@@ -12,13 +12,23 @@ const apiRouter = require('./routes/routers.js')
 server.use('/api',apiRouter)
 
 
+//STATIC-LY SERVING OUR HTML
+const DIST_PATH = path.join(__dirname, './public' )
+server.use(express.static(DIST_PATH))
+
+const ROUTES = path.join(__dirname,'./routes/routers.js')
+server.use(express.static(ROUTES))
+
+
+
 server.listen(PORT, ()=>{
     console.log(chalk.cyan('Server is up on port', PORT))
     try{
         db.connect();
         console.log('Connected to the database!')
-        db.exit();
-    }catch(e){throw e}
+        db.end();
+    }catch(e){
+        throw e}
 });
 
 
