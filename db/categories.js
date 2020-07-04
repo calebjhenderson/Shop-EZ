@@ -15,7 +15,6 @@ const createCategory = async ({
 
         return category;
 
-
     } catch(error){
         throw error;
     }

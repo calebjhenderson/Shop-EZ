@@ -6,6 +6,7 @@
 
 const bcrypt = require('bcrypt');
 const {
+    client,
     createUser,
     createOrder,
     createProduct,
@@ -13,16 +14,7 @@ const {
     createCart,
     createShop,
     createCategory
-    
 } = require('./index');
-
-const { Client } = require('pg'); 
-const DATABASE_URL = process.env.DATABASE_URL || 'postgres://localhost:5432/shop-ez';
-
-const client = new Client(DATABASE_URL);
-
-module.exports = { client };
-
 
 
 /*---------------------------------- Functions ---------------------------------------*/
@@ -44,21 +36,23 @@ async function testDB() {
 
 //Create all tables if they do not already exist
 async function createTables() {
+    
+    console.log('Starting to create tables...');
     try {
 
         //Users table
         await client.query(
             `CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
-                username VARCHAR(25) UNIQUE NOT NULL,
-                password VARCHAR(25) NOT NULL,
-                "firstName" VARCHAR(25) NOT NULL,
-                "lastName" VARCHAR(25) NOT NULL,
+                username VARCHAR(255) UNIQUE NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                "firstName" VARCHAR(255) NOT NULL,
+                "lastName" VARCHAR(255) NOT NULL,
                 email VARCHAR(255) UNIQUE NOT NULL,
                 role varchar NOT NULL,
                 addresses TEXT [],
                 "paymentInfo" TEXT [],
-                "shopName" VARCHAR (50),
+                "shopName" VARCHAR (255),
                 public BOOLEAN DEFAULT false,
                 active BOOLEAN DEFAULT true
             );`
@@ -89,7 +83,7 @@ async function createTables() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS user_products (
                 id SERIAL PRIMARY KEY,
-                "userID" INTEGER REFERENCES user(id) NOT NULL,
+                "userID" INTEGER REFERENCES users(id) NOT NULL,
                 "productId" INTEGER REFERENCES products(id) NOT NULL
             );`
         );
@@ -118,7 +112,7 @@ async function createTables() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS carts(
                 id SERIAL PRIMARY KEY,
-                "userId" INTEGER REFERENCES user(id),
+                "userId" INTEGER REFERENCES users(id),
                 products INTEGER []
             );`
         );
@@ -142,7 +136,7 @@ async function createTables() {
                 products INTEGER [] NOT NULL,
                 "orderDate" DATE NOT NULL,
                 "orderTotal" FLOAT(2) NOT NULL,
-                shippingAddress VARCHAR(255) NOT NULL,
+                "shippingAddress" VARCHAR(255) NOT NULL,
                 fulfilled BOOLEAN DEFAULT false
             );`
 
@@ -230,8 +224,8 @@ async function createTables() {
                 "customerUserId" INTEGER REFERENCES users(id) NOT NULL,
                 "merchantUserId" INTEGER REFERENCES users(id) NOT NULL,
                 "orderId" INTEGER REFERENCES orders(id),
-                "productId" INTEGER REFERENCES product(id),
-                "storeId" INTEGER REFERENCES stores(id),
+                "productId" INTEGER REFERENCES products(id),
+                "storeId" INTEGER REFERENCES shops(id),
                 messages TEXT [] NOT NULL
             );`
         );
@@ -359,7 +353,7 @@ async function createInitialUsers() {
             "lastName": 'Dyleuth',
             email: 'tony.dyleuth@example.com',
             role: 'admin',
-            address: [],
+            addresses: [],
             "paymentInfo": [],
             "shopName": '',
             public: true,
@@ -373,7 +367,7 @@ async function createInitialUsers() {
             "lastName": 'Alami',
             email: 'nahidalami@example.com',
             role: 'merchant',
-            address: [],
+            addresses: [],
             "paymentInfo": [],
             "shopName": '',
             public: true,
@@ -387,7 +381,7 @@ async function createInitialUsers() {
             "lastName": 'Henderson',
             email: 'caleb_rocks@example.com',
             role: 'user',
-            address: [],
+            addresses: [],
             "paymentInfo": [],
             "shopName": "Caleb's Rocks",
             public: true,
@@ -401,7 +395,7 @@ async function createInitialUsers() {
             "lastName": 'Hafez',
             email: 'yhafez3@example.com',
             role: 'user',
-            address: [],
+            addresses: [],
             "paymentInfo": [],
             "shopName": '',
             public: false,
@@ -425,15 +419,15 @@ async function createInitialCategories() {
     // id SERIAL PRIMARY KEY,
     // name VARCHAR(25) UNIQUE NOT NULL
 
-    const clothing = createCategory('clothing');
+    const clothing = await createCategory({name: 'clothing'});
 
-    const recreation = createCategory('recreation');
+    const recreation = await createCategory({name: 'recreation'});
 
-    const electronics = createCategory('electronics');
+    const electronics = await createCategory({name: 'electronics'});
 
-    const music = createCategory('music');
+    const music = await createCategory({name: 'music'});
 
-    const education = createCategory('education');
+    const education = await createCategory({name: 'education'});
 
     console.log("Creating initial categories...");
 
@@ -468,48 +462,48 @@ async function createInitialProducts() {
 
     try {
         
-        const rock = createProduct({
+        const rock = await createProduct({
             name: 'Pet Rock',
             description: 'A friendly rock found in Joshua Tree looking for a home',
             price: 300.99,
             quantity: 1,
-            delivery: ['pickup'],
+            delivery: '{"pickup"}',
             rating: 5.0,
             "userId": 3,
-            "categoryId": 2 
+            "categoryId": "{2, 3}"
         });
 
-        const turnTable = createProduct({
+        const turnTable = await createProduct({
             name: 'Turntables',
             description: "A pair of used Pioneer CDJ's in decent condition, perfect for getting your scratch on!",
             price: 450.99,
             quantity: 2,
-            delivery: ['standard', 'express', 'next-day'],
+            delivery: '{"standard", "express", "next-day"}',
             rating: 3.5,
             "userId": 4,
-            "categoryId": 4 
+            "categoryId": '{4}'
         });
 
-        const dress = createProduct({
+        const dress = await createProduct({
             name: 'Embroidered Dress',
             description: 'One of a kind, hand-made embroidered dress from Egypt, perfect for weddings, parties, and other special occassions!',
             price: 60.00,
             quantity: 50,
-            delivery: ['standard'],
+            delivery: '{"standard"}',
             rating: 5.0,
             "userId": 2,
-            "categoryId": 1
+            "categoryId": "{1}"
         });
         
-        const course = createProduct({
+        const course = await createProduct({
             name: 'Fullstack Software Development Course',
             description: 'A part-time course offered by the incredible Fullstack Academy of Code to get you coding in your dream job in 6-months',
             price: '11000.00',
             quantity: 999,
-            delivery: ['electronic'],
+            delivery: '{"electronic"}',
             rating: 5.0,
             "userId": 1,
-            "categoryId": 5
+            "categoryId": "{5}"
         });
 
         console.log("Finished creating initial products!");
@@ -536,31 +530,31 @@ async function createInitialShops() {
 
     try {
 
-        const calebsRocks = createShop({
+        const calebsRocks = await createShop({
             "userId": 3,
             name: "Caleb's Rocks",
-            products: [1],
+            products: '{1}',
             description: 'The finest rocks in the industry, but also the finest rocking tunes in that industry too'
         });
 
-        const lamasatyFashion = createShop({
+        const lamasatyFashion = await createShop({
             "userId": 2,
             name: 'Lamasaty Fashion',
-            products: [3],
+            products: '{3}',
             description: 'An Arabic and Islamic clothing and accessory store'
         });
 
-        const djHub = createShop({
+        const djHub = await createShop({
             "userId": 4,
             name: 'DJ Hub',
-            products: [2],
+            products: '{2}',
             description: "The one-stop shop for all your DJ'ing needs. And when I say all, I really mean ALL!"
         });
 
-        const fullStack = createShop({
+        const fullStack = await createShop({
             "userId": 1,
             name: 'Fullstack Academy of Code',
-            products: [4, 1],
+            products: '{4, 1}',
             description: 'A coding bootcamp dedicated to helping you excel in the tech industry'
         });
 
@@ -590,7 +584,7 @@ async function createInitialReviews() {
 
     try {
 
-        const satisfied = createReview({
+        const satisfied = await createReview({
             "productId": 1,
             "userId": 4,
             title: 'This rock ROCKS',
@@ -598,7 +592,7 @@ async function createInitialReviews() {
             comment: "I purchased this rock a week ago and was completely blown away. Not only does it actually rock, this rock also totally ROCKS!!!"
         });
 
-        const angry = createReview({
+        const angry = await createReview({
             "productId": 2,
             "userId": 2,
             title: "Janky turntables, 10/10 don't reccomend",
@@ -606,7 +600,7 @@ async function createInitialReviews() {
             comment: "I purchased these turtables expecting them to at the very least work. Imagine my fury when I instead received a cardboard cut out of a turntable. Absolutely ridiculous, I demand my money back"
         });
 
-        const confused = createReview({
+        const confused = await createReview({
             "productId": 4,
             "userId": 1,
             title: 'Am I too good of a coder?',
@@ -614,10 +608,10 @@ async function createInitialReviews() {
             comment: "I had really high expectations of Fullstack, but this was just a whole nother level. I'm almost in disbelief at how hirable I am."
         });
 
-        const ecstatic = createReview({
+        const ecstatic = await createReview({
             "productId": 3,
             "userId": 3,
-            title: 'Incredible',
+            title: '',
             rating: 5,
             comment: "I'm in absolute love with this dress, it's exactly what my wife and I were looking for! Thanks Lamasaty fashion!!!"
         });
@@ -644,28 +638,28 @@ async function createInitialCarts() {
 
     try {
 
-        const tonysCart = createCart({
+        const tonysCart = await createCart({
             "userId": 1,
-            products: [1, 4]
+            products: '{1, 4}'
         });
 
-        const nahidsCart = createCart({
+        const nahidsCart = await createCart({
             "userId": 2,
-            products: [2]
+            products: '{2}'
         });
 
-        const calebsCart = createCart({
+        const calebsCart = await createCart({
             "userId": 3,
-            products: [3, 2]
+            products: '{3, 2}'
         });
 
-        const yahyasCart = createCart({
+        const yahyasCart = await createCart({
             "userId": 4,
-            products: [1, 4, 2]
+            products: '{1, 4, 2}'
         });
 
-        const anonsCart = createCart({
-            products: [1, 2, 4]
+        const anonsCart = await createCart({
+            products: '{1, 2, 4}'
         });
 
         console.log("Finished creating initial carts!");
@@ -684,30 +678,46 @@ async function createInitialOrders() {
     // Reference
     // id SERIAL PRIMARY KEY,
     // "userId" INTEGER REFERENCES users(id) NOT NULL,
-    // "orderId" INTEGER REFERENCES orders(id) NOT NULL
+    // products INTEGER [] NOT NULL,
+    // "orderDate" DATE NOT NULL,
+    // "orderTotal" FLOAT(2) NOT NULL,
+    // shippingAddress VARCHAR(255) NOT NULL,
+    // fulfilled BOOLEAN DEFAULT false
 
     console.log("Creating initial orders...");
 
     try {
 
-        const rocks = createOrder({
+        const rocks = await createOrder({
             "userId": 1,
-            "orderId": 1 
+            products: '{1}',
+            "orderDate": '2020-05-08',
+            "orderTotal": 100.32,
+            "shippingAddress": '12345 Street Ln., City, ST, 12345'
         });
 
-        const clothes = createOrder({
+        const clothes = await createOrder({
             "userId": 2,
-            "orderId": 2
+            products: '{1, 2}',
+            "orderDate": '2020-05-08',
+            "orderTotal": 52.22,
+            "shippingAddress": '12345 Street Ln., City, ST, 12345'
         });
 
-        const music = createOrder({
+        const music = await createOrder({
             "userId": 3,
-            "orderId": 3
+            products: '{2, 3}',
+            "orderDate": '2020-05-08',
+            "orderTotal": 2.42,
+            "shippingAddress": '12345 Street Ln., City, ST, 12345'
         });
 
-        const curriculum = createOrder({
+        const curriculum = await createOrder({
             "userId": 4,
-            "orderId": 4
+            products: '{1, 2, 3}',
+            "orderDate": '2020-05-08',
+            "orderTotal": 11000.32,
+            "shippingAddress": '12345 Street Ln., City, ST, 12345'
         });
 
         console.log("Finished creating initial orders!");
@@ -749,6 +759,4 @@ async function bootstrap() {
 bootstrap()
 .then(testDB)
 .catch(console.error)
-.finally(() => 
-    client.end()
-);
+.finally(() => client.end());

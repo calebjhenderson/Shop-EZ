@@ -1,19 +1,22 @@
 // ./db/products.js
 
+const { client } = require("./users");
+
 const createProduct = async ({
     name,
     description,
     price,
     quantity,
-    delivery = [],
+    delivery = '{}',
     rating,
     userId,
-    categoryId,
+    categoryId = '{}',
 
 }) => {
+    
     try{
     const { rows: [ product ] } = await client.query(
-        `INSERT INTO user_products (name, description, price, quantity, delivery, rating, "userId", "categoryId")
+        `INSERT INTO products (name, description, price, quantity, delivery, rating, "userId", "categoryId")
         VALUES($1,$2,$3,$4,$5,$6,$7,$8)
         RETURNING *;
         `, [name,description,price,quantity,delivery,rating,userId,categoryId]
@@ -30,7 +33,7 @@ const getAllProducts = async () => {
 
    try{
     const { rows } = await client.query(`
-    SELECT * FROM user_products;
+    SELECT * FROM products;
     `);
     
     return rows;
@@ -44,7 +47,7 @@ const getAllProducts = async () => {
 const getProductById = async(productId) => {
     try{ 
         const { rows: [product] } = await client.query(`
-        SELECT * FROM user_products 
+        SELECT * FROM products 
         WHERE id=${ productId }
         `);
 
@@ -64,7 +67,7 @@ const getProductById = async(productId) => {
 const getProductByName = async(productName) => {
     try{ 
         const { rows: [product] } = await client.query(`
-        SELECT * FROM user_products 
+        SELECT * FROM products 
         WHERE name=${ productName }
         `);
 
