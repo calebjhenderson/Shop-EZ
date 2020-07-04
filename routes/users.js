@@ -11,3 +11,5 @@ usersRouter.use(function(){
 usersRouter.post(function( req, res ){})
 usersRouter.patch(function( req, res ){})
 usersRouter.delete(function( req, res ){})
+
+module.exports = usersRouter
