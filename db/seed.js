@@ -7,6 +7,10 @@
 const bcrypt = require('bcrypt');
 const {
     client,
+    createUser,
+    getAllUsers,
+    getUsersByUserName,
+    getUserByUserId
 } = require('./index');
 
 const { Client } = require('pg'); 
