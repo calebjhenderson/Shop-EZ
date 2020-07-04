@@ -6,7 +6,6 @@
 
 const bcrypt = require('bcrypt');
 const {
-    client,
     createUser,
     getAllUsers,
     getUsersByUserName,
