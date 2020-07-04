@@ -6,9 +6,6 @@ module.exports = {
         filename: 'main.js',
         path: path.join(__dirname, './public'),
     },
-    node: {
-        fs: "empty"
-     },
     devtool: 'source-map',
     module: {
         rules: [
