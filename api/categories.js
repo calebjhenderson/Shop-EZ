@@ -1,0 +1,2 @@
+// ./api/categories.js
+
