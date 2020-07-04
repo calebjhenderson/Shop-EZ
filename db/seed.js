@@ -5,6 +5,13 @@
 
 
 const bcrypt = require('bcrypt');
+const {
+    client,
+    createUser,
+    getAllUsers,
+    getUsersByUserName,
+    getUserByUserId
+} = require('./index');
 
 const { Client } = require('pg'); 
 const DATABASE_URL = process.env.DATABASE_URL || 'postgres://localhost:5432/shop-ez';
