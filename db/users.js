@@ -1,3 +1,5 @@
+// ./db/users.js
+
 const { Client } = require('pg');
 
 const client = new Client(process.env.DATABASE_URL) || 'postgres://localhost:5432/shop-ez'
@@ -12,7 +14,7 @@ const createUser = async ({
     role,
     userAddress: [],
     paymentInfo: [],
-    shopname
+    shopname,
     
     
 }) => {
@@ -66,4 +68,10 @@ const getUserByUserName = async (username) => {
     }
 }
 
-
+module.export = {
+    client,
+    createUser,
+    getUserById,
+    getUserByUserName,
+    getAllUsers
+}
