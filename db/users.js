@@ -1,30 +1,27 @@
 // ./db/users.js
 
-const { Client } = require('pg');
-
-const client = new Client(process.env.DATABASE_URL) || 'postgres://localhost:5432/shop-ez'
-
+// to-do add profile-image to column
 const createUser = async ({
     username,
     firstName,
     lastName,
     email,
     password,
-    profileImage,
     role,
-    userAddress: [],
-    paymentInfo: [],
-    shopname,
+    address = [],
+    paymentInfo = [],
+    shopName = ''
     
     
 }) => {
+  
     try {
         const { rows: [ users ] } = await client.query(
-            `INSERT INTO users(username, firstName, lastName, email, password, profileImage, role, userAddress, paymentInfo, shopname)
+            `INSERT INTO users(username, firstName, lastName, email, password,role, address, paymentInfo, shopName)
             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
             ON CONFLICT (username) DO NOTHING
             RETURNING *;
-            `, [username,firstName,lastName,email,password,profileImage,role,userAddress,paymentInfo,shopname]
+            `, [username,firstName,lastName,email,password,role,address,paymentInfo,shopName]
         );
 
         return users;
@@ -34,7 +31,22 @@ const createUser = async ({
     }
 }
 
-const getAllUsers = as
+const getAllUsers = async () => {
+
+    try {
+        const { rows } = await client.query(`
+           SELECT *
+           FROM users;
+        `);
+    
+        return rows;
+    
+      } catch (error){
+        throw error;
+      }
+ }
+
+
 const getUserById = async (userId) => {
     try {
         const { rows: [ user ] } = await client.query(`
@@ -73,5 +85,5 @@ module.export = {
     createUser,
     getUserById,
     getUserByUserName,
-    getAllUsers
+    getAllUsers,
 }
