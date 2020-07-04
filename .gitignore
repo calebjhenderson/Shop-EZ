@@ -1,5 +1,4 @@
-# /.gitignore
-
+# /.gitignoregit 
 .env
 node_modules
 main.js
