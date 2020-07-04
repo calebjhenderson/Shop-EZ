@@ -56,7 +56,10 @@ const getUserById = async (userId) => {
         `, [userId]);
         
         if(!user) {
-            return null;
+            throw { 
+                name: "UserNotFoundError",
+                message: "Cannot find user with that userId"
+            };   
         }
 
         return user
@@ -80,8 +83,9 @@ const getUserByUserName = async (username) => {
     }
 }
 
-module.export = {
-    client,
+
+
+module.exports = {
     createUser,
     getUserById,
     getUserByUserName,

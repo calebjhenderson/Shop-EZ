@@ -7,9 +7,13 @@
 const bcrypt = require('bcrypt');
 const {
     createUser,
-    getAllUsers,
-    getUsersByUserName,
-    getUserByUserId
+    createOrder,
+    createProduct,
+    createReview,
+    createCart,
+    createShop,
+    createCategory
+    
 } = require('./index');
 
 const { Client } = require('pg'); 
