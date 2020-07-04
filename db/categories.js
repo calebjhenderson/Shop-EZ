@@ -1,7 +1,5 @@
 // ./db/categories.js
 
-const { client } = require("./users")
-
 const createCategory = async ({
     name
 }) => {

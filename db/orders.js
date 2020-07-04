@@ -12,6 +12,7 @@ const createOrder = async ({
         VALUES($1,$2)`, [userId,orderId] );
 
         return order;
+        
     } catch(error){
         throw error;
     }

@@ -1,13 +1,12 @@
 // ./db/reviews.js
 
-const { client } = require("../db/users")
 
 const createReview = async ({
     productId,
     userId,
     title,
     rating,
-    comment
+    comment,
 }) => {
     try{
         const { rows: [ review ]} = await client.query(`

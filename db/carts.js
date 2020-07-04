@@ -1,7 +1,5 @@
 // ./db/carts.js
 
-const { client } = require("./users")
-
 const createCart = async ({
     userId,
     products = [],
@@ -12,12 +10,15 @@ const createCart = async ({
             VALUES($1,$2)
             RETURNING *;
             `, [userId,products]
-        )
+        );
+
+      return cart;
+
     } catch(error){
         throw error;
     }
 }
 
-module.exports {
+module.exports = {
     createCart
 }
