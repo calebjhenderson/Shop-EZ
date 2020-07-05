@@ -29,6 +29,46 @@ const createProduct = async ({
   }
 }
 
+const updateProduct = async (id, fields = {} ) => {
+
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index + 1 }`
+      ).join(', ');
+
+      console.log('setstring', setString)
+    
+      if (setString.length === 0) {
+          console.log("test")
+        return;
+      }
+    
+      try {
+        const { rows: [ product ] }= await client.query(`
+          UPDATE products
+          SET ${ setString }
+          WHERE id=${ id }
+          RETURNING *;
+        `, Object.values(fields));
+    
+        return product;
+      } catch (error) {
+        throw error;
+      }
+}
+
+const deleteProduct = async (productId) => {
+    try {
+        const { rows: [ deletedProduct ]} = await client.query(`
+            DELETE FROM products
+            WHERE id=$1
+        `, [productId]);
+        
+        return deletedProduct;
+    } catch(error) {
+        throw error;
+    }
+}
+
 const getAllProducts = async () => {
 
    try{
@@ -88,5 +128,7 @@ module.exports = {
     createProduct,
     getAllProducts,
     getProductById,
-    getProductByName
+    getProductByName,
+    updateProduct,
+    deleteProduct,
 }

@@ -15,7 +15,8 @@ const createShop = async ({
         RETURNING *;
         `, [userId,name,products,description]);
 
-        return shop
+        return shop;
+        
     } catch(error){
         throw error;
     }

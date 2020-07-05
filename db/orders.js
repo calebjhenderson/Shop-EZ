@@ -16,6 +16,7 @@ const createOrder = async ({
         RETURNING *;`, [userId,products,orderDate,orderTotal,shippingAddress] );
 
         return order;
+        
     } catch(error){
         throw error;
     }
