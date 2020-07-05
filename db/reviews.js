@@ -1,17 +1,18 @@
 // ./db/reviews.js
 
+const { client } = require("../db/users")
 
 const createReview = async ({
     productId,
     userId,
     title,
     rating,
-    comment,
+    comment
 }) => {
     try{
         const { rows: [ review ]} = await client.query(`
-        INSERT INTO reviews ("productId","userId", title, rating,comment)
-        VALUES($1,$2,$3,$4,5)
+        INSERT INTO reviews ("productId", "userId", title, rating, comment)
+        VALUES ($1,$2,$3,$4,$5)
         RETURNING *;
         `, [productId,userId,title,rating,comment]);
 

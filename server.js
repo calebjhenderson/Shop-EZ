@@ -4,7 +4,7 @@ const express = require ('express');
 const server = express();
 const chalk = require('chalk')
 const path = require('path')
-const { db  } = require('./db/seed.js');
+const { client  } = require('./db/seed.js');
 
 
 //This uses the subrouters
@@ -23,12 +23,7 @@ server.use(express.static(ROUTES))
 
 server.listen(PORT, ()=>{
     console.log(chalk.cyan('Server is up on port', PORT))
-    try{
-        db.connect();
-        console.log('Connected to the database!')
-        db.end();
-    }catch(e){
-        throw e}
+ 
 });
 
 

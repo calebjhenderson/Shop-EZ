@@ -1,6 +1,11 @@
 // ./db/users.js
 
-// to-do add profile-image to column
+const { Client } = require('pg'); 
+const e = require('express');
+const DATABASE_URL = process.env.DATABASE_URL || 'postgres://localhost:5432/shop-ez';
+const client = new Client(DATABASE_URL);
+
+// to-do add profile-image to column table 
 const createUser = async ({
     username,
     firstName,
@@ -8,20 +13,20 @@ const createUser = async ({
     email,
     password,
     role,
-    address = [],
+    addresses = [],
     paymentInfo = [],
-    shopName = ''
-    
-    
+    shopName = '',
+    public,
+    active
 }) => {
   
     try {
         const { rows: [ users ] } = await client.query(
-            `INSERT INTO users(username, firstName, lastName, email, password,role, address, paymentInfo, shopName)
-            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+            `INSERT INTO users(username, "firstName", "lastName", email, password, role, addresses, "paymentInfo", "shopName", public, active)
+            VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10, $11)
             ON CONFLICT (username) DO NOTHING
             RETURNING *;
-            `, [username,firstName,lastName,email,password,role,address,paymentInfo,shopName]
+            `, [username,firstName,lastName,email,password,role,addresses,paymentInfo,shopName, public, active]
         );
 
         return users;
@@ -31,6 +36,51 @@ const createUser = async ({
     }
 }
 
+const updateUser = async (id, fields = {} ) => {
+
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index + 1 }`
+      ).join(', ');
+
+      console.log('setstring', setString)
+    
+      if (setString.length === 0) {
+          console.log("test")
+        return;
+      }
+    
+      try {
+        const { rows: [ users ] }= await client.query(`
+          UPDATE users
+          SET ${ setString }
+          WHERE id=${ id }
+          RETURNING *;
+        `, Object.values(fields));
+    
+        return users;
+      } catch (error) {
+        throw error;
+      }
+}
+
+const deleteUser= async(userId) => {
+   try{
+       const { rows: [ user ] } = await client.query(`
+           DELETE FROM users
+           WHERE id=$1
+       `, [userId]);
+
+     console.log("User Deleted!")
+
+     return user;
+   } catch(error){
+       throw error;
+   }
+}
+
+
+
+
 const getAllUsers = async () => {
 
     try {
@@ -38,13 +88,16 @@ const getAllUsers = async () => {
            SELECT *
            FROM users;
         `);
-    
+        console.log("testing all users",rows)
         return rows;
+
     
       } catch (error){
         throw error;
       }
  }
+ 
+
 
 
 const getUserById = async (userId) => {
@@ -61,7 +114,7 @@ const getUserById = async (userId) => {
                 message: "Cannot find user with that userId"
             };   
         }
-
+   
         return user
 
     } catch(error){
@@ -69,12 +122,21 @@ const getUserById = async (userId) => {
     }
 }
 
+
+
 const getUserByUserName = async (username) => {
     try{
         const { rows: [ user ] } = await client.query(`
         SELECT * FROM users
         WHERE username = $1
         `, [username]);
+    
+        if(!user){
+            throw {
+                name: "UserNotFoundError",
+                message: "Cannot find user with that userName"
+            }
+        }
 
         return user;
 
@@ -84,10 +146,12 @@ const getUserByUserName = async (username) => {
 }
 
 
-
 module.exports = {
+    client,
     createUser,
     getUserById,
     getUserByUserName,
     getAllUsers,
+    updateUser,
+    deleteUser,
 }

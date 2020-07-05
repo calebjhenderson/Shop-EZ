@@ -9,3 +9,5 @@ productsRouter.use(function( req, res, next){
 productsRouter.post(function( req, res ){})
 productsRouter.patch(function( req, res ){})
 productsRouter.delete(function( req, res ){})
+
+module.exports = productsRouter

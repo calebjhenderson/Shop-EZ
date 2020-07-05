@@ -1,5 +1,7 @@
 // ./db/categories.js
 
+const { client } = require("./users")
+
 const createCategory = async ({
     name
 }) => {
@@ -12,7 +14,6 @@ const createCategory = async ({
         );
 
         return category;
-
 
     } catch(error){
         throw error;

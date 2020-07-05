@@ -10,3 +10,5 @@ shopsRouter.use(function( req, res, next){
 shopsRouter.post(function( req, res ){})
 shopsRouter.patch(function( req, res ){})
 shopsRouter.delete(function( req, res ){})
+
+module.exports = shopsRouter
