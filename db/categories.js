@@ -63,11 +63,37 @@ const deleteCategory = async (categoryId) => {
 const getAllCategories = async () => {
     try{
         const { rows } = await client.query(`
-            SELECT * FROM categories'
+            SELECT * FROM categories;
         `);
 
         return rows;
     }catch(error){
+        throw error;
+    }
+}
+
+const getCategoryById = async (categoryId) => {
+    try {
+        const { rows: [ category ] } = await client.query(`
+            SELECT * FROM categories
+            WHERE id=$1
+        `, [categoryId]);
+
+        return category;
+    } catch(error){
+        throw error;
+    }
+}
+
+const getCategoryByName = async (categoryName) => {
+    try {
+        const { rows: [ category ] } = await client.query(`
+            SELECT * FROM categories
+            WHERE name=$1
+        `, [categoryName]);
+
+        return category;
+    } catch(error){
         throw error;
     }
 }
@@ -77,4 +103,6 @@ module.exports = {
     updateCategory,
     deleteCategory,
     getAllCategories,
+    getCategoryById,
+    getCategoryByName,
 }
