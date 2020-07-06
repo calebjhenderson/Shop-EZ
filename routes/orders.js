@@ -1,7 +1,16 @@
+
+//  ./routes/orders.js
+
 const express = require('express');
 const ordersRouter = express.Router();
 const { createOrder } = require('../db/orders.js');
 const { requireUser } = require('../db/users.js')
+
+ordersRouter.use(function( req, res, next){
+    console.log("A request has been made to the /api/orders endpoint.");
+    next();
+})
+
 
 ordersRouter.post('/', requireUser, async function( req, res, next ){
     const { userId, products, orderDate, orderTotal, shippingAddress } = req.body

@@ -41,8 +41,6 @@ const setString = Object.keys(fields).map(
     (key, index) => `"${ key }"=$${ index + 1 }`
   ).join(', ');
 
-  console.log('setstring', setString)
-
   if (setString.length === 0) {
       console.log("test")
     return;
@@ -69,6 +67,8 @@ const deleteCart = async(cartId) => {
         WHERE id=$1
         `, [cartId]);
 
+        console.log('deletedCart is ', deletedCart);
+
         return deletedCart;
     } catch(error){
         throw error;
@@ -79,8 +79,8 @@ const getCartByUserId = async (userId) => {
     try { 
         const { rows: [ cart ]} = await client.query(
             `SELECT * FROM carts
-            WHERE "userId=${userId}`
-        );
+            WHERE "userId"=$1
+        `, [userId]);
 
         return cart;
     }catch(error){

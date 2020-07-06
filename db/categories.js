@@ -104,5 +104,5 @@ module.exports = {
     deleteCategory,
     getAllCategories,
     getCategoryById,
-    getCategoryByName,
+    getCategoryByName
 }

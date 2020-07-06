@@ -1,7 +1,14 @@
+
+//  ./routes/reviews.js
+
 const express = require('express');
 const reviewsRouter = express.Router();
 const { createReview } = require('../db/reviews.js')
 
+reviewsRouter.use(function( req, res, next){
+    console.log("A request has been made to the /api/reviews endpoint.");
+    next();
+})
 
 reviewsRouter.post('/', async function( req, res, next ){
     const { productId, userId, title, rating, comment } = req.body

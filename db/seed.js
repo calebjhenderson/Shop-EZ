@@ -15,6 +15,25 @@ const {
     createShop,
     createCategory,
     updateUser,
+    updateCart,
+    deleteCart,
+    getCartByUserId,
+    updateCategory,
+    deleteCategory,
+    getAllCategories,
+    getCategoryById,
+    getCategoryByName,
+    updateOrder,
+    deleteOrder,
+    getAllOrders,
+    getOrderById,
+    getOrderByUserId,
+    getAllProducts,
+    getProductById,
+    getProductByName,
+    getAllProductsByUserId,
+    updateProduct,
+    deleteProduct,
 } = require('./index');
 
 
@@ -26,6 +45,101 @@ async function testDB() {
 
     try {
         console.log("Start db testing...")
+        
+
+        //Order table functions
+        // console.log('Testing deleteOrder')
+        // const deletedOrder = await deleteOrder(1)
+        // console.log("DeleteOrder results", deletedOrder)
+
+        // console.log('Testing getAllOrders')
+        // const allOrders = await getAllOrders()
+        // console.log("getAllOrders results", allOrders)
+
+        // console.log('Testing getOrderById')
+        // const orderByIdResult = await getOrderById(2)
+        // console.log("getOrderById results", orderByIdResult)
+
+        // console.log('Testing getOrderByUserId')
+        // const orderByIdUserResult = await getOrderByUserId(3)
+        // console.log("getOrderByUserId results", orderByIdUserResult)
+        
+        //Products table functions
+
+        console.log('Testing getAllProducts')
+        const allProducts = await getAllProducts()
+        console.log("getAllProducts results", allProducts)
+
+        console.log("Testing getProductsById")
+        const getProductByIdResults = await getProductById(4)
+        console.log("GetProductById result", getProductByIdResults)
+
+        console.log("Testing getProductsByName")
+        const getProductByNameResults = await getProductByName("Turntables")
+        console.log("GetProductByName result", getProductByNameResults)
+
+        console.log("Testing updateProduct")
+        const updateProductResult = await updateProduct(2, {
+            name: "Human Rock",
+            description:"A human rock"
+        })
+        console.log("updateProduct result", updateProductResult)
+
+        console.log("Testing deleteProduct")
+        const deleteProductResult = await deleteProduct(2)
+        console.log("updateProduct result", deleteProductResult)
+        
+        console.log("Testing getAllProductsByUserId")
+        const geAllProductsByUserIdResults = await getAllProductsByUserId(4)
+        console.log("getAllProductsByUserId result", geAllProductsByUserIdResults)
+
+        
+        
+        
+        
+
+
+
+        //Cart table functions
+        console.log('Testing updateCart...');
+        const updatedCart = await updateCart(2, { products: '{2, 3, 4}' });
+        console.log('updateCart result: ', updatedCart);
+
+        console.log('Testing deleteCart...');
+        const deletedCart = await deleteCart(2);
+        console.log('deleteCart result: ', deleteCart);
+        
+        console.log('Testing getCartByUserId...');
+        const userCart = await getCartByUserId(1);
+        console.log('getCartByUderId result: ', userCart);
+
+        
+        
+        //Category table functions
+        console.log('Testing updateCategory...');
+        const updatedCategory = await updateCategory(2, {name: 'Fun'});
+        console.log('updateCategory result: ', updatedCategory);
+
+        console.log('Testing deleteCategory...');
+        const deletedCategory = await deleteCategory(2);
+        console.log('deleteCategory result is ', deletedCategory);
+
+        console.log('Testing getAllCategories...');
+        const allCategories = await getAllCategories();
+        console.log('getAllCategories result is ', allCategories);
+
+        console.log('Testing getCategoryById...');
+        const categoryById = await getCategoryById(1);
+        console.log('getCategoryById result is ', categoryById);
+
+        console.log('Testing getCategoryByName');
+        const categoryByName = await getCategoryByName('music');
+        console.log('getCategoryByName result is ', categoryByName);
+
+        
+
+
+
        
         console.log("Finished db testing")
     }catch(error) {

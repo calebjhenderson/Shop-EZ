@@ -1,10 +1,16 @@
+
 const express = require('express');
 const categoriesRouter = express.Router();
 const { createCategory } = require('../db/categories.js');
 const { requireUser } = require('../db/users.js')
 
+categoriesRouter.use(function( req, res, next){
+    console.log("A request has been made to the /api/categories endpoint.");
+    next();
+})
 
-categoriesRouter.post('/', requireUser, async function( req, res, next ){
+
+categoriesRouter.post('/', async function( req, res, next ){
     const { name } = req.body 
     const categoryData = {}
     categoryData.name = name
