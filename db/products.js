@@ -124,8 +124,7 @@ const getProductByName = async(productName) => {
     }
 }
 
-
-const getAllProductsByUserId = async(userId) => {
+const getProductsByUserId = async(userId) => {
     try{ 
         const { rows } = await client.query(`
         SELECT * FROM products 
@@ -139,12 +138,13 @@ const getAllProductsByUserId = async(userId) => {
     }
 }
 
+
 module.exports = {
     createProduct,
     getAllProducts,
     getProductById,
     getProductByName,
-    getAllProductsByUserId,
+    getProductsByUserId,
     updateProduct,
     deleteProduct,
 }

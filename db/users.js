@@ -146,11 +146,33 @@ const getUserByUserName = async (username) => {
 }
 
 
+const getUserByEmail = async (email) =>
+{
+    try { 
+        const { rows: [ user ] } = await client.query(
+            `SELECT * FROM users 
+            WHERE email=$1`
+        , [email])
+
+        if(!user){
+            throw {
+                name: "UserNotFoundError",
+                message: "Cannot find user with that email"
+            }
+        }
+
+        return user;
+    } catch(error){
+        throw error;
+    }
+}
+
 module.exports = {
     client,
     createUser,
     getUserById,
     getUserByUserName,
+    getUserByEmail,
     getAllUsers,
     updateUser,
     deleteUser,
