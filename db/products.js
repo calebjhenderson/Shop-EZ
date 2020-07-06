@@ -124,11 +124,27 @@ const getProductByName = async(productName) => {
     }
 }
 
+
+const getAllProductsByUserId = async(userId) => {
+    try{ 
+        const { rows } = await client.query(`
+        SELECT * FROM products 
+        WHERE "userId"=${ userId }
+        `);
+
+     return rows;
+
+    } catch(error){
+        throw error;
+    }
+}
+
 module.exports = {
     createProduct,
     getAllProducts,
     getProductById,
     getProductByName,
+    getAllProductsByUserId,
     updateProduct,
     deleteProduct,
 }

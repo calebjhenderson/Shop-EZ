@@ -75,8 +75,22 @@ const deleteCart = async(cartId) => {
     }
 }
 
+const getCartByUserId = async (userId) => {
+    try { 
+        const { rows: [ cart ]} = await client.query(
+            `SELECT * FROM carts
+            WHERE "userId=${userId}`
+        );
+
+        return cart;
+    }catch(error){
+        throw error;
+    }
+}
+
 module.exports = {
     createCart,
     updateCart,
     deleteCart,
+    getCartByUserId,
 }
