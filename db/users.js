@@ -1,11 +1,33 @@
 // ./db/users.js
 
-const { Client } = require('pg'); 
-const e = require('express');
-const DATABASE_URL = process.env.DATABASE_URL || 'postgres://localhost:5432/shop-ez';
-const client = new Client(DATABASE_URL);
 
-// to-do add profile-image to column table 
+/* ------------ Reference ------------*/
+
+// id SERIAL PRIMARY KEY,
+// username VARCHAR(255) UNIQUE NOT NULL,
+// password VARCHAR(255) NOT NULL,
+// "firstName" VARCHAR(255) NOT NULL,
+// "lastName" VARCHAR(255) NOT NULL,
+// email VARCHAR(255) UNIQUE NOT NULL,
+// role varchar NOT NULL,
+// addresses TEXT [],
+// "paymentInfo" TEXT [],
+// "shopName" VARCHAR (255),
+// public BOOLEAN DEFAULT false,
+// active BOOLEAN DEFAULT true
+
+
+/*------------------------------- Imports and Globals -----------------------------------*/
+
+
+const client = require("./client");
+const { getAllProductsByUserId, deleteProduct } = require("./products");
+
+
+/*---------------------------------- Functions ---------------------------------------*/
+
+
+//Adds new row to users table and returns new user object
 const createUser = async ({
     username,
     firstName,
@@ -13,13 +35,14 @@ const createUser = async ({
     email,
     password,
     role,
-    addresses = [],
-    paymentInfo = [],
+    addresses = '{}',
+    paymentInfo = '{}',
     shopName = '',
     public,
     active
 }) => {
-  
+        
+    // TODO: add profile-image to column table 
     try {
         const { rows: [ users ] } = await client.query(
             `INSERT INTO users(username, "firstName", "lastName", email, password, role, addresses, "paymentInfo", "shopName", public, active)
@@ -32,10 +55,13 @@ const createUser = async ({
         return users;
 
     } catch(error){
-        throw error; 
+        console.error(`There's been an error creating a new user @ createUser({username, firstname, lastname, email, password, role, addresses='{}', paymentInfo='{}', shopName, public, active}) in ./db/users.js. ${ error }`)
+        throw error;
     }
 }
 
+
+//Updates row in users table and returns updated user object
 const updateUser = async (id, fields = {} ) => {
 
     const setString = Object.keys(fields).map(
@@ -59,47 +85,60 @@ const updateUser = async (id, fields = {} ) => {
     
         return users;
       } catch (error) {
+        console.error(`There's been an error updating a user @ updateUser(id, fields = {}) in ./db/users.js. ${ error }`)
         throw error;
       }
 }
 
+
+//Deletes row from users table and returns deleted user object
 const deleteUser= async(userId) => {
-   try{
-       const { rows: [ user ] } = await client.query(`
-           DELETE FROM users
-           WHERE id=$1
-       `, [userId]);
+    
+    try{
 
-     console.log("User Deleted!")
+        const userProducts = await getAllProductsByUserId(userId);
+        
+        await Promise.all(userProducts.map(async (productObj) => {
+            await deleteProduct(productObj.id);
+        }));
 
-     return user;
-   } catch(error){
-       throw error;
-   }
+        const { rows: [ user ] } = await client.query(`
+            DELETE FROM users
+            WHERE id=$1
+        `, [userId]);
+
+        console.log("User Deleted!")
+
+        return user;
+
+    }
+    catch(error){
+        console.error(`There's been an error deleting a user @ deleteUser(userId) in ./db/users.js. ${ error }`)
+        throw error;
+    }
 }
 
 
-
-
+//Returns an array containing userObjects for every user in the users table
 const getAllUsers = async () => {
 
     try {
         const { rows } = await client.query(`
-           SELECT *
-           FROM users;
+            SELECT *
+            FROM users;
         `);
-        console.log("testing all users",rows)
+
         return rows;
 
-    
-      } catch (error){
+    }
+    catch (error){
+        console.error(`There's been an error getting all users @ geAllUsers() in ./db/users.js. ${ error }`)
         throw error;
-      }
- }
+    }
+}
  
 
-
-
+//Returns the user object, if it exists, of the user with the specified userId from the usertable
 const getUserById = async (userId) => {
     try {
         const { rows: [ user ] } = await client.query(`
@@ -118,12 +157,13 @@ const getUserById = async (userId) => {
         return user
 
     } catch(error){
+        console.error(`There's been an error getting a user by id @ getUserByUserId(userId) in ./db/users.js. ${ error }`)
         throw error;
     }
 }
 
 
-
+//Returns the user object, if it exists, of the user with the specified username from the usertable
 const getUserByUserName = async (username) => {
     try{
         const { rows: [ user ] } = await client.query(`
@@ -141,13 +181,16 @@ const getUserByUserName = async (username) => {
         return user;
 
     } catch(error){
+        console.error(`There's been an error getting a user by username @ getUserByUserName(username) in ./db/users.js. ${ error }`)
         throw error;
     }
 }
 
 
+/*---------------------------------- Exports ---------------------------------------*/
+
+
 module.exports = {
-    client,
     createUser,
     getUserById,
     getUserByUserName,

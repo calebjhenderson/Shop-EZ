@@ -1,15 +1,32 @@
 // ./db/carts.js
 
-const { client } = require("./users");
-const { query } = require("express");
 
+/* ------------ Reference ------------*/
+
+
+// id SERIAL PRIMARY KEY,
+// "userId" INTEGER REFERENCES users(id),
+// products INTEGER []
+
+
+/*------------------------------- Imports and Globals -----------------------------------*/
+
+
+const client = require("./client");
+const { addProductToCart, removeProductFromCart, getProductsByCartId } = require("./cart_products");
+
+
+/*---------------------------------- Functions ---------------------------------------*/
+
+
+// Add new cart to carts table and return new cart object
 const createCart = async ({
     userId=NaN,
-    products = '{}',
+    products = '{}'
 }) => {
     try {
 
-        //NaN is the only value not equal to istelf, so this will return true only if userId is NaN
+        //NaN is the only value in JS not equal to istelf, so this will return true only if userId is NaN
         const isNotNum = userId !== userId;
 
         if(!isNotNum){
@@ -18,79 +35,139 @@ const createCart = async ({
                 VALUES($1,$2)
                 RETURNING *;
                 `, [userId,products]
-            )
+            );
+
+            //For each product, create an entry in cart_products table
+            const targetProductArr = products.slice(1, products.length - 1).split("");
+            const finalProductsArr = targetProductArr.filter((char) => char !== ' ' && char !== ',');
+            const cartProducts = await Promise.all(finalProductsArr.map(async (productId) => {return await addProductToCart(productId, cart.id)}));
+
             return cart;
         }
         else{
-            const { rows: [ cart ] } = await client.query(
-                `INSERT INTO carts (products)
+            const { rows: [ cart ] } = await client.query(`
+                INSERT INTO carts (products)
                 VALUES($1)
                 RETURNING *;
-                `, [products]
-            )
+            `, [products]);
+            
             return cart;
         }
-    } catch(error){
+    }
+    catch(error) {
+        console.error(`There's been an error creating cart @ createCart({userId=Nan, products='{}'}) in ./db/carts.js. ${ error }`)
         throw error;
     }
 }
 
+
+// Update cart in carts table and return updated cart object
 const updateCart = async (id, fields ) => {
 
-const setString = Object.keys(fields).map(
-    (key, index) => `"${ key }"=$${ index + 1 }`
-  ).join(', ');
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index + 1 }`
+    ).join(', ');
 
-  if (setString.length === 0) {
-      console.log("test")
-    return;
-  }
+    if (setString.length === 0) {return}
 
-  try {
-    const { rows: [ cart ] }= await client.query(`
-      UPDATE carts
-      SET ${ setString }
-      WHERE id=${ id }
-      RETURNING *;
-    `, Object.values(fields));
+    try {
 
-    return cart;
-  } catch (error) {
-    throw error;
-  }
-}
+        const { rows: [ cart ] }= await client.query(`
+            UPDATE carts
+            SET ${ setString }
+            WHERE id=${ id }
+            RETURNING *;
+        `, Object.values(fields));
 
-const deleteCart = async(cartId) => {
-    try{
-        const { rows: [ deletedCart ]} = await client.query(`
-        DELETE FROM carts
-        WHERE id=$1
-        `, [cartId]);
+        return cart;
 
-        console.log('deletedCart is ', deletedCart);
-
-        return deletedCart;
-    } catch(error){
+    }
+    catch (error) {
+        console.error(`There's been an error updating cart @ updateCart(id, fields) in ./db/carts.js. ${ error }`)
         throw error;
     }
 }
 
+
+// Return cart object associated with specified cartId from carts table
+const getCartById = async (cartId) => {
+
+    try {
+        const { rows: [cart] } = await client.query(`
+            SELECT * FROM carts
+            WHERE id=$1;
+        `, [cartId]);
+        
+        return cart;
+    }
+    catch (error){
+        console.error(`There's been an error getting cart id @ getCartById(cartId) in ./db/carts.js. ${ error }`);
+        throw error;
+    }
+
+}
+
+
+// Delete cart from carts table and return deleted cart object
+const deleteCart = async (cartId) => {
+
+    try{
+
+        const isCart = await getCartById(cartId);
+        if(isCart){
+            
+            const cartProducts = await getProductsByCartId(cartId);
+            const deletedCartProducts = await Promise.all(cartProducts.map(async (cartProdObj) => await removeProductFromCart(cartProdObj.id)));
+
+            const { rows: [ deletedCart ]} = await client.query(`
+                DELETE FROM carts
+                WHERE id=$1
+                RETURNING *
+            `, [cartId]);
+
+            return deletedCart;
+        }
+        else{
+            throw({
+                name: "CartNotFoundError",
+                message: "Cannot find cart with that cartId"
+            })
+        }
+    }
+    catch(error){
+        console.error(`There's been an error deleting cart @ deleteCart(cartId) in ./db/carts.js. ${ error }`)
+        throw error;
+    }
+    
+}
+
+
+// Return cart object associated with specified userId from carts table
 const getCartByUserId = async (userId) => {
-    try { 
-        const { rows: [ cart ]} = await client.query(
-            `SELECT * FROM carts
-            WHERE "userId"=$1
+
+    try {
+
+        const { rows: cart } = await client.query(`
+        SELECT * FROM carts
+        WHERE "userId"=$1;
         `, [userId]);
 
         return cart;
-    }catch(error){
+    }
+    catch(error){
+        console.error(`There's been an error getting cart by userId @ getCartByUserId(userId) in ./db/carts.js. ${ error }`)
         throw error;
     }
 }
+
+
+/*---------------------------------- Exports ---------------------------------------*/
+
 
 module.exports = {
     createCart,
     updateCart,
     deleteCart,
+    getCartById,
     getCartByUserId,
 }
