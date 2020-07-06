@@ -1,9 +1,10 @@
 const express = require('express');
 const categoriesRouter = express.Router();
 const { createCategory } = require('../db/categories.js');
-const categories = require('../db/categories.js');
+const { requireUser } = require('../db/users.js')
 
-categoriesRouter.post('/', async function( req, res, next ){
+
+categoriesRouter.post('/', requireUser, async function( req, res, next ){
     const { name } = req.body 
     const categoryData = {}
     categoryData.name = name

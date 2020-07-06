@@ -1,7 +1,8 @@
 const express = require('express');
 const productsRouter = express.Router();
 const { getAllProducts, createProduct, getProductById } = require('../db/products.js')
-//NEED TO WRITE REQUIRE USER
+const { requireUser } = require('../db/users.js')
+
 
 productsRouter.use( async function( req, res, next ){
     console.log("A request has been made to the /api/products endpoint.");

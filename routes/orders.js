@@ -1,6 +1,7 @@
 const express = require('express');
 const ordersRouter = express.Router();
 const { createOrder } = require('../db/orders.js');
+const { requireUser } = require('../db/users.js')
 
 ordersRouter.post('/', requireUser, async function( req, res, next ){
     const { userId, products, orderDate, orderTotal, shippingAddress } = req.body

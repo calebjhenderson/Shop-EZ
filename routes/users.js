@@ -1,6 +1,6 @@
 const express = require('express');
 const usersRouter = express.Router();
-const { getAllUsers, createUser, getUserByUsername } = require('../db/users.js')
+const { getAllUsers, createUser, getUserByUserName } = require('../db/users.js')
 //NEED TO WRITE REQUIRE USER
 
 
@@ -86,7 +86,7 @@ usersRouter.post('/login', async function (req, res, next){
     const { username, password } = req.body; 
 
     try{
-        const user = await getUserByUsername(username);
+        const user = await getUserByUserName(username);
         const hashedPassword = user.password;
         const { id } = user;
         const firstName = user.firstName;

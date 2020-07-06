@@ -2,6 +2,7 @@ const express = require('express');
 const reviewsRouter = express.Router();
 const { createReview } = require('../db/reviews.js')
 
+
 reviewsRouter.post('/', async function( req, res, next ){
     const { productId, userId, title, rating, comment } = req.body
 

@@ -1,6 +1,7 @@
 const express = require('express');
 const shopsRouter = express.Router();
 const { createShop } = require('../db/shops.js')
+const { requireUser } = require('../db/users.js')
 //NEED TO WRITE REQUIRE USER
 
 shopsRouter.use( async function (req, res, next){
