@@ -1,6 +1,7 @@
 // ./db/carts.js
 
-const { client } = require("./users")
+const { client } = require("./users");
+const { query } = require("express");
 
 const createCart = async ({
     userId=NaN,
@@ -34,6 +35,62 @@ const createCart = async ({
     }
 }
 
+const updateCart = async (id, fields ) => {
+
+const setString = Object.keys(fields).map(
+    (key, index) => `"${ key }"=$${ index + 1 }`
+  ).join(', ');
+
+  console.log('setstring', setString)
+
+  if (setString.length === 0) {
+      console.log("test")
+    return;
+  }
+
+  try {
+    const { rows: [ cart ] }= await client.query(`
+      UPDATE carts
+      SET ${ setString }
+      WHERE id=${ id }
+      RETURNING *;
+    `, Object.values(fields));
+
+    return cart;
+  } catch (error) {
+    throw error;
+  }
+}
+
+const deleteCart = async(cartId) => {
+    try{
+        const { rows: [ deletedCart ]} = await client.query(`
+        DELETE FROM carts
+        WHERE id=$1
+        `, [cartId]);
+
+        return deletedCart;
+    } catch(error){
+        throw error;
+    }
+}
+
+const getCartByUserId = async (userId) => {
+    try { 
+        const { rows: [ cart ]} = await client.query(
+            `SELECT * FROM carts
+            WHERE "userId=${userId}`
+        );
+
+        return cart;
+    }catch(error){
+        throw error;
+    }
+}
+
 module.exports = {
-    createCart
+    createCart,
+    updateCart,
+    deleteCart,
+    getCartByUserId,
 }

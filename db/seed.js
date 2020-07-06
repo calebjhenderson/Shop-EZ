@@ -13,7 +13,8 @@ const {
     createReview,
     createCart,
     createShop,
-    createCategory
+    createCategory,
+    updateUser,
 } = require('./index');
 
 
@@ -25,7 +26,7 @@ async function testDB() {
 
     try {
         console.log("Start db testing...")
-
+       
         console.log("Finished db testing")
     }catch(error) {
         console.error("Error testing db functions @ ./db/seed.js testDB()! Error: ")
