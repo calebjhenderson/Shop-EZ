@@ -3,6 +3,7 @@
 const express = require('express');
 const cartsRouter = express.Router();
 const { createCart } = require('../db/carts.js')
+const { requireUser } = require('../db/users.js')
 
 
 cartsRouter.post('/', requireUser, async function( req, res, next){
