@@ -1,3 +1,5 @@
+//  ./routes/products.js
+
 const express = require('express');
 const productsRouter = express.Router();
 const { getAllProducts, createProduct, getProductById } = require('../db/products.js')
