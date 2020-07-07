@@ -13,7 +13,6 @@
 
 
 const client = require("./client");
-const { getProductById } = require("./products");
 
 
 /*---------------------------------- Functions ---------------------------------------*/
@@ -23,27 +22,14 @@ const { getProductById } = require("./products");
 const addProductToOrder = async (orderId, productId) => {
 
     try{
-        
-        const isProduct = await getProductById(productId);
 
-        if(isProduct){
+        const { rows: [ newOrderproduct ] } = await client.query(`
+            INSERT INTO order_products ("orderId", "productId")
+            VALUES($1, $2)
+            RETURNING *;
+        `, [orderId, productId]);
 
-            const { rows: [ newOrderproduct ] } = await client.query(`
-                INSERT INTO order_products ("orderId", "productId")
-                VALUES($1, $2)
-                RETURNING *;
-            `, [orderId, productId]);
-
-            console.log()
-            return newOrderproduct;
-        
-        }
-        else{
-            throw{
-                name: "ProductNotFoundError",
-                message: "Cannot find product with that productId"
-            }
-        }
+        return newOrderproduct;
 
     }
     catch(error){
@@ -86,7 +72,7 @@ const removeProductFromOrder = async (orderProductId) => {
 }
 
 
-// Returun order product object associated with the specified orderProductId
+// Return order product object associated with the specified orderProductId
 const getOrderProductById = async (orderProductId) => {
 
     try{
@@ -106,9 +92,31 @@ const getOrderProductById = async (orderProductId) => {
 }
 
 
+// Return an array of order product objects associated with the specified productId
+const getOrderProductsByProductId = async (productId) => {
+
+    try{
+
+        const { rows: orderProductsArr } = await client.query(`
+            SELECT * FROM order_products
+            WHERE "productId"=$1;
+        `, [productId]);
+        
+        return orderProductsArr;
+
+    }
+    catch(error){
+        console.error(`There's been an error getting order products by product id @ getOrderProductsByProductId(productId) in ./db/order_products.js. ${ error }`)
+        throw error;
+    }
+
+}
+
+
 /*---------------------------------- Exports ---------------------------------------*/
 
 module.exports = {
     addProductToOrder,
-    removeProductFromOrder
+    removeProductFromOrder,
+    getOrderProductsByProductId
 }

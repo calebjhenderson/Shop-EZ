@@ -1,5 +1,7 @@
 // ./db/index.js
 
+// Requires and exports all db functions
+
 module.exports = {
     ...require('./users'),
     ...require('./carts'),

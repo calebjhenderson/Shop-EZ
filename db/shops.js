@@ -49,8 +49,6 @@ const updateShop = async (id, fields = {} ) => {
     const setString = Object.keys(fields).map(
         (key, index) => `"${ key }"=$${ index + 1 }`
       ).join(', ');
-
-      console.log('setstring', setString)
     
       if (setString.length === 0) {return}
     
@@ -149,6 +147,7 @@ const getShopByUserId = async (userId) => {
         throw error;
     }
 }
+
 
 
 /*---------------------------------- Exports ---------------------------------------*/

@@ -5,7 +5,7 @@
 const path = require('path');
 require('dotenv').config();
 
-const { PORT = 3000 } = process.env;
+const PORT = process.env.PORT
 const express = require('express');
 const server = express();
 
@@ -15,7 +15,8 @@ server.use(bodyParser.json());
 const morgan = require('morgan');
 server.use(morgan('dev'));
 
-const { client } = require('./db');
+const client = require('./db/client.js');
+
 client.connect();
 
 const PUBLIC_PATH = path.join(__dirname, './public');

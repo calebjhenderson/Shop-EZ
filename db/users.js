@@ -21,10 +21,26 @@
 
 
 const client = require("./client");
-const { getAllProductsByUserId, deleteProduct } = require("./products");
-
+const { getAllProductsByUserId, deleteProduct, deactivateProduct } = require("./products");
+const { getShopByUserId, deleteShop } = require("./shops");
+const { getReviewsByUserId, deleteReview } = require("./reviews");
+const { getCartByUserId, deleteCart } = require("./carts");
+const { deleteOrderFromUser, getUserOrdersByUserId } = require('./user_orders');
+ 
 
 /*---------------------------------- Functions ---------------------------------------*/
+
+
+//Verifies if user exists and is logged in for actions requiring active login
+function requireUser(req, res, next) {
+    if(!req.user) {
+        next({
+            name: "MissingUserError",
+            message: "You must be logged in to perform this action"
+        });
+    }
+    next();
+}
 
 
 //Adds new row to users table and returns new user object
@@ -51,7 +67,7 @@ const createUser = async ({
             RETURNING *;
             `, [username,firstName,lastName,email,password,role,addresses,paymentInfo,shopName, public, active]
         );
-
+  
         return users;
 
     } catch(error){
@@ -67,13 +83,8 @@ const updateUser = async (id, fields = {} ) => {
     const setString = Object.keys(fields).map(
         (key, index) => `"${ key }"=$${ index + 1 }`
       ).join(', ');
-
-      console.log('setstring', setString)
     
-      if (setString.length === 0) {
-          console.log("test")
-        return;
-      }
+      if (setString.length === 0) {return}
     
       try {
         const { rows: [ users ] }= await client.query(`
@@ -97,17 +108,27 @@ const deleteUser= async(userId) => {
     try{
 
         const userProducts = await getAllProductsByUserId(userId);
-        
-        await Promise.all(userProducts.map(async (productObj) => {
-            await deleteProduct(productObj.id);
-        }));
+        await Promise.all(userProducts.map(async (productObj) => {await deleteProduct(productObj.id)}));
+
+        const userReviews = await getReviewsByUserId(userId);
+        await Promise.all(userReviews.map(async (reviewObj) => {await deleteReview(reviewObj.id)}));
+
+        const userCart = await getCartByUserId(userId)
+        await deleteCart(userCart.id);
+
+        const userOrders = await getUserOrdersByUserId(userId);
+        await Promise.all(userOrders.map(async (ordersObj) => {await deleteOrderFromUser(ordersObj.id)}));
+
+        const userShop = await getShopByUserId(userId);
+        await deleteShop(userShop.id);
+
+
 
         const { rows: [ user ] } = await client.query(`
             DELETE FROM users
             WHERE id=$1
+            RETURNING *
         `, [userId]);
-
-        console.log("User Deleted!")
 
         return user;
 
@@ -116,6 +137,7 @@ const deleteUser= async(userId) => {
         console.error(`There's been an error deleting a user @ deleteUser(userId) in ./db/users.js. ${ error }`)
         throw error;
     }
+
 }
 
 
@@ -186,15 +208,40 @@ const getUserByUserName = async (username) => {
     }
 }
 
-function requireUser(req, res, next) {
-    if(!req.user) {
-        next({
-            name: "MissingUserError",
-            message: "You must be logged in to perform this action"
-        });
+
+// Sets active row for user with specified userId to false in users table
+const deactivateUser = async (userId) => {
+
+    try{
+
+        const userProducts = await getAllProductsByUserId(userId);
+        await Promise.all(userProducts.map(async (productObj) => {await deactivateProduct(productObj.id)}));
+
+        const userReviews = await getReviewsByUserId(userId);
+        await Promise.all(userReviews.map(async (reviewObj) => {await deleteReview(reviewObj.id)}));
+
+        const userCart = await getCartByUserId(userId)
+        await deleteCart(userCart.id);
+
+        const userShop = await getShopByUserId(userId);
+        await deleteShop(userShop.id);
+
+        const { rows: [ user ] } = await client.query(`
+            UPDATE users
+            SET "active"=false
+            WHERE id=$1
+            RETURNING *
+        `, [userId]);
+
+        return user;
+
     }
-    next();
-  }
+    catch(error){
+        console.error(`There's been an error deactivating a user @ deactivateUser(userId) in ./db/users.js. ${ error }`)
+        throw error;
+    }
+
+}
 
 
 /*---------------------------------- Exports ---------------------------------------*/
@@ -207,5 +254,6 @@ module.exports = {
     getAllUsers,
     updateUser,
     deleteUser,
-    requireUser
+    requireUser,
+    deactivateUser
 }
