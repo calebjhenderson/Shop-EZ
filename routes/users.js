@@ -2,14 +2,18 @@
 
 const express = require('express');
 const usersRouter = express.Router();
-const { getAllUsers, createUser, getUserByUserName } = require('../db/users.js')
+const { getAllUsers, createUser, getUserByUserName } = require('../db/users.js');
+const { getUserProductsByUserId } = require('../db/user_products');
+const { getUserOrdersByUserId } = require('../db/user_orders');
+const { getProductById } = require('../db/products');
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const cart_products = require('../db/cart_products.js');
 const SALT_COUNT = 10;
 
 
-usersRouter.use( async function(){
+usersRouter.use(async function( req, res, next ){
     console.log('A request is being made to the /api/users endpoint.');
     next()
 });
@@ -84,6 +88,7 @@ usersRouter.post('/register', async function (req, res, next){
 
 //Login As Existing User Route
 usersRouter.post('/login', async function (req, res, next){
+  
     const { username, password } = req.body; 
 
     try{
@@ -119,7 +124,65 @@ usersRouter.post('/login', async function (req, res, next){
         const{ name, message } = error
         next({ name, message})
     }
-    });     
+    });
+
+usersRouter.get('/orders', async function (req,res,next){
+    const { id } = req.params
+    try {
+      const userOrders = await getUserOrdersByUserId(id)
+
+      if(!userOrders){
+        next({
+          name: "NoOrdersForUserError",
+          message: "No orders found for that specified user"
+        })
+      }
+      
+      res.send({
+         name: "userOrdersFound",
+         message: "Orders for this user have been found. See attached",
+         userOrders
+      })
+
+    } catch(error){
+      console.error(error);
+      const{ name, message } = error;
+      next({ name, message });
+    }
+});
+
+usersRouter.get('/products/:userId', async function (req, res, next){
+
+  const userId = req.params.userId;
+
+  try{
+    const userProductIdsArr = await getUserProductsByUserId(userId);
+
+    if(userProductIdsArr && userProductIdsArr.length){
+      
+        const userProducts = await Promise.all(userProductIdsArr.map(async (userProductIdObj) => await getProductById(userProductIdObj.productId) ))
+          
+        res.send({
+          name: "userProductsFound",
+          message: "Products for this user have been found. See attached.",
+          userProducts
+        })
+      }
+      else{
+        next({
+          name: "NoUserProductsFound",
+          message: "No products have been found for the specified user"
+        })
+      }
+    
+  }
+  catch(error){
+    console.error(error);
+    const{ name, message } = error;
+    next({ name, message });
+  }
+  
+});
 
 
 module.exports = usersRouter

@@ -93,9 +93,31 @@ const getUserOrderById = async (userOrderId) => {
 }
 
 
+// Returns an array of all userOrder objects associated with the specified userId, if any 
+const getUserOrdersByUserId = async(userId) => {
+
+    try{
+        
+        const { rows: userOrdersArr } = await client.query(`
+            SELECT * FROM user_orders
+            WHERE "userId"=$1;
+        `, [userId])
+
+        return userOrdersArr;
+
+    }
+    catch(error){
+        console.error(`There's been an error getting user orders by user id @ getUserOrdersByUserId(userId) in ./db/user_products.js. ${ error }`)
+        throw error;
+    }
+
+}
+
+
 /*---------------------------------- Exports ---------------------------------------*/
 
 module.exports = {
     addOrderToUser,
-    deleteOrderFromUser
+    deleteOrderFromUser,
+    getUserOrdersByUserId
 }

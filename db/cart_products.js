@@ -13,7 +13,6 @@
 
 
 const client = require("./client");
-const { getProductById } = require("./products");
 
 
 /*---------------------------------- Functions ---------------------------------------*/
@@ -24,24 +23,14 @@ const addProductToCart = async (productId, cartId) => {
 
     try{
 
-        const isProduct = await getProductById(productId);
+        const { rows: [ newCartProduct ] } = await client.query(`
+            INSERT INTO cart_products
+            ("productId", "cartId")
+            VALUES ($1, $2)
+            RETURNING *
+        `, [productId, cartId])
 
-        if(isProduct){
-            const { rows: [ newCartProduct ] } = await client.query(`
-                INSERT INTO cart_products
-                ("productId", "cartId")
-                VALUES ($1, $2)
-                RETURNING *
-            `, [productId, cartId])
-
-            return newCartProduct;
-        }
-        else{
-            throw { 
-                name: "ProductNotFoundError",
-                message: "Cannot find product with that productId"
-            }
-        }
+        return newCartProduct;
     }
     catch(error){
         console.error(`There's been an error adding a product to a cart @ addProductToCart(productId, cartId) in ./db/cart_products.js. ${ error }`)
@@ -122,11 +111,33 @@ const getProductsByCartId = async (cartId) => {
 }
 
 
+// Returns an array of all userProduct objects associated with the specified product id, if any 
+const getCartProductsByProductId = async(productId) => {
+
+    try{
+        
+        const { rows: cartProductsArr } = await client.query(`
+            SELECT * FROM cart_products
+            WHERE "productId"=$1;
+        `, [productId])
+
+        return cartProductsArr;
+
+    }
+    catch(error){
+        console.error(`There's been an error getting cart products by product id @ getCartProductsByProductId(productId) in ./db/cart_products.js. ${ error }`)
+        throw error;
+    }
+
+}
+
+
 /*---------------------------------- Exports ---------------------------------------*/
 
 module.exports = {
     addProductToCart,
     removeProductFromCart,
     getCartProductById,
-    getProductsByCartId
+    getProductsByCartId,
+    getCartProductsByProductId
 }

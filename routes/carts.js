@@ -2,7 +2,9 @@
 
 const express = require('express');
 const cartsRouter = express.Router();
-const { createCart, updateCart, deleteCart, getCartById } = require('../db/carts.js')
+const { createCart, updateCart, deleteCart, getCartById, getCartByUserId } = require('../db/carts.js')
+const { getProductById } = require('../db/products.js')
+const { addProductToCart, removeProductFromCart } = require('../db/cart_products.js')
 const { requireUser } = require('../db/users.js')
 
 
@@ -52,7 +54,7 @@ cartsRouter.patch('/:id', async function (req, res, next){
 
 
 // Delete Cart Route
-cartsRouter.delete('/:id', async function (req, res, next){
+cartsRouter.delete('/:id', async function ( req, res, next ){
     const { id } = req.params
     const cart = await getCartById(id)
 
@@ -62,6 +64,39 @@ cartsRouter.delete('/:id', async function (req, res, next){
             res.send({ message:'Cart deleted.', cart:deletedCart })
         }
     } catch(error){
+        console.error(error)
+        next()
+    }
+});
+
+
+// Add Product to Cart Route
+cartsRouter.put('/:productId', async function ( req, res, next ){
+    const { productId } = req.params
+    const product = await getProductById(productId)
+    const userId = req.body
+    const cart = await getCartByUserId(userId)
+   
+    try {
+        const newCartProduct = await addProductToCart(productId, cart)
+        res.send( { message:'Product added to cart', product:newCartProduct })
+    } catch (error) {
+        console.error(error)
+        next()  
+    }
+});
+
+// Delete Product From Cart Route
+cartsRouter.delete('/:productId', async function ( req, res, next){
+    const { productId} = req.params
+    const product = await getProductById(productId)
+    const userId = req.body
+    const cart = await getCartByUserId(userId)
+
+    try{
+      const deletedCartProduct = await removeProductFromCart(productId)
+      res.send({ message:'Product removed from cart.', product:deletedCartProduct })
+    }catch(error){
         console.error(error)
         next()
     }

@@ -101,7 +101,7 @@ const getCartById = async (cartId) => {
         return cart;
     }
     catch (error){
-        console.error(`There's been an error getting cart id @ getCartById(cartId) in ./db/carts.js. ${ error }`);
+        console.error(`There's been an error getting cart by id @ getCartById(cartId) in ./db/carts.js. ${ error }`);
         throw error;
     }
 
@@ -147,7 +147,7 @@ const getCartByUserId = async (userId) => {
 
     try {
 
-        const { rows: cart } = await client.query(`
+        const { rows: [ cart ] } = await client.query(`
         SELECT * FROM carts
         WHERE "userId"=$1;
         `, [userId]);
