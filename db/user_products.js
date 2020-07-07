@@ -93,10 +93,54 @@ const getUserProductById = async (userProductId) => {
 }
 
 
+// Returns an array of all userProduct objects associated with the specified product id, if any 
+const getUserProductsByProductId = async(productId) => {
+
+    try{
+        
+        const { rows: userProductsArr } = await client.query(`
+            SELECT * FROM user_products
+            WHERE "productId"=$1;
+        `, [productId])
+
+        return userProductsArr;
+
+    }
+    catch(error){
+        console.error(`There's been an error getting user products by product id @ getUserProductsByProductId(productId) in ./db/user_products.js. ${ error }`)
+        throw error;
+    }
+
+}
+
+
+// Returns an array of all userProduct objects associated with the specified userId, if any
+const getUserProductsByUserId = async(userId) => {
+
+    try{
+        
+        const { rows: userProductsArr } = await client.query(`
+            SELECT "productId" FROM user_products
+            WHERE "userId"=$1;
+        `, [userId])
+
+        return userProductsArr;
+
+    }
+    catch(error){
+        console.error(`There's been an error getting user products by user id @ getUserProductsByUserId(productId) in ./db/user_products.js. ${ error }`)
+        throw error;
+    }
+
+}
+
+
 /*---------------------------------- Exports ---------------------------------------*/
 
 
 module.exports = {
     addProductToUser,
-    deleteProductFromUser
+    deleteProductFromUser,
+    getUserProductsByProductId,
+    getUserProductsByUserId
 }

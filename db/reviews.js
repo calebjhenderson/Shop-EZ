@@ -16,6 +16,7 @@
 
 
 const client = require("./client");
+const { addReviewToProduct, removeReviewFromProduct, getProductReviewByReviewId } = require("./product_reviews");
 
 
 /*---------------------------------- Functions ---------------------------------------*/
@@ -36,8 +37,10 @@ const createReview = async ({
         RETURNING *;
         `, [productId,userId,title,rating,comment]);
 
-        return review
+        //Add new review to product in product_reviews table
+        const reviewProductResult = await addReviewToProduct(review.productId,review.id);
 
+        return review;
     }
     catch(error){
         console.error(`There's been an error creating a review @ createReview({productId, userId, title, rating, comment}) in ./db/reviews.js. ${ error }`)
@@ -50,6 +53,10 @@ const createReview = async ({
 const deleteReview = async (reviewId) => {
     
     try{
+
+        const productReviewObj = await getProductReviewByReviewId(reviewId);
+        if(productReviewObj){const removedReview = await removeReviewFromProduct(productReviewObj.id)}
+
         const { rows: [ deletedReview ] } = await client.query(`
             DELETE FROM reviews 
             WHERE id=$1
@@ -139,7 +146,7 @@ const getReviewsByProductId = async(productId) => {
 const getReviewsByUserId = async(userId) => {
 
     try {
-        const { rows: [reviews] } = await client.query(
+        const { rows: reviews } = await client.query(
             `SELECT * FROM reviews
             WHERE "userId"=$1`
         , [userId]);

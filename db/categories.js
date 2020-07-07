@@ -22,6 +22,7 @@ const createCategory = async ({
     name
 }) => {
     try {
+        
         const { rows: [ category ] } = await client.query(
             `INSERT INTO categories (name)
              VALUES($1)
@@ -44,9 +45,7 @@ const updateCategory = async (id, fields ) => {
     const setString = Object.keys(fields).map(
         (key, index) => `"${ key }"=$${ index + 1 }`
       ).join(', ');
-    
-      console.log('setstring', setString)
-    
+        
       if (setString.length === 0) {
         return;
       }

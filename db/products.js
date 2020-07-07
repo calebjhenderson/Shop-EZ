@@ -19,8 +19,10 @@
 
 const client = require("./client");
 const { getReviewsByProductId, deleteReview } = require("./reviews");
-const { addProductToUser, deleteProductFromUser } = require("./user_products");
-const { addCategoryToProduct } = require("./category_products");
+const { addProductToUser, deleteProductFromUser, getUserProductsByProductId } = require("./user_products");
+const { addCategoryToProduct, getCategoryProductsByProductId, removeCategoryFromProduct } = require("./category_products");
+const { addProductToCart, removeProductFromCart, getCartProductsByProductId } = require('./cart_products');
+const { addProductToOrder, removeProductFromOrder, getOrderProductsByProductId } = require('./order_products');
 
 
 /*---------------------------------- Functions ---------------------------------------*/
@@ -70,19 +72,14 @@ const createProduct = async ({
 // Updates a product in the products table and returns the updated product object
 const updateProduct = async (id, fields = {} ) => {
 
-    console.log('here at updateProduct');
     const setString = Object.keys(fields).map(
         (key, index) => `"${ key }"=$${ index + 1 }`
       ).join(', ');
-
-      console.log('setstring', setString)
     
-      if (setString.length === 0) {
-          console.log("test")
-        return;
-      }
+      if (setString.length === 0) {return}
 
       try {
+
         const { rows: [ product ] }= await client.query(`
           UPDATE products
           SET ${ setString }
@@ -91,7 +88,8 @@ const updateProduct = async (id, fields = {} ) => {
         `, Object.values(fields));
     
         return product;
-      }
+    
+    }
       catch (error) {
         console.error(`There's been an error updating a product @ updateProduct(id, fields = {}) in ./db/products.js. ${ error }`)
         throw error;
@@ -107,7 +105,25 @@ const deleteProduct = async (productId) => {
         const isProductReviews = await getReviewsByProductId(productId);
         if(isProductReviews){const deletedReview = await deleteReview(productId)}
 
-        const isUserProducts = await getUserProductsByProductId(productId);
+        const userProductsArr = await getUserProductsByProductId(productId);
+        if(userProductsArr && userProductsArr.length){
+            await Promise.all(userProductsArr.map(async (userProductObj) => { return await deleteProductFromUser(userProductObj.id) }));
+        }
+
+        const categoryProductsArr = await getCategoryProductsByProductId(productId);
+        if(categoryProductsArr && categoryProductsArr.length){
+            await Promise.all(categoryProductsArr.map(async (categoryProductObj) => { return await removeCategoryFromProduct(categoryProductObj.id) }));
+        }
+
+        const cartProductsArr = await getCartProductsByProductId(productId);
+        if(cartProductsArr && cartProductsArr.length){
+            await Promise.all(cartProductsArr.map(async (cartProductObj) => { return await removeProductFromCart(cartProductObj.id) }));
+        }
+
+        const orderProductsArr = await getOrderProductsByProductId(productId);
+        if(orderProductsArr && orderProductsArr.length){
+            await Promise.all(orderProductsArr.map(async (orderProductObj) => { return await removeProductFromOrder(orderProductObj.id) }));
+        }
         
 
         const { rows: [ deletedProduct ]} = await client.query(`
@@ -117,7 +133,8 @@ const deleteProduct = async (productId) => {
         `, [productId]);
         
         return deletedProduct;
-    } catch(error) {
+    }
+    catch(error) {
         console.error(`There's been an error deleting a product @ deleteProduct(productId) in ./db/products.js. ${ error }`)
         throw error;
     }
@@ -160,7 +177,7 @@ const getProductById = async(productId) => {
              message: "Cannot find product with that productId"
          };
      }
-
+    
      return product;
 
     }
@@ -220,6 +237,45 @@ const getProductsByUserId = async(userId) => {
 }
 
 
+// Sets active row for product of specified productId to false in products table
+const deactivateProduct = async (productId) => {
+
+    try{
+
+        const userProductsArr = await getUserProductsByProductId(productId);
+        if(userProductsArr && userProductsArr.length){
+            await Promise.all(userProductsArr.map(async (userProductObj) => { return await deleteProductFromUser(userProductObj.id) }));
+        }
+
+        const categoryProductsArr = await getCategoryProductsByProductId(productId);
+        if(categoryProductsArr && categoryProductsArr.length){
+            await Promise.all(categoryProductsArr.map(async (categoryProductObj) => { return await removeCategoryFromProduct(categoryProductObj.id) }));
+        }
+
+        const cartProductsArr = await getCartProductsByProductId(productId);
+        if(cartProductsArr && cartProductsArr.length){
+            await Promise.all(cartProductsArr.map(async (cartProductObj) => { return await removeProductFromCart(cartProductObj.id) }));
+        }
+
+        const { rows: [ deactivatedProduct ]} = await client.query(`
+            UPDATE products
+            SET "active"=false
+            WHERE id=$1
+            RETURNING *;
+        `, [productId]);
+
+        return deactivatedProduct;
+        
+    }
+    catch(error) {
+        console.error(`There's been an error deactivating a product @ deactivateProduct(productId) in ./db/products.js. ${ error }`)
+        throw error;
+    }
+}
+
+
+
+
 /*---------------------------------- Exports ---------------------------------------*/
 
 
@@ -231,4 +287,5 @@ module.exports = {
     getProductsByUserId,
     updateProduct,
     deleteProduct,
+    deactivateProduct
 }

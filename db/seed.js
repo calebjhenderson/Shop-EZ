@@ -32,7 +32,6 @@ const {
     deleteOrder,
     getAllOrders,
     getOrderById,
-    getOrderByUserId,
     getAllProducts,
     getProductById,
     getProductByName,
@@ -61,7 +60,9 @@ const {
     addProductToUser,
     deleteProductFromUser,
     addOrderToUser,
-    deleteOrderFromUser
+    deleteOrderFromUser,
+    deactivateProduct,
+    deactivateUser
 } = require('./index');
 
 
@@ -87,9 +88,13 @@ async function testDB() {
         // });
         // console.log(chalk.green('updateUser result: '), updatedUser);
 
-        console.log(chalk.magenta('Testing deleteUser...'));
-        const deletedUser = await deleteUser(4);
-        console.log(chalk.green('deleteUser result: '), deletedUser);
+        // console.log(chalk.magenta('Testing deactivateUser...'));
+        // const deactivatedUser = await deactivateUser(4);
+        // console.log(chalk.green('deactiveUser result: '), deactivatedUser);
+
+        // console.log(chalk.magenta('Testing deleteUser...'));
+        // const deletedUser = await deleteUser(4);
+        // console.log(chalk.green('deleteUser result: '), deletedUser);
 
         // console.log(chalk.magenta('Testing getAllUsers...'));
         // const allUsers = await getAllUsers();
@@ -126,9 +131,9 @@ async function testDB() {
         // })
         // console.log("updateProduct result", updateProductResult)
 
-        // console.log("Testing deleteProduct")
-        // const deleteProductResult = await deleteProduct(2)
-        // console.log("deleteProduct result", deleteProductResult);
+        // console.log("Testing deactivateProduct")
+        // const deactivateProductResult = await deactivateProduct(2)
+        // console.log("deactivateProduct result", deactivateProductResult);
         
         // console.log("Testing getAllProductsByUserId")
         // const geAllProductsByUserIdResults = await getAllProductsByUserId(4)
@@ -370,7 +375,8 @@ async function createTables() {
                 delivery TEXT [],
                 rating FLOAT(1),
                 "userId" INTEGER REFERENCES users(id) NOT NULL,
-                "categoryId" INTEGER []
+                "categoryId" INTEGER [],
+                active BOOLEAN DEFAULT true
             );`
         );
 
@@ -453,7 +459,6 @@ async function createTables() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS orders(
                 id SERIAL PRIMARY KEY,
-                "userId" INTEGER REFERENCES users(id) NOT NULL,
                 products INTEGER [] NOT NULL,
                 "orderDate" DATE NOT NULL,
                 "orderTotal" FLOAT(2) NOT NULL,

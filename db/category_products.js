@@ -55,7 +55,7 @@ const removeCategoryFromProduct = async (categoryProductId) => {
 
     try{
 
-        const isCategoryProduct = await getCatgeoryProductById(categoryProductId);
+        const isCategoryProduct = await getCategoryProductById(categoryProductId);
 
         if(isCategoryProduct){
             
@@ -86,7 +86,7 @@ const removeCategoryFromProduct = async (categoryProductId) => {
 
 
 // Return category product associated with the specified categoryProductId
-const getCatgeoryProductById = async (categoryProductId) => {
+const getCategoryProductById = async (categoryProductId) => {
 
     try{
 
@@ -108,10 +108,33 @@ const getCatgeoryProductById = async (categoryProductId) => {
 }
 
 
+// Return an array of category product objects associated with the specified productId
+const getCategoryProductsByProductId = async (productId) => {
+
+    try{
+        
+        const { rows: categoryProductsArr } = await client.query(`
+            SELECT * FROM category_products
+            WHERE "productId"=$1;
+        `, [productId]);
+        
+        return categoryProductsArr;
+
+    }
+    catch(error){
+        console.error(`There's been an error getting category products by product id @ getCategoryProductsByProductId(productId) in ./db/category_products.js. ${ error }`)
+        throw error;
+    }
+
+}
+
+
 /*---------------------------------- Exports ---------------------------------------*/
 
 
 module.exports = {
     addCategoryToProduct,
     removeCategoryFromProduct,
+    getCategoryProductById,
+    getCategoryProductsByProductId
 }

@@ -4,6 +4,7 @@
 const express = require('express');
 const ordersRouter = express.Router();
 const { createOrder, getAllOrders, getOrderById, updateOrder, deleteOrder } = require('../db/orders.js');
+const { addProductToOrder, getOrderByProductId, getOrderProductsByProductId, removeProductFromOrder } = require('../db/order_products.js')
 const { requireUser } = require('../db/users.js');
 
 
@@ -51,7 +52,7 @@ ordersRouter.post('/', requireUser, async function( req, res, next ){
 ordersRouter.patch('/:orderId', async function( req, res, next){
     const { orderId } = req.params
     const order = getOrderById(orderId)
-    const { fields } = order
+    const { fields } = req.body 
     try {
         const updatedOrder = await updateOrder( orderId, fields )
         if(updatedOrder){
@@ -75,6 +76,39 @@ ordersRouter.delete('/:orderId', async function( req, res, next){
     } catch (error) {
         console.error(error)
         next() 
+    }
+});
+
+// Add Product To Order Route
+ordersRouter.patch('/:productId', async function ( req, res, next ){
+    const { productId } = req.params
+
+    const order = await getOrderByProductId(productId)
+
+    const orderProducts = await getOrderProductsByProductId(productId)
+    if(order) order.order_products = orderProducts
+    const { orderId } = order.order_products
+    const newOrderProduct = await addProductToOrder( orderId, productId)
+   
+    try{
+        res.send({message:'Product added to order.',product:newOrderProduct})
+    } catch (error){
+        console.error(error)
+        next()
+    }
+});
+
+// Remove Product from Order Route
+ordersRouter.delete('/:productId', async function ( req, res, next ){
+    const { productId } = req.params
+    const updatedOrder = await removeProductFromOrder(productId)
+    try{
+        if(updatedOrder){
+            res.send({message:'Product has been removed from order', order:updatedOrder})
+        }
+    } catch( error ){
+        console.error(error)
+        next()
     }
 });
 

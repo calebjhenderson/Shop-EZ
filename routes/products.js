@@ -2,7 +2,7 @@
 
 const express = require('express');
 const productsRouter = express.Router();
-const { getAllProducts, createProduct, getProductById } = require('../db/products.js')
+const { getAllProducts, createProduct, getProductById, deleteProduct, updateProduct } = require('../db/products.js')
 const { requireUser } = require('../db/users.js')
 
 
@@ -50,7 +50,7 @@ productsRouter.post('/', requireUser, async function( req, res, next ){
 //Edit Product Route
 productsRouter.patch('/:productId', requireUser, async function( req, res, next ){
     const { productId } = req.params
-    const { id } = req.user
+    const { id } = req.body
     const { name, description, price, quantity, delivery, rating, userId} = req.body
     const updateFields = {}
 
@@ -62,13 +62,10 @@ productsRouter.patch('/:productId', requireUser, async function( req, res, next 
     if( rating ){ updateFields.rating = rating }
 
     try{
-        const originalProduct = getProductById( productId )
-        const creatorId = originalProduct.userId
+        const product = await getProductById( productId )
+        const creatorId = product.userId
         if( id === creatorId ){
-            //updateProduct has not been written yet
-            await updateProduct( id, updateFields)
-            const updatedProduct = await getProductById(id)
-            
+           const updatedProduct = await updateProduct( id, updateFields)
             res.send({ message:'Product has been updated!', product:updatedProduct })
         } else {
             next({
@@ -85,13 +82,13 @@ productsRouter.patch('/:productId', requireUser, async function( req, res, next 
 //Delete Products Route
 productsRouter.delete('/:productId', requireUser, async function( req, res, next ){
     const { productId } = req.params;
-    const { id } = req.user;
+    const { id } = req.body;
 
     try{
         const product = await getProductById(productId)
         const creatorId = product.userId
         if(id === creatorId){
-            //deleteProduct has not been written yet
+            
         const deletedProduct = await deleteProduct(product)
      
         res.send({ message:'Producted has been deleted!', product:deletedProduct}) 
@@ -106,5 +103,7 @@ productsRouter.delete('/:productId', requireUser, async function( req, res, next
         next({ name, message })
     }
 });
+
+
 
 module.exports = productsRouter

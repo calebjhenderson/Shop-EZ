@@ -5,7 +5,6 @@
 
 
 // id SERIAL PRIMARY KEY,
-// "userId" INTEGER REFERENCES users(id) NOT NULL,
 // products INTEGER [] NOT NULL,
 // "orderDate" DATE NOT NULL,
 // "orderTotal" FLOAT(2) NOT NULL,
@@ -17,6 +16,8 @@
 
 
 const client = require("./client");
+const { addProductToOrder } = require("./order_products")
+const { addOrderToUser } = require("./user_orders")
 
 
 /*---------------------------------- Functions ---------------------------------------*/
@@ -25,21 +26,29 @@ const client = require("./client");
 // Creates a new order in the orders table and returns the new order object
 const createOrder = async ({
     userId,
-    products,
+    products = '{}',
     orderDate,
     orderTotal,
     shippingAddress
 }) => {
     try {
         const { rows: [ order ] } = await client.query(`
-        INSERT INTO orders("userId", products, "orderDate", "orderTotal", "shippingAddress")
-        VALUES($1,$2, $3, $4, $5)
-        RETURNING *;`, [userId,products,orderDate,orderTotal,shippingAddress] );
+        INSERT INTO orders(products, "orderDate", "orderTotal", "shippingAddress")
+        VALUES($1,$2, $3, $4)
+        RETURNING *;`, [products,orderDate,orderTotal,shippingAddress] );
+
+         // Add newly created order to user_orders table
+        const orderToUserResult = await addOrderToUser(userId,order.id)
+
+        //For each product the order is being associated with, create an entry in the order_products table for it
+        const targetProductArr = products.slice(1, products.length - 1).split("");
+        const finalProductArr = targetProductArr.filter((char) => char !== ' ' && char !== ',');
+        const productOrder = await Promise.all(finalProductArr.map(async (product) => {return await addProductToOrder(order.id, product)}));
 
         return order;
         
     } catch(error){
-        console.error(`There's been an error creating a new order @ createOrder({userId, products, orderDate, orderTotal, shippingAddress}) in ./db/orders.js. ${ error }`)
+        console.error(`There's been an error creating a new order @ createOrder({products, orderDate, orderTotal, shippingAddress}) in ./db/orders.js. ${ error }`)
         throw error;
     }
 }
@@ -135,27 +144,6 @@ const getOrderById = async (orderId) => {
 }
 
 
-// Returns an array of orders associated with the user with the specified userId, if any
-const getOrderByUserId = async (userId) => {
-    
-    try{
-
-        const { rows: [ order ] } = await client.query(
-            `SELECT * FROM orders 
-            WHERE "userId"=${userId}`
-        );
-
-        return order;
-
-    }
-    catch(error){
-        console.error(`There's been an error getting an order by userId @ getOrderByUserId(UserId) in ./db/orders.js. ${ error }`)
-        throw error;
-    }
-
-}
-
-
 /*---------------------------------- Exports ---------------------------------------*/
 
 
@@ -165,5 +153,4 @@ module.exports = {
     deleteOrder,
     getAllOrders,
     getOrderById,
-    getOrderByUserId,
 }
