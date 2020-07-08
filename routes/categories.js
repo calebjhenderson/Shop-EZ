@@ -6,32 +6,35 @@ const { addCategoryToProduct, removeCategoryFromProduct } = require('../db/categ
 
 const { requireUser } = require('../db/users.js')
 
-categoriesRouter.use(function( req, res, next){
+categoriesRouter.use(async function( req, res, next){
     console.log("A request has been made to the /api/categories endpoint.");
     next();
-})
+});
 
 // Get All Categories Route
 categoriesRouter.get('/', async function( req, res, next ){
     const categories = await getAllCategories()
-    if(categories){
-        res.send({ message:'Here are all of the categories', allCategories:categories  })
-        next()
-    }
-})
+        try{
+            res.send({ message:'Here are all of the categories', allCategories:categories  })
+            } catch(error){
+                console.error(error)
+                const { name, message } = error
+                next({ name, message })
+            }
+});
 
 // Create Category Route
-categoriesRouter.post('/newcategory', async function( req, res, next ){
+categoriesRouter.post('/create', async function( req, res, next ){
     const { name } = req.body 
     const categoryData = {}
     categoryData.name = name
     try {
         const newCategory = await createCategory(categoryData)
         res.send({ message:'New Category Created', category: newCategory})
-        
-    } catch(error) {
+    } catch(error){
         console.error(error)
-        next()
+            const { name, message } = error
+            next({ name, message })
     }
 });
 
@@ -45,11 +48,11 @@ categoriesRouter.patch('/update/:id', async function ( req, res, next ){
         if(category){
             const updatedCategory = await updateCategory(id, fields)
             res.send({ message:'Category updated.', category:updatedCategory})
-        }
-        
-    } catch (error) {
+        }  
+    } catch(error){
         console.error(error)
-        next()   
+            const { name, message } = error
+            next({ name, message })   
     }
 });
 
@@ -61,14 +64,15 @@ categoriesRouter.delete('/delete/:id', async function ( req, res, next ){
         if(deleteCategory){
             res.send({ message:'Category deleted.', category:deletedCategory})
         }
-    } catch (error) {
+    } catch(error){
         console.error(error)
-        next()   
+        const { name, message } = error
+        next({ name, message }) 
     }
 });
 
 // Add Category to Product Route
-categoriesRouter.patch('/:productId', async function( req, res, next){
+categoriesRouter.patch('/addcategory/:productId', async function( req, res, next){
     const { productId } = req.params
     const category = getCategoryByProductId(productId)
     const { categoryId } = category
@@ -77,15 +81,15 @@ categoriesRouter.patch('/:productId', async function( req, res, next){
         if(updatedProduct){
             res.send({message:'Category added to product', product:updatedProduct })
         }
-    } catch ( error ){
+    } catch( error ){
         console.error(error)
-        next()
-
+            const { name, message } = error
+            next({ name, message })
     }
-})
+});
 
 // Delete Category from Product Route
-categoriesRouter.delete('/:productId', async function ( req, res, next ){
+categoriesRouter.delete('/deletecategory/:productId', async function ( req, res, next ){
     const { productId } = req.params
     const productWithDeletedCategory = await removeCategoryFromProduct(productId)
     try{
@@ -94,7 +98,8 @@ categoriesRouter.delete('/:productId', async function ( req, res, next ){
         }
     } catch(error){
         console.error(error)
-        next()
+            const { name, message } = error
+            next({ name, message })
     }
 });
 

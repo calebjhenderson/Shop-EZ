@@ -8,7 +8,7 @@ const { client  } = require('./db/seed.js');
 
 
 //This uses the subrouters
-const apiRouter = require('./routes/routers.js')
+const apiRouter = require('./routes/index.js')
 server.use('/api',apiRouter)
 
 

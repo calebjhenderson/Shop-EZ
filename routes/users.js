@@ -13,14 +13,14 @@ const cart_products = require('../db/cart_products.js');
 const SALT_COUNT = 10;
 
 
-usersRouter.use(async function( req, res, next ){
+usersRouter.use(async function(req, res, next){
     console.log('A request is being made to the /api/users endpoint.');
     next()
 });
 
 
 //Get All Users Route
-usersRouter.get('/', async function  (req, res, next){
+usersRouter.get('/', async function(req, res, next){
     try{
     const users = await getAllUsers();
     res.send({ users })
@@ -29,7 +29,7 @@ usersRouter.get('/', async function  (req, res, next){
         const{ name, message } = error
         next({ name, message })
     }
-  });
+});
 
 
 //Create New User Route
@@ -78,15 +78,15 @@ usersRouter.post('/register', async function (req, res, next){
           });
     
           
-        } catch (error) {
+        } catch(error){
           console.error(error)
           const { name, message } = error
           next({ name, message })
         } 
-      });
+});
 
 
-//Login As Existing User Route
+//Login User Route
 usersRouter.post('/login', async function (req, res, next){
   
     const { username, password } = req.body; 
@@ -124,7 +124,7 @@ usersRouter.post('/login', async function (req, res, next){
         const{ name, message } = error
         next({ name, message})
     }
-    });
+});
 
 usersRouter.get('/orders', async function (req,res,next){
     const { id } = req.params
@@ -175,13 +175,11 @@ usersRouter.get('/products/:userId', async function (req, res, next){
         })
       }
     
+  } catch(error){
+    console.error(error)
+    const{ name, message } = error
+    next({ name, message })
   }
-  catch(error){
-    console.error(error);
-    const{ name, message } = error;
-    next({ name, message });
-  }
-  
 });
 
 
