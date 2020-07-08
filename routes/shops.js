@@ -22,7 +22,7 @@ shopsRouter.get('/', async function (req, res, next){
 
 
 //Create New Shop Route 
-shopsRouter.post('/', requireUser, async function( req, res, next ){
+shopsRouter.post('/newshop', requireUser, async function( req, res, next ){
     const{ userId, name, products, description } = req.body
 
     const shopData = {}
@@ -31,9 +31,8 @@ shopsRouter.post('/', requireUser, async function( req, res, next ){
     shopData.name = name
     shopData.products = products
     shopData.description = description
-
+    const newShop = createShop(shopData)
     try{
-        const newShop = createShop(shopData)
         if(newShop){
         res.send({ message:'Shop Created!', shop: newShop })
     }
@@ -47,7 +46,7 @@ shopsRouter.post('/', requireUser, async function( req, res, next ){
 
 
 //Edit Shop Route
-shopsRouter.patch('/:shopId', requireUser, async function( req, res, next ){
+shopsRouter.patch('/update/:shopId', requireUser, async function( req, res, next ){
     const { shopId } = req.params
     const shop = await getShopById(shopId)
     const { fields } = shop
@@ -58,13 +57,14 @@ shopsRouter.patch('/:shopId', requireUser, async function( req, res, next ){
         }      
     } catch (error) {
         console.error(error)
-        next()
+        const { name, message } = error
+        next({ name, message })
     }
 });
 
 
 //Delete Shop Route 
-shopsRouter.delete('/:shopId', requireUser, async function( req, res, next ){
+shopsRouter.delete('/delete/:shopId', requireUser, async function( req, res, next ){
     const { shopId } = req.params
     const shop = await getShopById(shopId)
     const deletedShop = await deleteShop(shop)
@@ -74,7 +74,8 @@ shopsRouter.delete('/:shopId', requireUser, async function( req, res, next ){
         }
     } catch (error) {
         console.error(error)
-        next()
+        const { name, message } = error
+        next({ name, message })
     }
 });
 
