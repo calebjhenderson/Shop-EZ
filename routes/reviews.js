@@ -10,7 +10,7 @@ const { requireUser } = require('../db/users.js')
 reviewsRouter.use(function( req, res, next){
     console.log("A request has been made to the /api/reviews endpoint.");
     next();
-})
+});
 
 //Create Review Route
 reviewsRouter.post('/', async function( req, res, next ){
@@ -24,10 +24,10 @@ reviewsRouter.post('/', async function( req, res, next ){
     reviewData.rating = rating
     reviewData.comment = comment 
 
+    const newReview = await createReview(reviewData)
+
     try {
-        const newReview = await createReview(reviewData)
         res.send({ message:'Thanks for submitting a review!', review:newReview} )
-        
     } catch (error) {
         console.error(error)
         const{ name, message } = error
@@ -36,33 +36,34 @@ reviewsRouter.post('/', async function( req, res, next ){
 });
 
 // Update Review Route
-reviewsRouter.patch('/:reviewId', requireUser, async function( req, res, next){
+reviewsRouter.patch('/update/:reviewId', requireUser, async function( req, res, next){
     const { reviewId } = req.params
     const review = await getReviewById(reviewId)
     const { fields } = review
+    const updatedReview = await updateReview(reviewId, fields)
     try {
-        const updatedReview = await updateReview(reviewId, fields)
         if(updatedReview){
             res.send({ message:'Your review has been updated.', review:updatedReview })
         }
-    } catch (error) {
+    } catch(error){
         console.error(error)
         next()
     }
 });
 
 // Delete Review Route
-reviewsRouter.delete('/:reviewId', requireUser, async function( req, res, next ){
+reviewsRouter.delete('/delete/:reviewId', requireUser, async function( req, res, next ){
     const { reviewId } = req.params
     const review = await getReviewById(reviewId)
+    const deletedReview = await deleteReview(review)
     try {
-        const deletedReview = await deleteReview(review)
         if(deletedReview){
             res.send({ message:'Your review has deleted.', review:deletedReview })
         }
     } catch (error) {
         console.error(error)
-        next()
+        const{ name, message } = error
+        next({ name, message })
     }
 });
 
