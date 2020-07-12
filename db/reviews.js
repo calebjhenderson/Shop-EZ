@@ -53,7 +53,6 @@ const createReview = async ({
 const deleteReview = async (reviewId) => {
     
     try{
-
         const productReviewObj = await getProductReviewByReviewId(reviewId);
         if(productReviewObj){const removedReview = await removeReviewFromProduct(productReviewObj.id)}
 
@@ -74,7 +73,7 @@ const deleteReview = async (reviewId) => {
 
 // Updates a review in the reviews table, and return the updated review object
 const updateReview = async (reviewId, fields = {}) => {
-
+    console.log("fields",fields)
     const setString = Object.keys(fields).map(
         (key, index) => `"${ key }"=$${ index + 1 }`
     ).join(', ');
@@ -82,6 +81,7 @@ const updateReview = async (reviewId, fields = {}) => {
     if (setString.length === 0) {return}
     
     try {
+  
         const { rows: [ updatedReview ] }= await client.query(`
             UPDATE reviews
             SET ${ setString }
@@ -110,7 +110,7 @@ const getReviewById = async (reviewId) => {
             WHERE id=$1;
         `, [ reviewId ]);
         
-        return reviewId;
+        return review;
 
     }
     catch(error){

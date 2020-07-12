@@ -71,7 +71,32 @@ const deleteOrderFromUser = async (userOrderId) => {
     }
 }
 
+//Delete order from user by orderId
+const deleteOrderFromUserByOrderId = async (id) => {
+    try{
+        const isUserOrder = await getUserOrdersByOrderId(id);
+        if(isUserOrder){
+            const { rows: [ deletedResult ] } = await client.query(`
+                DELETE FROM user_orders
+                WHERE id=$1
+                RETURNING *;
+            `, [isUserOrder.id]);
 
+            return deletedResult;
+        }
+        else{
+            throw ({
+                name: "UserProductNotFoundError",
+                message: "Cannot find user product with that userProductId"
+            })
+        }
+        
+    }
+    catch(error){
+        console.error(`There's been an error deleting an order from a user @ deleteOrderFromUser(userOrderId) in ./db/user_orders.js. ${ error }`);
+        throw error;
+    }
+}
 // Returns user product object connected to provided userProductId
 const getUserOrderById = async (userOrderId) => {
 
@@ -113,11 +138,56 @@ const getUserOrdersByUserId = async(userId) => {
 
 }
 
+//By orderId
+const getUserOrdersByOrderId = async(orderId) => {
+
+    try{
+        
+        const { rows: userOrdersArr } = await client.query(`
+            SELECT * FROM user_orders
+            WHERE "orderId"=$1;
+        `, [orderId])
+
+        return userOrdersArr;
+
+    }
+    catch(error){
+        console.error(`There's been an error getting user orders by order id @ getUserOrdersByOrderId(orderId) in ./db/user_products.js. ${ error }`)
+        throw error;
+    }
+
+}
+
+//Deletes a user_order based off orderId
+const deleteUserOrder = async (orderId) => {
+
+    try{
+
+        const { rows: [deletedOrder] } = await client.query(`
+            DELETE FROM user_orders
+            WHERE "orderId"=$1
+            RETURNING *
+        `, [orderId] )
+        if(deletedOrder){
+            return deletedOrder;
+        }else {
+            throw ({message:'User_order does not exist'})
+        }
+    }
+    catch(error){
+        console.error(`There's been an error deleting an order @ deleteOrder(orderId) in ./db/orders.js. ${ error }`)
+        throw error;
+    }
+}
+
 
 /*---------------------------------- Exports ---------------------------------------*/
 
 module.exports = {
     addOrderToUser,
     deleteOrderFromUser,
-    getUserOrdersByUserId
+    getUserOrdersByUserId,
+    getUserOrdersByOrderId,
+    deleteOrderFromUserByOrderId,
+    deleteUserOrder
 }

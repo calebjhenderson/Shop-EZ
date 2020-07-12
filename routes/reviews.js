@@ -12,7 +12,7 @@ reviewsRouter.use(function( req, res, next){
     next();
 });
 
-//Create Review Route
+//Create Review Route---------------------------------Works!
 reviewsRouter.post('/', async function( req, res, next ){
     const { productId, userId, title, rating, comment } = req.body
 
@@ -27,7 +27,7 @@ reviewsRouter.post('/', async function( req, res, next ){
     const newReview = await createReview(reviewData)
 
     try {
-        res.send({ message:'Thanks for submitting a review!', review:newReview} )
+        res.send( { message:'Thanks for submitting a review!', review:newReview} )
     } catch (error) {
         console.error(error)
         const{ name, message } = error
@@ -35,28 +35,30 @@ reviewsRouter.post('/', async function( req, res, next ){
     }
 });
 
-// Update Review Route
+// Update Review Route---------------------------------Works!
 reviewsRouter.patch('/update/:reviewId', requireUser, async function( req, res, next){
     const { reviewId } = req.params
-    const review = await getReviewById(reviewId)
-    const { fields } = review
-    const updatedReview = await updateReview(reviewId, fields)
     try {
+    const review = await getReviewById(reviewId)
+    console.log("review",review)
+    const updatedReview = await updateReview(reviewId, review)
         if(updatedReview){
             res.send({ message:'Your review has been updated.', review:updatedReview })
         }
-    } catch(error){
+    }
+   catch(error){
         console.error(error)
         next()
     }
 });
 
-// Delete Review Route
+// Delete Review Route------------------------------Works!
 reviewsRouter.delete('/delete/:reviewId', requireUser, async function( req, res, next ){
     const { reviewId } = req.params
-    const review = await getReviewById(reviewId)
-    const deletedReview = await deleteReview(review)
     try {
+        const review = await getReviewById(reviewId)
+        
+        const deletedReview = await deleteReview(review.id)
         if(deletedReview){
             res.send({ message:'Your review has deleted.', review:deletedReview })
         }
@@ -66,6 +68,12 @@ reviewsRouter.delete('/delete/:reviewId', requireUser, async function( req, res,
         next({ name, message })
     }
 });
+
+
+
+
+
+
 
 // // Add Review To Product Route
 // reviewsRouter.put('/:reviewId', async function ( req, res, next){
