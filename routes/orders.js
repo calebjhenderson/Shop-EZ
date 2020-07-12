@@ -11,7 +11,7 @@ const { requireUser } = require('../db/users.js');
 ordersRouter.use(function( req, res, next){
     console.log("A request has been made to the /api/orders endpoint.");
     next();
-})
+});
 
 // Get All Orders Route
 ordersRouter.get('/', async function( req, res, next ){
@@ -20,14 +20,15 @@ ordersRouter.get('/', async function( req, res, next ){
         if(allOrders){
         res.send({ allOrders })
         }
-    }catch(error){
-    console.error(error)
-    next()
+    } catch(error){
+        console.error(error)
+        const { name, message } = error
+        next({ name, message })
     }
 });
 
 // Create Order Route
-ordersRouter.post('/', requireUser, async function( req, res, next ){
+ordersRouter.post('/create', requireUser, async function( req, res, next ){
     const { userId, products, orderDate, orderTotal, shippingAddress } = req.body
     const orderData = {}
     orderData.userId = userId
@@ -41,7 +42,7 @@ ordersRouter.post('/', requireUser, async function( req, res, next ){
         if(newOrder){
             res.send({ message:'Order created!', order:orderData} )
         }
-    } catch(error) {
+    } catch(error){
         console.error(error)
         const{ name, message } = error
         next({ name, message })    
@@ -49,7 +50,7 @@ ordersRouter.post('/', requireUser, async function( req, res, next ){
 });
 
 // Edit Order Route
-ordersRouter.patch('/:orderId', async function( req, res, next){
+ordersRouter.patch('/update/:orderId', async function( req, res, next){
     const { orderId } = req.params
     const order = getOrderById(orderId)
     const { fields } = req.body 
@@ -58,34 +59,35 @@ ordersRouter.patch('/:orderId', async function( req, res, next){
         if(updatedOrder){
             res.send({ message:'Order updated.', order:updatedOrder} )
         }
-    } catch (error) {
+    } catch (error){
         console.error(error)
-        next()
+        const { name, message } = error
+        next({ name, message })
     }
 });
 
 
 //Delete Order Route
-ordersRouter.delete('/:orderId', async function( req, res, next){
+ordersRouter.delete('/delete/:orderId', async function( req, res, next){
     const { orderId } = req.params
     try {
         const deletedOrder = await deleteOrder(orderId)
         if(deletedOrder){
             res.send({ message:'Order deleted.', order:deletedOrder})
         }
-    } catch (error) {
+    } catch (error){
         console.error(error)
-        next() 
+        const { name, message } = error
+        next({ name, message })
     }
 });
 
 // Add Product To Order Route
-ordersRouter.patch('/:productId', async function ( req, res, next ){
+ordersRouter.patch('/addorderproduct/:productId', async function ( req, res, next ){
     const { productId } = req.params
-
     const order = await getOrderByProductId(productId)
-
     const orderProducts = await getOrderProductsByProductId(productId)
+    
     if(order) order.order_products = orderProducts
     const { orderId } = order.order_products
     const newOrderProduct = await addProductToOrder( orderId, productId)
@@ -94,21 +96,23 @@ ordersRouter.patch('/:productId', async function ( req, res, next ){
         res.send({message:'Product added to order.',product:newOrderProduct})
     } catch (error){
         console.error(error)
-        next()
+        const { name, message } = error
+        next({ name, message })
     }
 });
 
 // Remove Product from Order Route
-ordersRouter.delete('/:productId', async function ( req, res, next ){
+ordersRouter.delete('/deleteorderproduct/:productId', async function ( req, res, next ){
     const { productId } = req.params
     const updatedOrder = await removeProductFromOrder(productId)
     try{
         if(updatedOrder){
             res.send({message:'Product has been removed from order', order:updatedOrder})
         }
-    } catch( error ){
+    } catch (error){
         console.error(error)
-        next()
+        const { name, message } = error
+        next({ name, message })
     }
 });
 
