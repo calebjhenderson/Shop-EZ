@@ -58,6 +58,8 @@ const createUser = async ({
     active
 }) => {
         
+
+
     // TODO: add profile-image to column table 
     try {
         const { rows: [ users ] } = await client.query(
