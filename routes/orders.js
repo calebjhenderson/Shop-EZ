@@ -2,6 +2,7 @@
 
 const express = require("express");
 const ordersRouter = express.Router();
+
 const {
   createOrder,
   getAllOrders,
@@ -12,9 +13,7 @@ const {
 const {
   addProductToOrder,
   getOrderProductsByProductId,
-  removeProductFromOrder,
   deleteOrderProducts,
-  getOrderProductsByOrderId,
   getAllOrderProducts,
 } = require("../db/order_products.js");
 const { deleteUserOrder } = require("../db/user_orders");
@@ -121,6 +120,7 @@ ordersRouter.delete("/delete/:orderId", requireUser, async function (
   }
 });
 
+<<<<<<< HEAD
 // Add Product To Order Route---------------"invalid input syntax for type integer: \"{\"{\\\"id\\\":6,\\\"orderId\\\":4,\\\"productId\\\":1}\",\"{\\\"id\\\":9,\\\"orderId\\\":6,\\\"productId\\\":1}\"}\""
 ordersRouter.patch("/addorderproduct/:orderproductId", async function (
   req,
@@ -160,6 +160,53 @@ ordersRouter.delete("/deleteorderproduct/:orderproductId", async function (
         message: "Product has been removed from order",
         order: removed,
       });
+=======
+// Add Product To Order Route------------------------------Works!
+ordersRouter.post('/addorderproduct/:orderId', async function ( req, res, next ){
+    const { orderId } = req.params
+    const { productId } = req.body
+    
+    try{
+            const orderProducts = await getOrderProductsByProductId(productId)
+           
+            if(orderProducts && orderProducts.length){
+            
+                for(let orderProduct of orderProducts ){
+                    if (+orderProduct.orderId === +orderId){
+                        console.log('OP', orderProduct)
+
+                        next({name:'orderProductAlreadyExists', message:'This product is already on this order' })
+                    }
+                }
+                const newOrderProduct = await addProductToOrder( orderId, productId)
+                res.send({message:'Product added to order.',product:newOrderProduct})
+            
+            }else{
+                const newOrderProduct = await addProductToOrder( orderId, productId)
+                res.send({message:'Product added to order.',product:newOrderProduct})
+            }    
+    } catch (error){
+        console.error(error)
+        const { name, message } = error
+        next({ name, message })
+    }
+});
+
+// Remove Product from Order Route-----------Works!
+ordersRouter.delete('/deleteorderproduct/:orderProductId', async function(req, res, next){
+    const { orderProductId } = req.params
+ 
+    
+    try{
+        const removed = await removeOrderProductById(orderProductId)
+        if(removed){
+            res.send({message:'Product has been removed from order', order:removed})
+        }
+    } catch (error){
+        console.error(error)
+        const { name, message } = error
+        next({ name, message })
+>>>>>>> 609f9b3b052ffa7cf925c0ab7b528154eb2a70bd
     }
   } catch (error) {
     console.error(error);

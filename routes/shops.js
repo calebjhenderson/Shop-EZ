@@ -68,10 +68,7 @@ shopsRouter.delete('/delete/:shopId', requireUser, async function( req, res, nex
     const { shopId } = req.params
     try{
     const shop = await getShopById(shopId)
-    console.log('shop is ', shop)
 
-
-  
     const deletedShop = await deleteShop(shop.id)
         if(deletedShop){
             res.send({ message:'Shop successfully deleted.', shop:deletedShop})

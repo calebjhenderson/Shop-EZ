@@ -23,16 +23,29 @@ const handleClose = () => {};
 
 function Nav() {
   return (
-    <AppBar className="nav" position="static">
-      <Toolbar className="nav-toolbar" style={nav}>
-        <div style={leftNav}>
-          <a href="#">
-            <img
-              src="/assets/logo.png"
-              alt="A pastel lavendar capital E and Z in a filled circle with pastel water colors"
-              style={logo}
-            />
-          </a>
+      <AppBar className='nav' position="static">
+        <Toolbar className='nav-toolbar' style={ nav }>
+
+          <div style={ leftNav }>
+            <a href='#' >
+              <img src='/assets/logo.png' alt='A pastel lavendar capital E and Z in a filled circle with pastel water colors' style={ logo } />
+            </a>
+
+            <Button style={ explore } variant="contained" color="secondary" startIcon={<ExploreIcon />} >
+              Explore
+            </Button>
+          </div>
+
+          <form style={ mainSearch } onSubmit={handleSubmit}>
+            <IconButton aria-label="main search filters" color="inherit">
+              <ArrowDropDown />
+            </IconButton>
+            <input type='search' placeholder='search' style={ mainSearchInput }>
+            </input>
+            <IconButton aria-label="main search filters" color="inherit">
+              <SearchIcon />
+            </IconButton>
+          </form>
 
           <Button
             style={explore}

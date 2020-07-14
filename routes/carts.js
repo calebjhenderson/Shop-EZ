@@ -4,7 +4,7 @@ const express = require('express');
 const cartsRouter = express.Router();
 const { createCart, updateCart, deleteCart, getCartById, getCartByUserId } = require('../db/carts.js')
 const { getProductById } = require('../db/products.js')
-const { addProductToCart, removeProductFromCart, getCartProductById } = require('../db/cart_products.js')
+const { addProductToCart, removeProductFromCart, getCartProductById, getCartProductByCartAndProductId } = require('../db/cart_products.js')
 const { requireUser } = require('../db/users.js');
 const products = require('../db/products.js');
 
@@ -34,17 +34,19 @@ cartsRouter.post('/create', async function (req, res, next){
     }
 });
 
-//------------------------------"Syntax error at or near \"[\" "
+//------------------------------Works!
 cartsRouter.patch('/update/:cartId', async function (req, res, next){
     const { cartId } = req.params
     const { products } = req.body
+
     const cartData = {}
     cartData.products = products
 
     try{ 
         const cart = await getCartById(cartId)
-        const updatedCart = await updateCart( cart, cartData )
-        console.log("update",updatedCart)
+        
+        const updatedCart = await updateCart( cart.id, cartData )
+      
     if(updatedCart){
         res.send({ message:'Your cart has been updated...', cart:updatedCart })
         }
@@ -56,13 +58,13 @@ cartsRouter.patch('/update/:cartId', async function (req, res, next){
 });
 
 
-// -----Invalid input syntax for type integer"{"id":1,"userId":1,"products":[1,4]}"
-cartsRouter.delete('/delete/:cartId', async function (req, res, next){
+// Delete Cart Route-----Works!
+cartsRouter.delete('/deletecart/:cartId', async function (req, res, next){
     const { cartId } = req.params
  
     try{
         const cart = await getCartById(cartId)
-        const deletedCart = await deleteCart(cart)
+        const deletedCart = await deleteCart(cart.id)
         if(deletedCart){
             res.send({ message:'Cart deleted.', cart:deletedCart })
         }
@@ -89,12 +91,15 @@ cartsRouter.put('/add/:productId', async function (req, res, next){
     }
 });
 
-// -invalid input syntax for type integer: "{"id":4,"userId":4,"products":[1,4,2]}"
-cartsRouter.delete('/delete/:productId', async function ( req, res, next){
+//Remove Product From Cart Route-----WORKS!
+cartsRouter.delete('/deletecartproduct/:productId', async function ( req, res, next){
     const { productId} = req.params
+    const { cartId } = req.body
  
     try{
-        const cartProduct = await getCartProductById(productId)
+        const cartProduct = await getCartProductByCartAndProductId(cartId, productId)
+    
+
         const deletedCartProduct = await removeProductFromCart(cartProduct.id)
       res.send({ message:'Product removed from cart.', product:deletedCartProduct })
     } catch(error){
