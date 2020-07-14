@@ -1,7 +1,5 @@
 //  ./index.js
 
-// /index.js
-
 const path = require('path');
 const dotenv = require('dotenv').config();
 const morgan = require('morgan');
@@ -22,6 +20,7 @@ server.use(express.json());
 server.use('/api', apiRouter);
 
 
+// Start listening to the server, and return a promise 
 const startServer = new Promise( (res) =>{
     server.listen(PORT, () => {
         console.log('The server is up on port', PORT);
@@ -32,4 +31,7 @@ const startServer = new Promise( (res) =>{
 
 
 
-sync(FORCE).then(startServer).catch(console.error);
+sync(FORCE)
+.then(startServer)
+.catch(console.error)
+.finally(client.end());

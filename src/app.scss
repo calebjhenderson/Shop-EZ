@@ -5,17 +5,23 @@
 /* ----------------------------------------------------------------------------------------------- Global -----------------------------------------------------------------------------------------------*/
 
 .nav {
-  .nav-toolbar {
-    display: flex;
+  // .nav-toolbar{
+  //     display: flex;
+  //     justify-content: space-between;
+  background: $theme-color-main;
+}
+
+.nav-buttons {
+  .nav-menu-button {
+    color: $primary-accent;
   }
 
-  .nav-buttons {
-    .nav-menu-button {
-    }
-
-    .nav-search-button {
-    }
+  .nav-search-button {
+    color: $primary-accent;
   }
+}
+
+.nav-search-button {
 }
 
 /* ----------------------------------------------------------------------------------------------- Media Queries -----------------------------------------------------------------------------------------------*/

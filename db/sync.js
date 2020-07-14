@@ -1,5 +1,6 @@
 // ./db/sync.js
 const client = require("./client");
+const chalk = require('chalk');
 
 //Create all tables if they do not already exist
 async function createTables() {

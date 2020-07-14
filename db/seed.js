@@ -965,7 +965,6 @@ async function createInitialOrders() {
 //Connects to client, then drops and rebuilds all tables with initial seed data
 async function bootstrap() {
   try {
-    client.connect();
     console.log(chalk.blue("Connected to DB!"));
 
     await dropTables();
