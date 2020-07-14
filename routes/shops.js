@@ -12,7 +12,7 @@ shopsRouter.use( async function (req, res, next){
     next()
 });
 
-//Get All Shops Route
+//Get All Shops Route---------------------------------Works!
 shopsRouter.get('/', async function (req, res, next){
     const allShops = await getAllShops()
     if(allShops){
@@ -21,7 +21,7 @@ shopsRouter.get('/', async function (req, res, next){
 });
 
 
-//Create New Shop Route 
+//Create New Shop Route ---------------------------------Works!
 shopsRouter.post('/newshop', requireUser, async function( req, res, next ){
     const{ userId, name, products, description } = req.body
 
@@ -45,13 +45,13 @@ shopsRouter.post('/newshop', requireUser, async function( req, res, next ){
 });
 
 
-//Edit Shop Route
+//Update Shop Route ---------------------------------Works!
 shopsRouter.patch('/update/:shopId', requireUser, async function( req, res, next ){
     const { shopId } = req.params
-    const shop = await getShopById(shopId)
-    const { fields } = shop
-    const updatedShop = await updateShop(shopId, fields)
     try {
+        const shop = await getShopById(shopId)
+        const updatedShop = await updateShop(shopId, shop)
+
         if(updatedShop){
             res.send({ message:'Shop has been updated', shop:updatedShop })
         }      
@@ -63,12 +63,16 @@ shopsRouter.patch('/update/:shopId', requireUser, async function( req, res, next
 });
 
 
-//Delete Shop Route 
+//Delete Shop Route ---------------------------------Works!
 shopsRouter.delete('/delete/:shopId', requireUser, async function( req, res, next ){
     const { shopId } = req.params
+    try{
     const shop = await getShopById(shopId)
-    const deletedShop = await deleteShop(shop)
-    try {
+    console.log('shop is ', shop)
+
+
+  
+    const deletedShop = await deleteShop(shop.id)
         if(deletedShop){
             res.send({ message:'Shop successfully deleted.', shop:deletedShop})
         }
@@ -76,9 +80,8 @@ shopsRouter.delete('/delete/:shopId', requireUser, async function( req, res, nex
         console.error(error)
         const { name, message } = error
         next({ name, message })
-    }
-});
-
+    }}
+);
 
 
 module.exports = shopsRouter
