@@ -4,48 +4,30 @@
 
 /* ----------------------------------------------------------------------------------------------- Global -----------------------------------------------------------------------------------------------*/
 
-.nav{
-    
-    .nav-toolbar{
-        display: flex;
-        
+.nav {
+  .nav-toolbar {
+    display: flex;
+  }
+
+  .nav-buttons {
+    .nav-menu-button {
     }
 
-    .nav-buttons{
-
-        .nav-menu-button{
-
-        }
-
-        .nav-search-button{
-
-        }
-    
+    .nav-search-button {
     }
-
+  }
 }
-
 
 /* ----------------------------------------------------------------------------------------------- Media Queries -----------------------------------------------------------------------------------------------*/
 
-
-@media (max-width: 850px){
-
+@media (max-width: 850px) {
 }
 
-
-@media (max-width: 650px){
-
+@media (max-width: 650px) {
 }
 
-
-@media (max-width: 500px){
-    
-
+@media (max-width: 500px) {
 }
 
-
-@media (max-width: 300px){
-
-
+@media (max-width: 300px) {
 }
