@@ -24,7 +24,7 @@ const handleClose = () => {};
 function Nav() {
   return (
       <AppBar className='nav' position="static">
-        <Toolbar className='nav-toolbar' style={ nav }>
+        <Toolbar className='nav-toolbar' style={ nav } />
 
           <div style={ leftNav }>
             <a href='#' >
