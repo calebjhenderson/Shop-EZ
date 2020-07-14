@@ -3,7 +3,7 @@
 const express = require('express');
 const productsRouter = express.Router();
 const { getAllProducts, createProduct, getProductById, deleteProduct, updateProduct } = require('../db/products.js')
-const { requireUser } = require('../db/users.js')
+const { requireUser, getUserById } = require('../db/users.js')
 
 
 productsRouter.use( async function( req, res, next ){
@@ -12,7 +12,7 @@ productsRouter.use( async function( req, res, next ){
 });
 
 
-//Get All Products Route
+//Get All Products Route------------------------------Works!
 productsRouter.get('/', async function( req, res, next ){
     const products = await getAllProducts()
     try{
@@ -27,8 +27,8 @@ productsRouter.get('/', async function( req, res, next ){
 });
 
 
-//Create Product Route
-productsRouter.post('/newproduct', requireUser, async function( req, res, next ){
+//Create Product Route------------------------------Works!
+productsRouter.post('/newproduct', requireUser, async function(req, res, next){
     const { name, description, price, quantity, delivery, rating, userId, categoryId } = req.body
 
     const productData = {}
@@ -54,11 +54,10 @@ productsRouter.post('/newproduct', requireUser, async function( req, res, next )
 });
 
 
-//Edit Product Route
-productsRouter.patch('/update/:productId', requireUser, async function( req, res, next ){
+//Edit Product Route------------------------------Works!
+productsRouter.patch('/update/:productId', requireUser, async function(req, res, next){
     const { productId } = req.params
-    const { id } = req.body
-    const { name, description, price, quantity, delivery, rating, userId} = req.body
+    const { id, name, description, price, quantity, delivery, rating } = req.body
     const updateFields = {}
 
     if( name ){ updateFields.name = name }
@@ -68,11 +67,13 @@ productsRouter.patch('/update/:productId', requireUser, async function( req, res
     if( delivery ){ updateFields.delivery = delivery }
     if( rating ){ updateFields.rating = rating }
 
-    const product = await getProductById( productId )
-    const creatorId = product.userId
+  
 
     try{
-        if( id === creatorId ){
+        const product = await getProductById( productId )
+        const user = await getUserById(id)
+        const creatorId = product.userId
+        if( user.id === creatorId ){
            const updatedProduct = await updateProduct( id, updateFields)
             res.send({ message:'Product has been updated!', product:updatedProduct })
         } else {
@@ -89,18 +90,16 @@ productsRouter.patch('/update/:productId', requireUser, async function( req, res
 });
 
 
-//Delete Products Route
-productsRouter.delete('/delete/:productId', requireUser, async function( req, res, next ){
+//Delete Products Route------------------------------Works!
+productsRouter.delete('/delete/:productId', requireUser, async function(req, res, next){
     const { productId } = req.params;
-    const { id } = req.body;
+    const { id } = req.user;
 
     try{
         const product = await getProductById(productId)
         const creatorId = product.userId
         if(id === creatorId){
-            
-        const deletedProduct = await deleteProduct(product)
-     
+        const deletedProduct = await deleteProduct(product.id)
         res.send({ message:'Producted has been deleted!', product:deletedProduct}) 
         } else {
             next({

@@ -32,15 +32,26 @@ const theme = createMuiTheme({
   },
 });
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: "#3c2e75",
+      main: "#080849",
+      dark: "#000023",
+    },
+    secondary: {
+      light: "#e5adff",
+      main: "#b17de8",
+      dark: "#7f4fb5",
+    },
+  },
+});
+
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Nav />
-      <InsertBanner />
-      <StoreHeader />
-      <StoreContent />
-      <Footer />
     </ThemeProvider>
   );
 };

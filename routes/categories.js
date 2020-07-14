@@ -1,17 +1,18 @@
 
 const express = require('express');
 const categoriesRouter = express.Router();
-const { createCategory, updateCategory, getCategoryById, getAllCategories, deleteCategory, getCategoryByProductId } = require('../db/categories.js');
+const { createCategory, updateCategory, getCategoryById, getAllCategories, deleteCategory, getCategoryByName } = require('../db/categories.js');
 const { addCategoryToProduct, removeCategoryFromProduct } = require('../db/category_products.js')
 
-const { requireUser } = require('../db/users.js')
+const { requireUser } = require('../db/users.js');
+const { getProductById } = require('../db/index.js');
 
 categoriesRouter.use(async function( req, res, next){
     console.log("A request has been made to the /api/categories endpoint.");
     next();
 });
 
-// Get All Categories Route
+// Get All Categories Route------------------------------WORKS!
 categoriesRouter.get('/', async function( req, res, next ){
     const categories = await getAllCategories()
         try{
@@ -23,7 +24,7 @@ categoriesRouter.get('/', async function( req, res, next ){
             }
 });
 
-// Create Category Route
+// Create Category Route------------------------------WORKS!
 categoriesRouter.post('/create', async function( req, res, next ){
     const { name } = req.body 
     const categoryData = {}
@@ -39,14 +40,16 @@ categoriesRouter.post('/create', async function( req, res, next ){
 });
 
 
-// Update Category Route
-categoriesRouter.patch('/update/:id', async function ( req, res, next ){
-    const { id } = req.params
-    const category = await getCategoryById(id)
-    const { fields } = category
+// Update Category Route------------------------------WORKS!
+categoriesRouter.patch('/update/:categoryId', requireUser, async function ( req, res, next ){
+    const { categoryId } = req.params
+    const { name } = req.body
+    const categoryData = {}
+    categoryData.name = name 
     try {
+        const category = await getCategoryById(categoryId)
         if(category){
-            const updatedCategory = await updateCategory(id, fields)
+            const updatedCategory = await updateCategory(categoryId, categoryData)
             res.send({ message:'Category updated.', category:updatedCategory})
         }  
     } catch(error){
@@ -56,11 +59,12 @@ categoriesRouter.patch('/update/:id', async function ( req, res, next ){
     }
 });
 
-// Delete Category Route
+// Delete Category Route------------------------------WORKS!
 categoriesRouter.delete('/delete/:id', async function ( req, res, next ){
     const { id } = req.params
-    const deletedCategory = await deleteCategory(id)
+  
     try {
+        const deletedCategory = await deleteCategory(id)
         if(deleteCategory){
             res.send({ message:'Category deleted.', category:deletedCategory})
         }
@@ -71,13 +75,16 @@ categoriesRouter.delete('/delete/:id', async function ( req, res, next ){
     }
 });
 
-// Add Category to Product Route
-categoriesRouter.patch('/addcategory/:productId', async function( req, res, next){
+// Add Category to Product Route-------------------------Category is undefined here
+categoriesRouter.patch('/addcategory/:productId', async function(req, res, next){
+    const { categoryName } = req.body
     const { productId } = req.params
-    const category = getCategoryByProductId(productId)
-    const { categoryId } = category
-    const updatedProduct = addCategoryToProduct( categoryId, productId )
+ 
     try{
+        const category = await getCategoryByName(categoryName)
+        const { categoryId } = category
+        const product = await getProductById(productId)
+        const updatedProduct = await addCategoryToProduct( categoryId, product.id )
         if(updatedProduct){
             res.send({message:'Category added to product', product:updatedProduct })
         }
@@ -88,11 +95,12 @@ categoriesRouter.patch('/addcategory/:productId', async function( req, res, next
     }
 });
 
-// Delete Category from Product Route
+// Delete Category from Product Route------------------------------WORKS!
 categoriesRouter.delete('/deletecategory/:productId', async function ( req, res, next ){
     const { productId } = req.params
-    const productWithDeletedCategory = await removeCategoryFromProduct(productId)
+    
     try{
+        const productWithDeletedCategory = await removeCategoryFromProduct(productId)
         if(productWithDeletedCategory){
             res.send({message:'Category removed from product', product:productWithDeletedCategory})
         }

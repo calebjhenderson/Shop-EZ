@@ -1,5 +1,10 @@
 // ./src/styles.js
 
+<<<<<<< HEAD
+=======
+import { text } from "body-parser";
+
+>>>>>>> d9bd4816fb2161bc8e69075331e9a8179d2ff091
 let themeMain = "rgba(61,47,117, 1)";
 let themeLite = "rgba(255, 255, 255, 1)";
 let themeDark = "rgba(48,48,48, 1)";
@@ -20,6 +25,7 @@ const styles = {
   },
 
   leftNav: {
+<<<<<<< HEAD
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -56,6 +62,45 @@ const styles = {
     "&:focus": {
       outline: "none",
     },
+=======
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    
+  },
+  
+    logo: {
+      width: "6rem",
+      height: "auto",
+      margin: "1rem 1rem 1rem 0.5rem",
+      paddingRight: "1rem",
+      borderRight: `2px solid ${secondaryAccent}`,
+    },
+
+  explore: {
+    opacity: '92%',
+    boxShadow: ` 0 1px 4px ${ secondaryAccent } `
+  },
+
+  mainSearch: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '55vw'
+  },
+
+  mainSearchInput: {
+    width: '50vw',
+    height: '2rem',
+    padding: '0.5rem',
+    border: 'none',
+    borderRadius: '10px',
+    boxShadow: `0 0 5px ${ primaryAccent }`,
+    fontSize: '1.1rem',
+    '&:focus': {
+      outline: 'none'
+    }
+>>>>>>> d9bd4816fb2161bc8e69075331e9a8179d2ff091
   },
 
   nav: {
