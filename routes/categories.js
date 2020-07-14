@@ -75,16 +75,16 @@ categoriesRouter.delete('/delete/:id', async function ( req, res, next ){
     }
 });
 
-// Add Category to Product Route-------------------------Category is undefined here
+// Add Category to Product Route-------------------------Works!
 categoriesRouter.patch('/addcategory/:productId', async function(req, res, next){
     const { categoryName } = req.body
     const { productId } = req.params
  
     try{
         const category = await getCategoryByName(categoryName)
-        const { categoryId } = category
+        const { id } = category
         const product = await getProductById(productId)
-        const updatedProduct = await addCategoryToProduct( categoryId, product.id )
+        const updatedProduct = await addCategoryToProduct( id, product.id )
         if(updatedProduct){
             res.send({message:'Category added to product', product:updatedProduct })
         }
