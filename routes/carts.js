@@ -4,8 +4,9 @@ const express = require('express');
 const cartsRouter = express.Router();
 const { createCart, updateCart, deleteCart, getCartById, getCartByUserId } = require('../db/carts.js')
 const { getProductById } = require('../db/products.js')
-const { addProductToCart, removeProductFromCart } = require('../db/cart_products.js')
-const { requireUser } = require('../db/users.js')
+const { addProductToCart, removeProductFromCart, getCartProductById } = require('../db/cart_products.js')
+const { requireUser } = require('../db/users.js');
+const products = require('../db/products.js');
 
 
 cartsRouter.use(async function( req, res, next ){
@@ -13,16 +14,16 @@ cartsRouter.use(async function( req, res, next ){
     next()
 });
 
-// Create Cart Route
-cartsRouter.post('/createcart', requireUser, async function (req, res, next){
+// Create Cart Route------------------------------WORKS!
+cartsRouter.post('/create', async function (req, res, next){
     const { userId, products } = req.body
     const cartData = {}
 
     cartData.userId = userId 
     cartData.products = products 
-    const newCart = await createCart(cartData)
     
     try {
+        const newCart = await createCart(cartData)
        if(newCart){
         res.send({ message:'Here is your cart...', cart: newCart})
        }
@@ -33,19 +34,19 @@ cartsRouter.post('/createcart', requireUser, async function (req, res, next){
     }
 });
 
-// Update Cart Route
-cartsRouter.patch('/update/:id', async function (req, res, next){
-    const { id } = req.params
-    const cart = await getCartById(id)
-    const { fields } = cart
+//------------------------------"Syntax error at or near \"[\" "
+cartsRouter.patch('/update/:cartId', async function (req, res, next){
+    const { cartId } = req.params
+    const { products } = req.body
     const cartData = {}
-    cartData.id = id
-    cartData.fields = fields
-    const updatedCart = await updateCart( cartData.id, cartData.fields )
-    
+    cartData.products = products
+
     try{ 
+        const cart = await getCartById(cartId)
+        const updatedCart = await updateCart( cart, cartData )
+        console.log("update",updatedCart)
     if(updatedCart){
-        res.send({ message:'Here is the updatedCart...', cart:updatedCart })
+        res.send({ message:'Your cart has been updated...', cart:updatedCart })
         }
     }catch(error){
         console.error(error)
@@ -55,13 +56,13 @@ cartsRouter.patch('/update/:id', async function (req, res, next){
 });
 
 
-// Delete Cart Route
-cartsRouter.delete('/deletecart/:id', async function ( req, res, next ){
-    const { id } = req.params
-    const cart = await getCartById(id)
-    const deletedCart = await deleteCart(cart)
-
+// -----Invalid input syntax for type integer"{"id":1,"userId":1,"products":[1,4]}"
+cartsRouter.delete('/delete/:cartId', async function (req, res, next){
+    const { cartId } = req.params
+ 
     try{
+        const cart = await getCartById(cartId)
+        const deletedCart = await deleteCart(cart)
         if(deletedCart){
             res.send({ message:'Cart deleted.', cart:deletedCart })
         }
@@ -73,15 +74,13 @@ cartsRouter.delete('/deletecart/:id', async function ( req, res, next ){
 });
 
 
-// Add Product to Cart Route
-cartsRouter.put('/add/:productId', async function ( req, res, next ){
+// Add Product to Cart Route------------------------------WORKS!
+cartsRouter.put('/add/:productId', async function (req, res, next){
     const { productId } = req.params
-    const product = await getProductById(productId)
-    const userId = req.body
-    const cart = await getCartByUserId(userId)
-    const newCartProduct = await addProductToCart(productId, cart)
+    const { cartId } = req.body
    
     try {
+        const newCartProduct = await addProductToCart(productId, cartId)
         res.send( { message:'Product added to cart', product:newCartProduct })
     } catch(error){
         console.error(error)
@@ -90,14 +89,13 @@ cartsRouter.put('/add/:productId', async function ( req, res, next ){
     }
 });
 
-// Delete Product From Cart Route
-cartsRouter.delete('/deletecartproduct/:productId', async function ( req, res, next){
+// -invalid input syntax for type integer: "{"id":4,"userId":4,"products":[1,4,2]}"
+cartsRouter.delete('/delete/:productId', async function ( req, res, next){
     const { productId} = req.params
-    const product = await getProductById(productId)
-    const userId = req.body
-    const cart = await getCartByUserId(userId)
-    const deletedCartProduct = await removeProductFromCart(productId)
+ 
     try{
+        const cartProduct = await getCartProductById(productId)
+        const deletedCartProduct = await removeProductFromCart(cartProduct.id)
       res.send({ message:'Product removed from cart.', product:deletedCartProduct })
     } catch(error){
         console.error(error)
