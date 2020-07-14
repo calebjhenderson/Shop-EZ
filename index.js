@@ -34,4 +34,4 @@ const startServer = new Promise( (res) =>{
 sync(FORCE)
 .then(startServer)
 .catch(console.error)
-.finally(client.end());
+// .finally(client.end());

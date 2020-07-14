@@ -15,7 +15,7 @@ server.use('/api',apiRouter)
 //STATIC-LY SERVING OUR HTML
 const DIST_PATH = path.join(__dirname, './public' )
 server.use(express.static(DIST_PATH))
-
+ //PROVIDING THE ROUTES
 const ROUTES = path.join(__dirname,'./routes/routers.js')
 server.use(express.static(ROUTES))
 

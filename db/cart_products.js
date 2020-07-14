@@ -42,18 +42,20 @@ const addProductToCart = async (productId, cartId) => {
 
 // Removes productId's from cartId's in cart_products table
 const removeProductFromCart = async (cartProductId) => {
+    console.log('Cart productId in removeProd', cartProductId)
 
     try{
-
+        
         const isCartProduct = await getCartProductById(cartProductId);
-
-        if(isCartProduct){
+        console.log('IS CART PRODUCT', isCartProduct)
+        console.log('Is CART PRODUCT LENGTH', isCartProduct.length)
+        if(isCartProduct && isCartProduct.length){
             const { rows: [ deletedCartProduct ] } = await client.query(`
                 DELETE FROM cart_products
                 WHERE id=$1
                 RETURNING *;
             `, [cartProductId]);
-
+            console.log('Delete CP', deletedCartProduct)
             return deletedCartProduct;
         }
         else{
@@ -73,13 +75,16 @@ const removeProductFromCart = async (cartProductId) => {
 
 // Returns single cart product object from cart_products table
 const getCartProductById = async (cartProductId) => {
+    console.log('CP ID in getCart', cartProductId)
     
     try{
         
-        const { rows: [ cartProduct ] } = await client.query(`
+        const { rows: cartProduct } = await client.query(`
             SELECT * FROM cart_products
             WHERE id=$1;
         `, [cartProductId]);
+
+        console.log('CARTPRODUCT', cartProduct)
 
         return cartProduct;
     }
@@ -132,6 +137,24 @@ const getCartProductsByProductId = async(productId) => {
 }
 
 
+
+
+const getCartProductByCartAndProductId = async (cartId, productId) =>{
+    try{
+        const { rows: [cartProductsArr] } = await client.query(`
+            SELECT * FROM cart_products
+            WHERE "productId"=$1
+            AND "cartId"=$2
+        `, [productId, cartId])
+
+        return cartProductsArr;
+
+    }
+    catch(error){
+        console.error(`There's been an error getting cart products by product & cart id @ getCartProductsByCartAndProductId(cartId, productId) in ./db/cart_products.js. ${ error }`)
+        throw error;
+    }
+}
 /*---------------------------------- Exports ---------------------------------------*/
 
 module.exports = {
@@ -139,5 +162,6 @@ module.exports = {
     removeProductFromCart,
     getCartProductById,
     getProductsByCartId,
-    getCartProductsByProductId
+    getCartProductsByProductId,
+    getCartProductByCartAndProductId
 }

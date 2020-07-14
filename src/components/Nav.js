@@ -34,14 +34,7 @@ function Nav() {
             <a href='#' >
               <img src='/assets/logo.png' alt='A pastel lavendar capital E and Z in a filled circle with pastel water colors' style={ logo } />
             </a>
-            <Menu
-              keepMounted
-              onClose={handleClose}
-              >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-              <MenuItem onClick={handleClose}>Logout</MenuItem>
-            </Menu>
+
             <Button style={ explore } variant="contained" color="secondary" startIcon={<ExploreIcon />} >
               Explore
             </Button>

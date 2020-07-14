@@ -1,7 +1,5 @@
 // ./src/styles.js
 
-import { text } from "body-parser";
-
 let themeMain = "rgba(61,47,117, 1)";
 let themeLite = "rgba(255, 255, 255, 1)";
 let themeDark = "rgba(48,48,48, 1)";
