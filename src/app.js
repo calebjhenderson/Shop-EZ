@@ -1,14 +1,19 @@
 // ./src/app.js
 
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import ReactRouterDOM from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { createMuiTheme } from '@material-ui/core/styles';
-import styles from './styles';
-import { ThemeProvider} from '@material-ui/core/styles';
+import variables from './styles';
+import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import { DrawerContext } from './DrawerContext'
 
 import Nav from './components/Nav';
+import CartDrawer from './components/CartDrawer'
+
+
+
+
 
 
 const theme = createMuiTheme({
@@ -30,10 +35,31 @@ const theme = createMuiTheme({
 
 
 const App = () => {
+
+
+  const [drawer, setDrawer] = useState({
+    left: false,
+    right: false,
+  });
+
+  const toggleDrawer = (anchor, open) => setDrawer({ ...drawer, [anchor]: open });
+
+
+
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-        <Nav />
+      <CssBaseline >
+      
+        <DrawerContext.Provider value={{ drawer, setDrawer, toggleDrawer }} >
+
+          <div id='app'>
+            <Nav />
+            <CartDrawer />
+          </div>
+          
+        </DrawerContext.Provider>
+
+      </CssBaseline>
     </ThemeProvider>
   );
 }

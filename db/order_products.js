@@ -45,7 +45,7 @@ const removeProductFromOrder = async (orderId) => {
 
     try{
         
-        const isOrderProduct = await getOrderProductByOrderId(orderId);
+        const isOrderProduct = await getOrderProductsByOrderId(orderId);
 
         if(isOrderProduct){
             const { rows: [ removedOrderProduct ] } = await client.query(`
@@ -74,7 +74,7 @@ const removeProductFromOrder = async (orderId) => {
 //Remove product from order by orderId
 const removeOrderProductByOrderId = async (orderId)=>{
     try{
-        const isOrderProduct = await getOrderProductByOrderId(orderId);
+        const isOrderProduct = await getOrderProductsByOrderId(orderId);
         console.log('OrderProduct', isOrderProduct)
         if(isOrderProduct){
             const { rows: [ removedOrderProduct ] } = await client.query(`
