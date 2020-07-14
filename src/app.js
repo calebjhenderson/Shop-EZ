@@ -7,7 +7,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { createMuiTheme } from "@material-ui/core/styles";
 import styles from "./styles";
 import { ThemeProvider } from "@material-ui/core/styles";
-
 import Nav from "./components/Nav";
 import StoreContent from "./components/StoreContent";
 import StoreHeader from "./components/StoreHeader";
@@ -32,26 +31,15 @@ const theme = createMuiTheme({
   },
 });
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      light: "#3c2e75",
-      main: "#080849",
-      dark: "#000023",
-    },
-    secondary: {
-      light: "#e5adff",
-      main: "#b17de8",
-      dark: "#7f4fb5",
-    },
-  },
-});
-
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Nav />
+      <InsertBanner />
+      <StoreHeader />
+      <StoreContent />
+      <Footer />
     </ThemeProvider>
   );
 };
