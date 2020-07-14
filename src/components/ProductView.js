@@ -2,7 +2,6 @@ import React from "react";
 import { Grid, Typography } from "@material-ui/core/";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -13,32 +12,33 @@ import Button from "@material-ui/core/Button";
 const useStyles = makeStyles({
   productContainer: {
     color: "#ffffff",
-    paddingLeft: "150px",
-    paddingRight: "150px",
-    background: "#080849",
+    paddingLeft: "75px",
+    paddingRight: "75px",
+    background: "#3d2f75",
   },
   rightContainer: {
     height: "100%",
-    padding: 50,
   },
   leftContainer: {
     height: "100%",
-    padding: 50,
+    padding: 40,
   },
   productViewTitle: {
     paddingTop: 10,
     paddingBottom: 10,
-    background: "#40407a",
+    background: "#ad77eb",
     color: "#ffffff",
   },
   productViewPrice: {},
-  productViewMedia: {},
+  productViewMedia: {
+    padding: 20,
+  },
   productViewContent: {
     paddingBottom: 10,
   },
   productViewButtons: {
     justifyContent: "center",
-    background: "#40407a",
+    background: "#ad77eb",
   },
 });
 
@@ -61,7 +61,7 @@ function ProductView() {
             image="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/thebreakfastclub-1548798769.jpg"
             title="Product example"
           />
-          <Rating name="read-only" />
+          <Rating name="size-large" defaultValue={2} size="large" />
         </Card>
       </Grid>
 
@@ -89,12 +89,18 @@ function ProductView() {
               variant="h5"
               component="h2"
             >
-              Price: 99
+              Price: $99.99
             </Typography>
             <CardContent>
               <Typography className={classes.productViewContent} component="p">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Pellentesque quis suscipit magna, vitae posuere dolor.
+                Pellentesque quis suscipit magna, vitae posuere dolor. Lorem
+                ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
+                quis suscipit magna, vitae posuere dolor.Lorem ipsum dolor sit
+                amet, consectetur adipiscing elit. Pellentesque quis suscipit
+                magna, vitae posuere dolor.Lorem ipsum dolor sit amet,
+                consectetur adipiscing elit. Pellentesque quis suscipit magna,
+                vitae posuere dolor.
               </Typography>
             </CardContent>
           </CardActionArea>

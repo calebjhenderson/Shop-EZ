@@ -1,7 +1,6 @@
 import React from "react";
-import { Grid, Paper, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -10,7 +9,6 @@ import Button from "@material-ui/core/Button";
 import products from "./dummy-products";
 import Rating from "@material-ui/lab/Rating";
 import { makeStyles } from "@material-ui/core/styles";
-import axios from "axios";
 
 const useStyles = makeStyles({
   productTitle: {
@@ -36,24 +34,12 @@ const useStyles = makeStyles({
   },
 });
 
-// async function getStoreProducts() {
-
-//   const token = localStorage.getItem('token');
-//   const headers = {
-//   headers: {
-//       'Content-Type': 'application/json',
-//       'Authorization': `Bearer ${ token }`}
-//   }
-
-//   const products = await axios.get(BASE_URL, headers)
-
-// }
 function ProductCard() {
   const classes = useStyles();
   return (
     <Grid container spacing={8} justify="center">
       {products.map((products) => (
-        <Grid item xs={12} s={6} md={4} lg={3} key={products.title}>
+        <Grid item xs={12} sm={6} md={4} lg={3} key={products.title}>
           <Card variant="outlined">
             <CardActionArea>
               <Typography
