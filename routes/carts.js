@@ -4,17 +4,18 @@ const express = require('express');
 const cartsRouter = express.Router();
 const { createCart, updateCart, deleteCart, getCartById, getCartByUserId } = require('../db/carts.js')
 const { getProductById } = require('../db/products.js')
-const { addProductToCart, removeProductFromCart } = require('../db/cart_products.js')
-const { requireUser } = require('../db/users.js')
+const { addProductToCart, removeProductFromCart, getCartProductById, getCartProductByCartAndProductId } = require('../db/cart_products.js')
+const { requireUser } = require('../db/users.js');
+const products = require('../db/products.js');
 
 
-cartsRouter.use( async function( req, res, next ){
+cartsRouter.use(async function( req, res, next ){
     console.log("A request has been made to the /api/carts endpoint.");
     next()
 });
 
-// Create Cart Route
-cartsRouter.post('/', requireUser, async function (req, res, next){
+// Create Cart Route------------------------------WORKS!
+cartsRouter.post('/create', async function (req, res, next){
     const { userId, products } = req.body
     const cartData = {}
 
@@ -23,82 +24,88 @@ cartsRouter.post('/', requireUser, async function (req, res, next){
     
     try {
         const newCart = await createCart(cartData)
-        res.send({ message:'Here is your cart...', cart: newCart })
-        
+       if(newCart){
+        res.send({ message:'Here is your cart...', cart: newCart})
+       }
     } catch(error) {
         console.error(error)
-        next()       
+        const { name, message } = error
+        next({ name, message }) 
     }
 });
 
-// Update Cart Route
-cartsRouter.patch('/:id', async function (req, res, next){
-    const { id } = req.params
-    const cart = await getCartById(id)
-    const { fields } = cart
+//------------------------------Works!
+cartsRouter.patch('/update/:cartId', async function (req, res, next){
+    const { cartId } = req.params
+    const { products } = req.body
 
     const cartData = {}
-    cartData.id = id
-    cartData.fields = fields
-    
-    try{
-    const updatedCart = await updateCart( cartData.id, cartData.fields )
+    cartData.products = products
+
+    try{ 
+        const cart = await getCartById(cartId)
+        
+        const updatedCart = await updateCart( cart.id, cartData )
+      
     if(updatedCart){
-        res.send({ message:'Here is the updatedCart...', cart:updatedCart })
+        res.send({ message:'Your cart has been updated...', cart:updatedCart })
         }
     }catch(error){
         console.error(error)
-        next()
+        const { name, message } = error
+        next({ name, message })
     }
 });
 
 
-// Delete Cart Route
-cartsRouter.delete('/:id', async function ( req, res, next ){
-    const { id } = req.params
-    const cart = await getCartById(id)
-
+// Delete Cart Route-----Works!
+cartsRouter.delete('/deletecart/:cartId', async function (req, res, next){
+    const { cartId } = req.params
+ 
     try{
-        const deletedCart = await deleteCart(cart)
+        const cart = await getCartById(cartId)
+        const deletedCart = await deleteCart(cart.id)
         if(deletedCart){
             res.send({ message:'Cart deleted.', cart:deletedCart })
         }
     } catch(error){
         console.error(error)
-        next()
+        const { name, message } = error
+        next({ name, message })
     }
 });
 
 
-// Add Product to Cart Route
-cartsRouter.put('/:productId', async function ( req, res, next ){
+// Add Product to Cart Route------------------------------Works!
+cartsRouter.put('/add/:productId', async function (req, res, next){
     const { productId } = req.params
-    const product = await getProductById(productId)
-    const userId = req.body
-    const cart = await getCartByUserId(userId)
+    const { cartId } = req.body
    
     try {
-        const newCartProduct = await addProductToCart(productId, cart)
+        const newCartProduct = await addProductToCart(productId, cartId)
         res.send( { message:'Product added to cart', product:newCartProduct })
-    } catch (error) {
+    } catch(error){
         console.error(error)
-        next()  
+        const { name, message } = error
+        next({ name, message })
     }
 });
 
-// Delete Product From Cart Route
-cartsRouter.delete('/:productId', async function ( req, res, next){
+//Remove Product From Cart Route-----WORKS!
+cartsRouter.delete('/deletecartproduct/:productId', async function ( req, res, next){
     const { productId} = req.params
-    const product = await getProductById(productId)
-    const userId = req.body
-    const cart = await getCartByUserId(userId)
-
+    const { cartId } = req.body
+ 
     try{
-      const deletedCartProduct = await removeProductFromCart(productId)
+        const cartProduct = await getCartProductByCartAndProductId(cartId, productId)
+    
+
+        const deletedCartProduct = await removeProductFromCart(cartProduct.id)
       res.send({ message:'Product removed from cart.', product:deletedCartProduct })
-    }catch(error){
+    } catch(error){
         console.error(error)
-        next()
+        const { name, message } = error
+        next({ name, message })
     }
 });
 

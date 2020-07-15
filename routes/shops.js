@@ -12,7 +12,7 @@ shopsRouter.use( async function (req, res, next){
     next()
 });
 
-//Get All Shops Route
+//Get All Shops Route---------------------------------Works!
 shopsRouter.get('/', async function (req, res, next){
     const allShops = await getAllShops()
     if(allShops){
@@ -21,8 +21,8 @@ shopsRouter.get('/', async function (req, res, next){
 });
 
 
-//Create New Shop Route 
-shopsRouter.post('/', requireUser, async function( req, res, next ){
+//Create New Shop Route ---------------------------------Works!
+shopsRouter.post('/newshop', requireUser, async function( req, res, next ){
     const{ userId, name, products, description } = req.body
 
     const shopData = {}
@@ -31,9 +31,8 @@ shopsRouter.post('/', requireUser, async function( req, res, next ){
     shopData.name = name
     shopData.products = products
     shopData.description = description
-
+    const newShop = createShop(shopData)
     try{
-        const newShop = createShop(shopData)
         if(newShop){
         res.send({ message:'Shop Created!', shop: newShop })
     }
@@ -46,38 +45,40 @@ shopsRouter.post('/', requireUser, async function( req, res, next ){
 });
 
 
-//Edit Shop Route
-shopsRouter.patch('/:shopId', requireUser, async function( req, res, next ){
+//Update Shop Route ---------------------------------Works!
+shopsRouter.patch('/update/:shopId', requireUser, async function( req, res, next ){
     const { shopId } = req.params
-    const shop = await getShopById(shopId)
-    const { fields } = shop
-    const updatedShop = await updateShop(shopId, fields)
     try {
+        const shop = await getShopById(shopId)
+        const updatedShop = await updateShop(shopId, shop)
+
         if(updatedShop){
             res.send({ message:'Shop has been updated', shop:updatedShop })
         }      
     } catch (error) {
         console.error(error)
-        next()
+        const { name, message } = error
+        next({ name, message })
     }
 });
 
 
-//Delete Shop Route 
-shopsRouter.delete('/:shopId', requireUser, async function( req, res, next ){
+//Delete Shop Route ---------------------------------Works!
+shopsRouter.delete('/delete/:shopId', requireUser, async function( req, res, next ){
     const { shopId } = req.params
+    try{
     const shop = await getShopById(shopId)
-    const deletedShop = await deleteShop(shop)
-    try {
+
+    const deletedShop = await deleteShop(shop.id)
         if(deletedShop){
             res.send({ message:'Shop successfully deleted.', shop:deletedShop})
         }
     } catch (error) {
         console.error(error)
-        next()
-    }
-});
-
+        const { name, message } = error
+        next({ name, message })
+    }}
+);
 
 
 module.exports = shopsRouter

@@ -8,14 +8,14 @@ const { client  } = require('./db/seed.js');
 
 
 //This uses the subrouters
-const apiRouter = require('./routes/routers.js')
+const apiRouter = require('./routes/index.js')
 server.use('/api',apiRouter)
 
 
 //STATIC-LY SERVING OUR HTML
 const DIST_PATH = path.join(__dirname, './public' )
 server.use(express.static(DIST_PATH))
-
+ //PROVIDING THE ROUTES
 const ROUTES = path.join(__dirname,'./routes/routers.js')
 server.use(express.static(ROUTES))
 

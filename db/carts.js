@@ -69,7 +69,9 @@ const updateCart = async (id, fields ) => {
     ).join(', ');
 
     if (setString.length === 0) {return}
-
+        console.log('id',id)
+        console.log('setstring',setString)
+        console.log('fields',fields)
     try {
 
         const { rows: [ cart ] }= await client.query(`
@@ -80,7 +82,6 @@ const updateCart = async (id, fields ) => {
         `, Object.values(fields));
 
         return cart;
-
     }
     catch (error) {
         console.error(`There's been an error updating cart @ updateCart(id, fields) in ./db/carts.js. ${ error }`)
@@ -112,11 +113,12 @@ const getCartById = async (cartId) => {
 const deleteCart = async (cartId) => {
 
     try{
-
         const isCart = await getCartById(cartId);
+        console.log("cart", isCart)
+        
         if(isCart){
-            
             const cartProducts = await getProductsByCartId(cartId);
+            console.log("cartProducts", cartProducts)
             const deletedCartProducts = await Promise.all(cartProducts.map(async (cartProdObj) => await removeProductFromCart(cartProdObj.id)));
 
             const { rows: [ deletedCart ]} = await client.query(`

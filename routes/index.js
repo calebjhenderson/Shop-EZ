@@ -14,7 +14,6 @@ apiRouter.use(async (req, res, next) => {
     const prefix = 'Bearer ';
     const auth = req.header('Authorization');
 
-  
     if (!auth) { 
       next();
     } else if (auth.startsWith(prefix)) {

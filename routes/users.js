@@ -13,14 +13,14 @@ const cart_products = require('../db/cart_products.js');
 const SALT_COUNT = 10;
 
 
-usersRouter.use(async function( req, res, next ){
+usersRouter.use(async function(req, res, next){
     console.log('A request is being made to the /api/users endpoint.');
     next()
 });
 
 
-//Get All Users Route
-usersRouter.get('/', async function  (req, res, next){
+//Get All Users Route---------------------------------Works!
+usersRouter.get('/', async function(req, res, next){
     try{
     const users = await getAllUsers();
     res.send({ users })
@@ -29,11 +29,12 @@ usersRouter.get('/', async function  (req, res, next){
         const{ name, message } = error
         next({ name, message })
     }
-  });
+});
 
 
-//Create New User Route
+//Create New User Route---------------------------------Works!
 usersRouter.post('/register', async function (req, res, next){
+    const recievedObj = req.body
     const {username, password, firstName, lastName, role, active, email, public, addresses, paymentInfo, shopName} = req.body
     try{
         bcrypt.hash(password, SALT_COUNT, function(error, hashedPassword){
@@ -56,11 +57,9 @@ usersRouter.post('/register', async function (req, res, next){
                 shopName
 
               }).then((newUser) => {
-    //would we need to sign all the user properties in the token or are these enough?
                 const token = jwt.sign({ 
                   username,
-                  firstName,
-                  lastName,
+                  password:hashedPassword,
                   id: newUser.id
                 }, process.env.JWT_SECRET, {
                   expiresIn: '1w'
@@ -76,17 +75,15 @@ usersRouter.post('/register', async function (req, res, next){
               })
             }
           });
-    
-          
-        } catch (error) {
+        } catch(error){
           console.error(error)
           const { name, message } = error
           next({ name, message })
         } 
-      });
+});
 
 
-//Login As Existing User Route
+//Login User Route---------------------------------Works!
 usersRouter.post('/login', async function (req, res, next){
   
     const { username, password } = req.body; 
@@ -105,7 +102,6 @@ usersRouter.post('/login', async function (req, res, next){
         }
            else {
           if (passwordsMatch) {
-              //again, do we need to sign more properties for the token?
           const token = jwt.sign({ id, username, firstName, lastName }, process.env.JWT_SECRET, { expiresIn: '1w' });
     
           res.send({ messageName: "Success!", message: "Welcome back!", token, firstName, lastName, id });
@@ -124,8 +120,9 @@ usersRouter.post('/login', async function (req, res, next){
         const{ name, message } = error
         next({ name, message})
     }
-    });
+});
 
+//Get User Orders Route---------------------------------Works!
 usersRouter.get('/orders', async function (req,res,next){
     const { id } = req.params
     try {
@@ -151,6 +148,7 @@ usersRouter.get('/orders', async function (req,res,next){
     }
 });
 
+//Get Products By UserID Route---------------------------------Works!
 usersRouter.get('/products/:userId', async function (req, res, next){
 
   const userId = req.params.userId;
@@ -175,13 +173,11 @@ usersRouter.get('/products/:userId', async function (req, res, next){
         })
       }
     
+  } catch(error){
+    console.error(error)
+    const{ name, message } = error
+    next({ name, message })
   }
-  catch(error){
-    console.error(error);
-    const{ name, message } = error;
-    next({ name, message });
-  }
-  
 });
 
 

@@ -3,7 +3,7 @@
 const express = require('express');
 const productsRouter = express.Router();
 const { getAllProducts, createProduct, getProductById, deleteProduct, updateProduct } = require('../db/products.js')
-const { requireUser } = require('../db/users.js')
+const { requireUser, getUserById } = require('../db/users.js')
 
 
 productsRouter.use( async function( req, res, next ){
@@ -12,16 +12,23 @@ productsRouter.use( async function( req, res, next ){
 });
 
 
-//Get All Products Route
+//Get All Products Route------------------------------Works!
 productsRouter.get('/', async function( req, res, next ){
     const products = await getAllProducts()
+    try{
+    if(products){
         res.send({ products })
-        next()
+        }
+    } catch(error){
+        console.error(error)
+        const { name, message } = error
+        next({ name, message })
+    }     
 });
 
 
-//Create Product Route
-productsRouter.post('/', requireUser, async function( req, res, next ){
+//Create Product Route------------------------------Works!
+productsRouter.post('/newproduct', requireUser, async function(req, res, next){
     const { name, description, price, quantity, delivery, rating, userId, categoryId } = req.body
 
     const productData = {}
@@ -34,24 +41,23 @@ productsRouter.post('/', requireUser, async function( req, res, next ){
     productData.rating = rating
     productData.userId = userId
     productData.categoryId = categoryId
+    const newProduct = await createProduct(productData)
     
     try{
-        const newProduct = await createProduct(productData)
         if(newProduct){
-
             res.send({ message:'Product Created!', newProduct })}
-
-    } catch ({ name, message }) {
+    } catch(error){
+        console.error(error)
+        const { name, message } = error
         next({ name, message })
     }
 });
 
 
-//Edit Product Route
-productsRouter.patch('/:productId', requireUser, async function( req, res, next ){
+//Edit Product Route------------------------------Works!
+productsRouter.patch('/update/:productId', requireUser, async function(req, res, next){
     const { productId } = req.params
-    const { id } = req.body
-    const { name, description, price, quantity, delivery, rating, userId} = req.body
+    const { id, name, description, price, quantity, delivery, rating } = req.body
     const updateFields = {}
 
     if( name ){ updateFields.name = name }
@@ -61,10 +67,13 @@ productsRouter.patch('/:productId', requireUser, async function( req, res, next 
     if( delivery ){ updateFields.delivery = delivery }
     if( rating ){ updateFields.rating = rating }
 
+  
+
     try{
         const product = await getProductById( productId )
+        const user = await getUserById(id)
         const creatorId = product.userId
-        if( id === creatorId ){
+        if( user.id === creatorId ){
            const updatedProduct = await updateProduct( id, updateFields)
             res.send({ message:'Product has been updated!', product:updatedProduct })
         } else {
@@ -73,24 +82,24 @@ productsRouter.patch('/:productId', requireUser, async function( req, res, next 
                 message: 'You may only edit your own products.'
             })
         }
-    } catch ({ name, message }){
+    } catch (error){
+        console.error(error)
+        const { name, message } = error
         next({ name, message })
     }
 });
 
 
-//Delete Products Route
-productsRouter.delete('/:productId', requireUser, async function( req, res, next ){
+//Delete Products Route------------------------------Works!
+productsRouter.delete('/delete/:productId', requireUser, async function(req, res, next){
     const { productId } = req.params;
-    const { id } = req.body;
+    const { id } = req.user;
 
     try{
         const product = await getProductById(productId)
         const creatorId = product.userId
         if(id === creatorId){
-            
-        const deletedProduct = await deleteProduct(product)
-     
+        const deletedProduct = await deleteProduct(product.id)
         res.send({ message:'Producted has been deleted!', product:deletedProduct}) 
         } else {
             next({
@@ -99,7 +108,9 @@ productsRouter.delete('/:productId', requireUser, async function( req, res, next
                 
             })
         }
-    } catch ({ name, message }){
+    } catch(error){
+        console.error(error)
+        const { name, message } = error
         next({ name, message })
     }
 });

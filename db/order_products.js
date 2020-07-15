@@ -22,7 +22,6 @@ const client = require("./client");
 const addProductToOrder = async (orderId, productId) => {
 
     try{
-
         const { rows: [ newOrderproduct ] } = await client.query(`
             INSERT INTO order_products ("orderId", "productId")
             VALUES($1, $2)
@@ -41,18 +40,18 @@ const addProductToOrder = async (orderId, productId) => {
 
 
 // Remove productId from associated orderId in order_products table
-const removeProductFromOrder = async (orderProductId) => {
+const removeProductFromOrder = async (orderId) => {
 
     try{
         
-        const isOrderProduct = await getOrderProductById(orderProductId);
+        const isOrderProduct = await getOrderProductByOrderId(orderId);
 
         if(isOrderProduct){
             const { rows: [ removedOrderProduct ] } = await client.query(`
                 DELETE FROM order_products
                 WHERE id=$1
                 RETURNING *;
-            `, [orderProductId])
+            `, [isOrderProduct.id])
 
             return removedOrderProduct;
         }
@@ -71,6 +70,33 @@ const removeProductFromOrder = async (orderProductId) => {
 
 }
 
+//Remove product from order by orderId
+const removeOrderProductByOrderId = async (orderId)=>{
+    try{
+        const isOrderProduct = await getOrderProductsByOrderId(orderId);
+        console.log('OrderProduct', isOrderProduct)
+        if(isOrderProduct){
+            const { rows: [ removedOrderProduct ] } = await client.query(`
+                DELETE FROM order_products
+                WHERE "orderId"=$1
+                RETURNING *;
+            `, [orderId])
+
+            return removedOrderProduct;
+        }
+        else{
+            throw{
+                name: "OrderProductNotFoundError",
+                message: "Cannot find order product with that orderId"
+            }
+        }
+
+    }
+    catch(error){
+        console.error(`There's been an error removing a product from an order @ addProductToOrder(orderProductId) in ./db/order_products.js. ${ error }`)
+        throw error;
+    }    
+}
 
 // Return order product object associated with the specified orderProductId
 const getOrderProductById = async (orderProductId) => {
@@ -86,6 +112,24 @@ const getOrderProductById = async (orderProductId) => {
     }
     catch(error){
         console.error(`There's been an error getting an order product by id @ getOrderProductById(orderProductId) in ./db/order_products.js. ${ error }`)
+        throw error;
+    }
+
+}
+//Returns order products with the order id passed
+const getOrderProductsByOrderId = async (orderId) => {
+    console.log("OrderId",orderId)
+    try{
+
+        const { rows: [ orderProduct ] } = await client.query(`
+            SELECT * FROM order_products
+            WHERE "orderId"=$1;
+        `, [orderId])
+        console.log('The orderproduct we need', orderProduct)
+        return orderProduct;
+    }
+    catch(error){
+        console.error(`There's been an error getting an order product by id @ getOrderProductByOrderId(orderProductId) in ./db/order_products.js. ${ error }`)
         throw error;
     }
 
@@ -112,11 +156,77 @@ const getOrderProductsByProductId = async (productId) => {
 
 }
 
+//Returns all of the order products
+const getAllOrderProducts = async () => {
+
+    try{
+        const { rows: orderProductsArr } = await client.query(`
+            SELECT * FROM order_products;
+            `);
+        console.log("orderProducts", orderProductsArr)
+        return orderProductsArr;
+
+    }
+    catch(error){
+        console.error(`There's been an error getting order products by product id @ getOrderProductsByProductId(productId) in ./db/order_products.js. ${ error }`)
+        throw error;
+    }
+
+}
+
+//Removes order products by Id
+const deleteOrderProducts = async (orderId) => {
+
+    try{
+
+        const { rows: [deletedOrderProduct] } = await client.query(`
+            DELETE FROM order_products
+            WHERE "orderId"=$1
+            RETURNING *
+        `, [orderId] )
+
+        return deletedOrderProduct;
+
+    }
+    catch(error){
+        console.error(`There's been an error deleting an order @ deleteOrder(orderId) in ./db/orders.js. ${ error }`)
+        throw error;
+    }
+}
+
+
+const removeOrderProductById = async (orderProductId) => {
+    try{
+
+        const { rows: [deletedOrderProduct] } = await client.query(`
+            DELETE FROM order_products
+            WHERE "id"=$1
+            RETURNING *
+        `, [orderProductId] )
+
+        return deletedOrderProduct;
+
+    }
+    catch(error){
+        console.error(`There's been an error deleting an order product @ deleteOrderProductById(orderProductId) in ./db/orders.js. ${ error }`)
+        throw error;
+    }
+
+}
+
+
+
 
 /*---------------------------------- Exports ---------------------------------------*/
 
 module.exports = {
     addProductToOrder,
     removeProductFromOrder,
-    getOrderProductsByProductId
+    getOrderProductsByProductId,
+    removeOrderProductByOrderId,
+    getOrderProductsByOrderId,
+    getAllOrderProducts,
+    deleteOrderProducts,
+    getOrderProductById,
+    removeOrderProductById
 }
