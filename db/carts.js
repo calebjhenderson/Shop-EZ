@@ -69,7 +69,9 @@ const updateCart = async (id, fields ) => {
     ).join(', ');
 
     if (setString.length === 0) {return}
-
+        console.log('id',id)
+        console.log('setstring',setString)
+        console.log('fields',fields)
     try {
 
         const { rows: [ cart ] }= await client.query(`

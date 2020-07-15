@@ -22,7 +22,6 @@ const client = require("./client");
 const addProductToOrder = async (orderId, productId) => {
 
     try{
-
         const { rows: [ newOrderproduct ] } = await client.query(`
             INSERT INTO order_products ("orderId", "productId")
             VALUES($1, $2)
@@ -74,7 +73,7 @@ const removeProductFromOrder = async (orderId) => {
 //Remove product from order by orderId
 const removeOrderProductByOrderId = async (orderId)=>{
     try{
-        const isOrderProduct = await getOrderProductByOrderId(orderId);
+        const isOrderProduct = await getOrderProductsByOrderId(orderId);
         console.log('OrderProduct', isOrderProduct)
         if(isOrderProduct){
             const { rows: [ removedOrderProduct ] } = await client.query(`
@@ -175,6 +174,7 @@ const getAllOrderProducts = async () => {
 
 }
 
+//Removes order products by Id
 const deleteOrderProducts = async (orderId) => {
 
     try{
@@ -195,6 +195,25 @@ const deleteOrderProducts = async (orderId) => {
 }
 
 
+const removeOrderProductById = async (orderProductId) => {
+    try{
+
+        const { rows: [deletedOrderProduct] } = await client.query(`
+            DELETE FROM order_products
+            WHERE "id"=$1
+            RETURNING *
+        `, [orderProductId] )
+
+        return deletedOrderProduct;
+
+    }
+    catch(error){
+        console.error(`There's been an error deleting an order product @ deleteOrderProductById(orderProductId) in ./db/orders.js. ${ error }`)
+        throw error;
+    }
+
+}
+
 
 
 
@@ -208,5 +227,6 @@ module.exports = {
     getOrderProductsByOrderId,
     getAllOrderProducts,
     deleteOrderProducts,
-    getOrderProductById
+    getOrderProductById,
+    removeOrderProductById
 }

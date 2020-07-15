@@ -1,6 +1,6 @@
 import React from "react";
-import ProductCard from "./ProductCard";
-import ProductView from "./ProductView";
+import ProductCard from "./product-card";
+import ProductView from "./product-view";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core/";
 

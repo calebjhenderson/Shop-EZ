@@ -12,9 +12,9 @@ import StoreContent from "./components/StoreContent";
 import StoreHeader from "./components/StoreHeader";
 import Footer from "./components/Footer";
 import InsertBanner from "./components/Banner";
-import ProductView from "./components/productView";
+import ProductView from "./components/product-view";
 import { Typography } from "@material-ui/core";
-import ProductCard from "./components/ProductCard";
+import ProductCard from "./components/product-card";
 
 const theme = createMuiTheme({
   palette: {
