@@ -102,7 +102,6 @@ usersRouter.post('/login', async function (req, res, next){
         }
            else {
           if (passwordsMatch) {
-              //again, do we need to sign more properties for the token?
           const token = jwt.sign({ id, username, firstName, lastName }, process.env.JWT_SECRET, { expiresIn: '1w' });
     
           res.send({ messageName: "Success!", message: "Welcome back!", token, firstName, lastName, id });

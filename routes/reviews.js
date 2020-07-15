@@ -4,7 +4,7 @@
 const express = require('express');
 const reviewsRouter = express.Router();
 const { createReview, getReviewById, updateReview, deleteReview } = require('../db/reviews.js')
-const { addReviewToProduct, getReviewbyReviewId, removeReviewFromProduct, getProductByReviewId } = require('../db/product_reviews')
+
 const { requireUser } = require('../db/users.js')
 
 reviewsRouter.use(function( req, res, next){
@@ -40,7 +40,7 @@ reviewsRouter.patch('/update/:reviewId', requireUser, async function( req, res, 
     const { reviewId } = req.params
     try {
     const review = await getReviewById(reviewId)
-    console.log("review",review)
+    
     const updatedReview = await updateReview(reviewId, review)
         if(updatedReview){
             res.send({ message:'Your review has been updated.', review:updatedReview })
@@ -69,41 +69,5 @@ reviewsRouter.delete('/delete/:reviewId', requireUser, async function( req, res,
     }
 });
 
-
-
-
-
-
-
-// // Add Review To Product Route
-// reviewsRouter.put('/:reviewId', async function ( req, res, next){
-
-//     const { reviewId } = req.params
-
-//     //This SELECT helper is not written
-//     const product = await getProductByReviewId(reviewId)
-//     const { productId } = product;
-//     try{
-//         const reviewedProduct = await addReviewToProduct(productId, reviewId)
-//         res.send({ message:'Product review submitted.', product:reviewedProduct})
-//     }catch(error){
-//         console.error(error)
-//         next()
-//     }
-// });
-
-
-// Remove Review From Product Routes
-// reviewsRouter.delete('/:reviewId', async function ( req, res, next){
-//     const { reviewId } = req.params
-//     const removedProductReview = await removeReviewFromProduct(reviewId)
-//     try{
-//         if(removedProductReview){
-//             res.send({ message:'Review removed from product', product:removedProductReview})
-//         }
-//     }catch(error){
-
-//     } 
-// });
 
 module.exports = reviewsRouter

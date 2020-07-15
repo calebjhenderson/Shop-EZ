@@ -1,34 +1,40 @@
 // ./src/app.js
 
+import ReactRouterDOM from 'react-router-dom';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import ReactRouterDOM from 'react-router-dom';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import variables from './styles';
-import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
-import { DrawerContext } from './DrawerContext'
 
-import Nav from './components/Nav';
+import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { Typography } from "@material-ui/core";
+
+import StoreContent from "./components/StoreContent";
+import StoreHeader from "./components/StoreHeader";
+import ProductView from "./components/productView";
+import ProductCard from "./components/ProductCard";
 import CartDrawer from './components/CartDrawer'
+import { DrawerContext } from './DrawerContext'
+import InsertBanner from "./components/Banner";
+import Footer from "./components/Footer";
+import Nav from './components/Nav';
+
+import variables from './styles';
 
 
 const theme = createMuiTheme({
-
   palette: {
     primary: {
-      light: '#3c2e75',
-      main: '#080849',
-      dark: '#000023'
+      light: "#3c2e75",
+      main: "#080849",
+      dark: "#000023",
     },
     secondary: {
-      light: '#e5adff',
-      main: '#b17de8',
-      dark: '#7f4fb5'
+      light: "#e5adff",
+      main: "#b17de8",
+      dark: "#7f4fb5",
     },
   },
-
 });
-
 
 const App = () => {
 
@@ -64,6 +70,11 @@ const App = () => {
             <div id='app' style={{ display: 'flex' }}>
               <Nav />
               <CartDrawer />
+              <InsertBanner />
+              <StoreHeader />
+              <StoreContent />
+              <Footer />
+
             </div>
             
           </DrawerContext.Provider>
@@ -72,8 +83,7 @@ const App = () => {
       </ThemeProvider>
     </div>
   );
-}
-
+};
 
 const app = document.getElementById("root");
 ReactDOM.render(<App />, app);
