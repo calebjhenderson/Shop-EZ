@@ -46,31 +46,7 @@ function Nav() {
               <SearchIcon />
             </IconButton>
           </form>
-
-          <Button
-            style={explore}
-            variant="contained"
-            color="secondary"
-            startIcon={<ExploreIcon />}
-          >
-            Explore
-          </Button>
-        </div>
-
-        <form style={mainSearch} onSubmit={handleSubmit}>
-          <IconButton aria-label="main search filters" color="inherit">
-            <ArrowDropDown />
-          </IconButton>
-          <input
-            type="search"
-            placeholder="search"
-            style={mainSearchInput}
-          ></input>
-          <IconButton aria-label="main search filters" color="inherit">
-            <SearchIcon />
-          </IconButton>
-        </form>
-
+          
         <div className="nav-buttons">
           <IconButton color="inherit" aria-label="open cart drawer">
             <PersonIcon />

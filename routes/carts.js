@@ -76,7 +76,7 @@ cartsRouter.delete('/deletecart/:cartId', async function (req, res, next){
 });
 
 
-// Add Product to Cart Route------------------------------WORKS!
+// Add Product to Cart Route------------------------------Works!
 cartsRouter.put('/add/:productId', async function (req, res, next){
     const { productId } = req.params
     const { cartId } = req.body

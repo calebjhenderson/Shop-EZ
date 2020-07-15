@@ -15,6 +15,7 @@ import InsertBanner from "./components/Banner";
 import ProductView from "./components/productView";
 import { Typography } from "@material-ui/core";
 import ProductCard from "./components/ProductCard";
+import Checkout from "./components/Checkout"
 
 const theme = createMuiTheme({
   palette: {
@@ -38,6 +39,7 @@ const App = () => {
       <Nav />
       <InsertBanner />
       <StoreHeader />
+      <Checkout/>
       <StoreContent />
       <Footer />
     </ThemeProvider>
