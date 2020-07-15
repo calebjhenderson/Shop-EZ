@@ -15,12 +15,9 @@ const {
   getOrderProductsByProductId,
   deleteOrderProducts,
   getAllOrderProducts,
+  removeOrderProductById
 } = require("../db/order_products.js");
 const { deleteUserOrder } = require("../db/user_orders");
-const {
-  getOrderProductById,
-  removeOrderProductByOrderId,
-} = require("../db/order_products");
 
 const { requireUser } = require("../db/users.js");
 
@@ -120,47 +117,6 @@ ordersRouter.delete("/delete/:orderId", requireUser, async function (
   }
 });
 
-<<<<<<< HEAD
-// Add Product To Order Route---------------"invalid input syntax for type integer: \"{\"{\\\"id\\\":6,\\\"orderId\\\":4,\\\"productId\\\":1}\",\"{\\\"id\\\":9,\\\"orderId\\\":6,\\\"productId\\\":1}\"}\""
-ordersRouter.patch("/addorderproduct/:orderproductId", async function (
-  req,
-  res,
-  next
-) {
-  const { orderproductId } = req.params;
-
-  try {
-    const order = await getOrderById(orderproductId);
-    const orderProducts = await getOrderProductsByProductId(orderproductId);
-
-    if (order) order.order_products = orderProducts;
-    const { orderId } = order;
-    const newOrderProduct = await addProductToOrder(orderId, orderProducts);
-    res.send({ message: "Product added to order.", product: newOrderProduct });
-  } catch (error) {
-    console.error(error);
-    const { name, message } = error;
-    next({ name, message });
-  }
-});
-
-// Remove Product from Order Route-----------getOrderProductByOrderId not written
-ordersRouter.delete("/deleteorderproduct/:orderproductId", async function (
-  req,
-  res,
-  next
-) {
-  const { orderproductId } = req.params;
-
-  try {
-    const orderProduct = await getOrderProductById(orderproductId);
-    const removed = await removeOrderProductByOrderId(orderProduct);
-    if (removed) {
-      res.send({
-        message: "Product has been removed from order",
-        order: removed,
-      });
-=======
 // Add Product To Order Route------------------------------Works!
 ordersRouter.post('/addorderproduct/:orderId', async function ( req, res, next ){
     const { orderId } = req.params
@@ -206,13 +162,8 @@ ordersRouter.delete('/deleteorderproduct/:orderProductId', async function(req, r
         console.error(error)
         const { name, message } = error
         next({ name, message })
->>>>>>> 609f9b3b052ffa7cf925c0ab7b528154eb2a70bd
     }
-  } catch (error) {
-    console.error(error);
-    const { name, message } = error;
-    next({ name, message });
   }
-});
+);
 
 module.exports = ordersRouter;
