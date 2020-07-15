@@ -16,6 +16,7 @@ const {
   getOrderProductsByProductId,
   deleteOrderProducts,
   getAllOrderProducts,
+  removeOrderProductById
 } = require("../db/order_products.js");
 
 const { deleteUserOrder } = require("../db/user_orders");
@@ -162,6 +163,7 @@ ordersRouter.delete('/deleteorderproduct/:orderProductId', async function(req, r
         const { name, message } = error
         next({ name, message })
     }
-});
+  }
+);
 
 module.exports = ordersRouter;
