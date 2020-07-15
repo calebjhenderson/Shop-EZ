@@ -12,10 +12,6 @@ import Nav from './components/Nav';
 import CartDrawer from './components/CartDrawer'
 
 
-
-
-
-
 const theme = createMuiTheme({
 
   palette: {
@@ -38,29 +34,43 @@ const App = () => {
 
 
   const [drawer, setDrawer] = useState({
-    left: false,
-    right: false,
+    cart: false,
+    account: false,
+    explore: false,
+    customizeShop: false,
   });
 
-  const toggleDrawer = (anchor, open) => setDrawer({ ...drawer, [anchor]: open });
+  const useStyles = makeStyles({
+
+    root: {
+        display: 'flex',
+    },
+  })
+
+  const classes = useStyles(theme);
+  
+
+  const toggleDrawer = anchor => setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
 
 
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline >
-      
-        <DrawerContext.Provider value={{ drawer, setDrawer, toggleDrawer }} >
+    <div className={ classes.root }>
+      <ThemeProvider theme={theme}>
+        <CssBaseline >
+        
+          <DrawerContext.Provider value={{ drawer, setDrawer, toggleDrawer }} >
 
-          <div id='app'>
-            <Nav />
-            <CartDrawer />
-          </div>
-          
-        </DrawerContext.Provider>
+            <div id='app' style={{ display: 'flex' }}>
+              <Nav />
+              <CartDrawer />
+            </div>
+            
+          </DrawerContext.Provider>
 
       </CssBaseline>
-    </ThemeProvider>
+      </ThemeProvider>
+    </div>
   );
 }
 

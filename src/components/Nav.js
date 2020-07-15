@@ -1,7 +1,7 @@
 // ./src/components/Nav.js
 
 import React, { useContext } from "react";
-import { useStyles, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import ArrowDropDown from "@material-ui/icons/ArrowDropDownCircleOutlined";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
@@ -19,83 +19,82 @@ import variables from '../styles'
 import { DrawerContext } from "../DrawerContext";
 
 
-const { themeMain, textColor, primaryAccent, secondaryAccent } = variables;
-
-const styles = (theme) => makeStyles({
-
-  // root
-
-  root: {
-    display: "flex",
-  },
-
-  // Nav/header
-
-  nav: {
-    zIndex: theme.zIndex.drawer + 1,
-    background: themeMain,
-    diplay: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    height: "7rem",
-  },
-
-  navHeader: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
-
-  leftNav: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    
-  },
-  
-  logo: {
-    width: "6rem",
-    height: "auto",
-    margin: "1rem 1rem 1rem 0.5rem",
-    paddingRight: "1rem",
-    borderRight: `2px solid ${secondaryAccent}`,
-  },
-
-  explore: {
-    opacity: '92%',
-    boxShadow: ` 0 1px 4px ${ secondaryAccent } `
-  },
-
-  mainSearch: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '55vw'
-  },
-
-  mainSearchInput: {
-    width: '50vw',
-    height: '2rem',
-    padding: '0.5rem',
-    border: 'none',
-    borderRadius: '10px',
-    boxShadow: `0 0 4px ${ primaryAccent }`,
-    fontSize: '1.1rem',
-    '&:focus': {
-      outline: 'none'
-    }
-  },
-
-  searchAll: {
-    color: textColor,
-  },
-})
+const { themeMain, textColor, primaryAccent, secondaryAccent, navHeight } = variables;
 
 
 const handleSubmit = () => {};
 
-
 function Nav() {
 
   const { toggleDrawer } = useContext(DrawerContext);
+
+  const useStyles = (makeStyles({
+
+    // root
+  
+    root: {
+      display: "flex",
+    },
+  
+    // Nav/header
+  
+    nav: {
+      zIndex: 1301,
+      background: themeMain,
+      diplay: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      height: navHeight,
+    },
+  
+    navHeader: {
+      zIndex: 1301,
+    },
+  
+    leftNav: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      
+    },
+    
+    logo: {
+      width: "6rem",
+      height: "auto",
+      margin: "1rem 1rem 1rem 0.5rem",
+      paddingRight: "1rem",
+      borderRight: `2px solid ${secondaryAccent}`,
+    },
+  
+    explore: {
+      opacity: '92%',
+      boxShadow: ` 0 1px 4px ${ secondaryAccent } `
+    },
+  
+    mainSearch: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '55vw'
+    },
+  
+    mainSearchInput: {
+      width: '50vw',
+      height: '2rem',
+      padding: '0.5rem',
+      border: 'none',
+      borderRadius: '10px',
+      boxShadow: `0 0 4px ${ primaryAccent }`,
+      fontSize: '1.1rem',
+      '&:focus': {
+        outline: 'none'
+      }
+    },
+  
+    searchAll: {
+      color: textColor,
+    },
+  }));
 
   const classes = useStyles();
 
@@ -110,7 +109,7 @@ function Nav() {
   } = classes;
 
   return (
-    <AppBar classes={{ root: navHeader }} position="fixed">
+    <AppBar position='fixed' classes={{ root: navHeader }} position="absolute">
       <Toolbar className={ nav }>
         <div className={ leftNav }>
           <a href="#">
@@ -147,19 +146,19 @@ function Nav() {
         <div className="nav-buttons">
           <IconButton
             color="inherit"
-            aria-label="open cart drawer"
+            aria-label="open account options drawer"
             onClick={() => {
-              toggleDrawer("right", true);
+              toggleDrawer("cart");
             }}
           >
             <PersonIcon />
           </IconButton>
 
           <IconButton
-            aria-label="open account options drawer"
+            aria-label="open cart drawer"
             color="inherit"
             onClick={() => {
-              toggleDrawer("right", true);
+              toggleDrawer("cart");
             }}
           >
             <Badge badgeContent={4} color="secondary">

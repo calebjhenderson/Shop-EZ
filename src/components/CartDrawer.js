@@ -1,22 +1,22 @@
 // ./src/components/CartDrawer
 
 import React, { useContext } from "react";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItem from "@material-ui/core/ListItem";
-import List from "@material-ui/core/list";
-import Drawer from "@material-ui/core/Drawer";
-import Typography from "@material-ui/core/Typography";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
 import RemoveIcon from "@material-ui/icons/RemoveCircle";
+import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
+import Accordion from "@material-ui/core/Accordion";
+import ListItem from "@material-ui/core/ListItem";
+import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/list";
 
-import variables from '../styles'
+import variables from "../styles";
 import { DrawerContext } from "../DrawerContext";
 
-
-const { drawerWidth, themeMain, textColor } = variables;
-
+const { drawerWidth, textColor, navHeight, primaryAccent } = variables;
 
 const testCart = [
   {
@@ -54,134 +54,226 @@ const testCart = [
     userId: 2,
     categoryId: "{1}",
   },
+  {
+    id: 3,
+    name: "Embroidered Dress",
+    description:
+      "One of a kind, hand-made embroidered dress from Egypt, perfect for weddings, parties, and other special occassions!",
+    price: 60.0,
+    quantity: 50,
+    delivery: '{"standard"}',
+    rating: 5.0,
+    userId: 2,
+    categoryId: "{1}",
+  },
+  {
+    id: 3,
+    name: "Embroidered Dress",
+    description:
+      "One of a kind, hand-made embroidered dress from Egypt, perfect for weddings, parties, and other special occassions!",
+    price: 60.0,
+    quantity: 50,
+    delivery: '{"standard"}',
+    rating: 5.0,
+    userId: 2,
+    categoryId: "{1}",
+  },
+  {
+    id: 3,
+    name: "Embroidered Dress",
+    description:
+      "One of a kind, hand-made embroidered dress from Egypt, perfect for weddings, parties, and other special occassions!",
+    price: 60.0,
+    quantity: 50,
+    delivery: '{"standard"}',
+    rating: 5.0,
+    userId: 2,
+    categoryId: "{1}",
+  },
 ];
 
-const useStyles = makeStyles({
-
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-        backgroundColor: themeMain,
-      },
-    
-      drawerPaper: {
-        width: drawerWidth,
-        backgroundColor: themeMain,
-      },
-    
-      drawerContainer: {
-        overflow: "auto",
-      },
-    
-      drawerPaperRoot: {
-        backgroundColor: themeMain,
-        color: textColor,
-      },
-    
-      // Cart
-    
-      remove: {
-        color: 'red',
-      }
-})
-
-
 function CartDrawer() {
-
   const { drawer, toggleDrawer } = useContext(DrawerContext);
+
+  const useStyles = makeStyles({
+    drawer: {
+      width: drawerWidth,
+      flexShrink: 0,
+      overflowX: 'hidden',
+    },
+
+    drawerPaper: {
+      width: drawerWidth,
+      backgroundColor: "rgba(90,68,179, 1)",
+      color: textColor,
+    },
+
+    drawerContainer: {
+      overflow: "auto",
+    },
+
+    // Cart
+
+    remove: {
+      color: "rgba(146,8,8, 1)",
+    },
+
+    removeButton: {
+      padding: '0 0.5rem 0 0.7rem',
+    },
+
+    blankSpace: {
+      height: `calc(${navHeight} + 0.5rem)`,
+    },
+
+    productImage: {
+      height: 'auto',
+      width: `calc( ${ drawerWidth } - 70% )`,
+    },
+
+    accordion: {
+      paddingLeft: '0',
+      boxShadow: ` 0 -1px 8px ${ primaryAccent } `,
+    },
+    
+    accordionRoot: {
+      background: 'rgba(255, 255, 255, 0.85)',
+      width: '100%',
+    }
+
+  });
 
   const classes = useStyles();
 
-  const cartList = () => (
-    <div id="cart-drawer">
+  const {
+    drawer: drawerStyle,
+    drawerPaper,
+    drawerContainer,
+    remove,
+    blankSpace,
+    productImage,
+    removeButton,
+    accordion,
+    accordionRoot,
+  } = classes;
+
+  const cartList = () => {
+    
+    const [expanded, setExpanded] = React.useState(false);
+
+    const handleChange = (panel) => (event, isExpanded) => {
+      setExpanded(isExpanded ? panel : false);
+    };
+    
+    return (
+    <div id="cart-drawer" style={{ position: "relative" }}>
       <List>
-        {testCart.map((productObj) => (
-          <ListItem component="div" key={productObj.userId} divider style={{ paddingLeft: '0', paddingRight: '0' }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width: "100%",
-                flexBasis: "1",
-                fontSize: "0.7rem",
-                flexWrap: "wrap",
-              }}
+        {testCart.map((productObj, index) => (
+          <ListItem
+            component="div"
+            key={productObj.userId}
+            style={{ padding: "0" }}
+          >
+            <Accordion
+              expanded={ expanded === `panel${ index }` }
+              onChange={ handleChange(`panel${ index }`)}
+              classes={{ root: accordionRoot }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  width: "45%",
-                  borderRight: "1px solid grey",
-                  marginLeft: '0.8rem',
-                }}
+              <AccordionSummary
+                aria-controls={ `panel${ index }ah-content` }
+                id={`panel${ index }ah-header`}
+                className={ accordion }
               >
-                <IconButton
-                  color="inherit"
-                  aria-label="delete cart item"
-                  style={{ paddingRight: "0.5rem", }}
-                //   classes={{ colorInherit: remove }}
-                >
-                  <RemoveIcon
-                    style={{
-                      fontSize: "1.3rem",
-                    }}
-                  />
-                </IconButton>
-                <Typography
-                  align="left"
-                  variant="h3"
-                  style={{ fontSize: "0.9rem", paddingRight: "0.5rem" }}
-                >
-                  {" "}
-                  {productObj.name}{" "}
-                </Typography>
-              </div>
-              <Typography
-                align="left"
-                variant="h4"
-                style={{
-                  width: "15%",
-                  fontSize: "0.8rem",
-                  borderRight: "1px solid grey",
-                  paddingRight: "0.5rem",
-                }}
-              >
-                {" "}
-                Qty: {productObj.quantity}{" "}
-              </Typography>
-              <Typography
-                align="right"
-                variant="h4"
-                style={{
-                    width: "20%",
-                    fontSize: "0.8rem",
-                    marginRight: '0.8rem',
-                   
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    flexBasis: "1",
+                    fontSize: "0.7rem",
+                    flexWrap: "wrap",
                   }}
-              >
-                {" "}
-                {productObj.price}{" "}
-              </Typography>
-            </div>
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      width: "45%",
+                      borderRight: "1px solid grey",
+                    }}
+                  >
+                    <IconButton
+                      color="primary"
+                      aria-label="delete cart item"
+                      className={ removeButton }
+                      classes={{ colorPrimary: remove }}
+                    >
+                      <RemoveIcon
+                        style={{
+                          fontSize: "1.3rem",
+                        }}
+                      />
+                    </IconButton>
+                    <Typography
+                      align="left"
+                      variant="h3"
+                      style={{ fontSize: "0.9rem", paddingRight: "0.5rem" }}
+                    >
+                      {" "}
+                      {productObj.name}{" "}
+                    </Typography>
+                  </div>
+                  <Typography
+                    align="left"
+                    variant="h4"
+                    style={{
+                      width: "15%",
+                      fontSize: "0.8rem",
+                      borderRight: "1px solid grey",
+                      paddingRight: "0.5rem",
+                    }}
+                  >
+                    {" "}
+                    Qty: {productObj.quantity}{" "}
+                  </Typography>
+                  <Typography
+                    align="right"
+                    variant="h4"
+                    style={{
+                      width: "20%",
+                      fontSize: "0.8rem",
+                      marginRight: "0.8rem",
+                    }}
+                  >
+                    {" "}
+                    {productObj.price}{" "}
+                  </Typography>
+                </div>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  <img className={ productImage } src='/assets/placeholder_product.png' alt='A generic placeholder image of an outline of sunglasses' />
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
           </ListItem>
         ))}
       </List>
     </div>
   );
-  
+}
 
   return (
     <Drawer
-      
-      className={classes.drawer}
+      className={drawerStyle}
       anchor="right"
-      open={drawer.right}
-      onClose={() => toggleDrawer("right", false)}
-      classes={{ paper: classes.drawerPaper }}
+      open={drawer.cart}
+      onClose={() => toggleDrawer("cart")}
+      classes={{ paper: drawerPaper }}
     >
-      <div className={classes.drawerContainer}>{cartList()}</div>
+      <div className={blankSpace}></div>
+      <div className={drawerContainer}>{cartList()}</div>
     </Drawer>
   );
 }
