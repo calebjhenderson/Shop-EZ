@@ -8,11 +8,9 @@ import ReactDOM from "react-dom";
 
 import StoreContent from "./components/StoreContent";
 import StoreHeader from "./components/StoreHeader";
-import ProductView from "./components/productView";
-import ProductCard from "./components/ProductCard";
-import Checkout from "./components/Checkout"
-import CartDrawer from './components/CartDrawer'
-import { DrawerContext } from './DrawerContext'
+import ProductView from "./components/product-view";
+import ProductCard from "./components/product-card";
+import CartDrawer from "./components/CartDrawer";
 import InsertBanner from "./components/Banner";
 import Footer from "./components/Footer";
 import Nav from "./components/Nav";
@@ -24,7 +22,7 @@ import {
   makeStyles,
 } from "@material-ui/core/styles";
 
-
+import { DrawerContext } from "./DrawerContext";
 import variables from "./styles";
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
