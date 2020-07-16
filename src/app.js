@@ -1,20 +1,25 @@
 // ./src/app.js
 
-import React from "react";
-import ReactDOM from "react-dom";
-import ReactRouterDOM from "react-router-dom";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { createMuiTheme } from "@material-ui/core/styles";
-import styles from "./styles";
-import { ThemeProvider } from "@material-ui/core/styles";
-import Nav from "./components/Nav";
+import ReactRouterDOM from 'react-router-dom';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+
+import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { Typography } from "@material-ui/core";
+
 import StoreContent from "./components/StoreContent";
 import StoreHeader from "./components/StoreHeader";
-import Footer from "./components/Footer";
-import InsertBanner from "./components/Banner";
 import ProductView from "./components/productView";
-import { Typography } from "@material-ui/core";
 import ProductCard from "./components/ProductCard";
+import CartDrawer from './components/CartDrawer'
+import { DrawerContext } from './DrawerContext'
+import InsertBanner from "./components/Banner";
+import Footer from "./components/Footer";
+import Nav from './components/Nav';
+
+import variables from './styles';
+
 
 const theme = createMuiTheme({
   palette: {
@@ -32,15 +37,51 @@ const theme = createMuiTheme({
 });
 
 const App = () => {
+
+
+  const [drawer, setDrawer] = useState({
+    cart: false,
+    account: false,
+    explore: false,
+    customizeShop: false,
+  });
+
+  const useStyles = makeStyles({
+
+    root: {
+        display: 'flex',
+    },
+  })
+
+  const classes = useStyles(theme);
+  
+
+  const toggleDrawer = anchor => setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
+
+
+
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Nav />
-      <InsertBanner />
-      <StoreHeader />
-      <StoreContent />
-      <Footer />
-    </ThemeProvider>
+    // <div className={ classes.root }>
+      <ThemeProvider theme={theme}>
+        <CssBaseline >
+        
+          <DrawerContext.Provider value={{ drawer, setDrawer, toggleDrawer }} >
+
+            <div id='app'>
+              <Nav />
+              <CartDrawer />
+
+              <InsertBanner />
+              <StoreHeader />
+              <StoreContent />
+              <Footer />
+            </div>
+            
+          </DrawerContext.Provider>
+
+      </CssBaseline>
+      </ThemeProvider>
+    // </div>
   );
 };
 

@@ -44,7 +44,7 @@ const removeProductFromOrder = async (orderId) => {
 
     try{
         
-        const isOrderProduct = await getOrderProductByOrderId(orderId);
+        const isOrderProduct = await getOrderProductsByOrderId(orderId);
 
         if(isOrderProduct){
             const { rows: [ removedOrderProduct ] } = await client.query(`
