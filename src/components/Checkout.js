@@ -3,12 +3,15 @@ import { makeStyles } from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
+import FlightTakeoffIcon from '@material-ui/icons/FlightTakeoff';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import InputLabel from '@material-ui/core/InputLabel';
+import ListIcon from '@material-ui/icons/List';
 import MenuItem from '@material-ui/core/MenuItem';
 import PaymentIcon from '@material-ui/icons/Payment';
 import Radio from '@material-ui/core/Radio';
@@ -16,10 +19,17 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import { Box } from "@material-ui/core";
 
 
 //STYLES
 const useStyles = makeStyles({
+    wholeComponent:{
+      border:"solid #ad77eb 10px",
+      margin:"1 em",
+      marginBottom:"1em"
+
+    },
     header:{
       marginRight: 150,
       marginLeft: 150,
@@ -41,7 +51,7 @@ const useStyles = makeStyles({
       marginTop: 2,
     },
     completeButton:{
-      textAlign: "center",
+      textAlign: "center"
     }
   
 });
@@ -60,12 +70,12 @@ function Checkout () {
 
   return (
   
-    <div>
-      <h1 className={classes.header}>Checkout <PaymentIcon></PaymentIcon></h1>
+    <div className={classes.wholeComponent}>
+      <h1 className={classes.header}><PaymentIcon/> Checkout </h1>
       <h3 className={classes.header}>Please fill out these fields to complete your order:</h3>
       <Accordion className={classes.checkoutAccordion} square expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-          <Typography>Shipping</Typography>
+          <Typography> <ListIcon/> Shipping</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <div>
@@ -89,7 +99,7 @@ function Checkout () {
 
       <Accordion className={classes.checkoutAccordion} square expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
         <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
-          <Typography>Payment Information</Typography>
+          <Typography> <AttachMoneyIcon/> Payment Information </Typography>
         </AccordionSummary>
         <AccordionDetails>
         <div>
@@ -116,7 +126,7 @@ function Checkout () {
 
       <Accordion className={classes.checkoutAccordion} square expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
         <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
-          <Typography>Delivery Options</Typography>
+          <Typography> <FlightTakeoffIcon/>  Delivery Options</Typography>
         </AccordionSummary>
         <AccordionDetails>
         <div>
@@ -132,7 +142,7 @@ function Checkout () {
         </AccordionDetails>
       </Accordion>
 <Container className = {classes.completeButton}>
-<Button color="secondary">Complete Order</Button>
+<Button variant="outlined" color="secondary">Complete Order</Button>
 </Container>
     </div>
   );
