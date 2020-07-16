@@ -70,12 +70,12 @@ const App = () => {
             <div id='app'>
               <Nav />
               <CartDrawer />
+
               <InsertBanner />
               <StoreHeader />
               <Checkout/>
               <StoreContent />
               <Footer />
-
             </div>
             
           </DrawerContext.Provider>

@@ -109,7 +109,11 @@ function Nav() {
   } = classes;
 
   return (
+<<<<<<< HEAD
     <AppBar position='static' classes={{ root: navHeader }}>
+=======
+    <AppBar position='static' classes={{ root: navHeader }} >
+>>>>>>> e9ce69cd39652f5022c2e13e3e5b9cc16a064fd8
       <Toolbar className={ nav }>
         <div className={ leftNav }>
           <a href="#">
