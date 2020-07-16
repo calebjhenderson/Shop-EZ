@@ -15,12 +15,9 @@ const {
   getOrderProductsByProductId,
   deleteOrderProducts,
   getAllOrderProducts,
+  removeOrderProductById,
 } = require("../db/order_products.js");
 const { deleteUserOrder } = require("../db/user_orders");
-const {
-  getOrderProductById,
-  removeOrderProductByOrderId,
-} = require("../db/order_products");
 
 const { requireUser } = require("../db/users.js");
 
