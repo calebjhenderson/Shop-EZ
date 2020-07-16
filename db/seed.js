@@ -740,6 +740,63 @@ async function createInitialProducts() {
       categoryId: "{5}",
     });
 
+    const course2 = await createProduct({
+      name: "Java for Dummies Course",
+      description: "A Java course offered to beginners of all ages",
+      price: "99.00",
+      quantity: 100,
+      delivery: '{"electronic"}',
+      rating: 3,
+      userId: 1,
+      categoryId: "{5}",
+    });
+
+    const course3 = await createProduct({
+      name: "Mobile Dev for Dummies Course",
+      description:
+        "A Mobile development course offered to beginners of all ages",
+      price: "35.00",
+      quantity: 100,
+      delivery: '{"electronic"}',
+      rating: 4.0,
+      userId: 1,
+      categoryId: "{5}",
+    });
+
+    const course4 = await createProduct({
+      name: "Passive Income Ideas",
+      description:
+        "A course that teaches different ways to make passive income",
+      price: "25.00",
+      quantity: 40,
+      delivery: '{"electronic"}',
+      rating: 2.0,
+      userId: 1,
+      categoryId: "{5}",
+    });
+
+    const course5 = await createProduct({
+      name: "Entrepenuer Crash Course",
+      description: "Learn to become an entrepenuer step by step",
+      price: "65.00",
+      quantity: 100,
+      delivery: '{"electronic"}',
+      rating: 4.0,
+      userId: 1,
+      categoryId: "{5}",
+    });
+
+    const course6 = await createProduct({
+      name: "Become a Chef",
+      description: "Learn to become chef as little as 1 day with this course ",
+      price: "100.00",
+      quantity: 100,
+      delivery: '{"electronic"}',
+      rating: 3.0,
+      userId: 1,
+      categoryId: "{5}",
+    });
+
     console.log(chalk.greenBright("Finished creating initial products!"));
   } catch (error) {
     console.error(

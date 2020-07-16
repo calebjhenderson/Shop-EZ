@@ -15,7 +15,7 @@ const {
   getOrderProductsByProductId,
   deleteOrderProducts,
   getAllOrderProducts,
-  removeOrderProductById
+  removeOrderProductById,
 } = require("../db/order_products.js");
 const { deleteUserOrder } = require("../db/user_orders");
 
@@ -118,52 +118,64 @@ ordersRouter.delete("/delete/:orderId", requireUser, async function (
 });
 
 // Add Product To Order Route------------------------------Works!
-ordersRouter.post('/addorderproduct/:orderId', async function ( req, res, next ){
-    const { orderId } = req.params
-    const { productId } = req.body
-    
-    try{
-            const orderProducts = await getOrderProductsByProductId(productId)
-           
-            if(orderProducts && orderProducts.length){
-            
-                for(let orderProduct of orderProducts ){
-                    if (+orderProduct.orderId === +orderId){
-                        console.log('OP', orderProduct)
+ordersRouter.post("/addorderproduct/:orderId", async function (req, res, next) {
+  const { orderId } = req.params;
+  const { productId } = req.body;
 
-                        next({name:'orderProductAlreadyExists', message:'This product is already on this order' })
-                    }
-                }
-                const newOrderProduct = await addProductToOrder( orderId, productId)
-                res.send({message:'Product added to order.',product:newOrderProduct})
-            
-            }else{
-                const newOrderProduct = await addProductToOrder( orderId, productId)
-                res.send({message:'Product added to order.',product:newOrderProduct})
-            }    
-    } catch (error){
-        console.error(error)
-        const { name, message } = error
-        next({ name, message })
+  try {
+    const orderProducts = await getOrderProductsByProductId(productId);
+
+    if (orderProducts && orderProducts.length) {
+      for (let orderProduct of orderProducts) {
+        if (+orderProduct.orderId === +orderId) {
+          console.log("OP", orderProduct);
+
+          next({
+            name: "orderProductAlreadyExists",
+            message: "This product is already on this order",
+          });
+        }
+      }
+      const newOrderProduct = await addProductToOrder(orderId, productId);
+      res.send({
+        message: "Product added to order.",
+        product: newOrderProduct,
+      });
+    } else {
+      const newOrderProduct = await addProductToOrder(orderId, productId);
+      res.send({
+        message: "Product added to order.",
+        product: newOrderProduct,
+      });
     }
+  } catch (error) {
+    console.error(error);
+    const { name, message } = error;
+    next({ name, message });
+  }
 });
 
 // Remove Product from Order Route-----------Works!
-ordersRouter.delete('/deleteorderproduct/:orderProductId', async function(req, res, next){
-    const { orderProductId } = req.params
- 
-    
-    try{
-        const removed = await removeOrderProductById(orderProductId)
-        if(removed){
-            res.send({message:'Product has been removed from order', order:removed})
-        }
-    } catch (error){
-        console.error(error)
-        const { name, message } = error
-        next({ name, message })
+ordersRouter.delete("/deleteorderproduct/:orderProductId", async function (
+  req,
+  res,
+  next
+) {
+  const { orderProductId } = req.params;
+
+  try {
+    const removed = await removeOrderProductById(orderProductId);
+    if (removed) {
+      res.send({
+        message: "Product has been removed from order",
+        order: removed,
+      });
     }
+  } catch (error) {
+    console.error(error);
+    const { name, message } = error;
+    next({ name, message });
   }
-);
+});
 
 module.exports = ordersRouter;
