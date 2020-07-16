@@ -61,27 +61,27 @@ const App = () => {
 
 
   return (
-    <div className={ classes.root }>
+    // <div className={ classes.root }>
       <ThemeProvider theme={theme}>
         <CssBaseline >
         
           <DrawerContext.Provider value={{ drawer, setDrawer, toggleDrawer }} >
 
-            <div id='app' style={{ display: 'flex' }}>
+            <div id='app'>
               <Nav />
               <CartDrawer />
+
               <InsertBanner />
               <StoreHeader />
               <StoreContent />
               <Footer />
-
             </div>
             
           </DrawerContext.Provider>
 
       </CssBaseline>
       </ThemeProvider>
-    </div>
+    // </div>
   );
 };
 
