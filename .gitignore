@@ -1,6 +1,7 @@
 # /.gitignoregit 
-.env
 node_modules
-main.js
+main.map.js
 main.js.map
 .ds_store
+main.js
+.env

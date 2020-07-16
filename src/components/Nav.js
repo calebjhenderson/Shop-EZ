@@ -1,22 +1,33 @@
-// ./src/components/Nav.js
+// ./src/components/Na
+
+/*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
 import React, { useContext } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 
 import ArrowDropDown from "@material-ui/icons/ArrowDropDownCircleOutlined";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core/styles";
 import ExploreIcon from "@material-ui/icons/Explore";
-import PersonIcon from "@material-ui/icons/Person";
 import SearchIcon from "@material-ui/icons/Search";
+import PersonIcon from "@material-ui/icons/Person";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import Badge from "@material-ui/core/Badge";
 
+<<<<<<< HEAD
 import variables from "../styles";
+=======
+>>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
 import { DrawerContext } from "../DrawerContext";
+import variables from "../styles";
 
+<<<<<<< HEAD
+=======
+/*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
+
+>>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
 const {
   themeMain,
   textColor,
@@ -24,10 +35,16 @@ const {
   secondaryAccent,
   navHeight,
 } = variables;
+<<<<<<< HEAD
+=======
+
+/*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
+>>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
 
 const handleSubmit = () => {};
 
 function Nav() {
+<<<<<<< HEAD
   const { toggleDrawer } = useContext(DrawerContext);
 
   const useStyles = makeStyles({
@@ -38,35 +55,55 @@ function Nav() {
     },
 
     // Nav/header
+=======
+  /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
+
+  const { toggleDrawer } = useContext(DrawerContext);
+
+  /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
+
+  const useStyles = makeStyles({
+    // Nav
+>>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
 
     nav: {
-      zIndex: 1301,
-      background: themeMain,
-      diplay: "flex",
       justifyContent: "space-between",
+      background: themeMain,
       alignItems: "center",
       height: navHeight,
+      diplay: "flex",
+      zIndex: 1301,
     },
 
     navHeader: {
       zIndex: 1301,
     },
 
+<<<<<<< HEAD
     leftNav: {
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
+=======
+    // Logo Area
+
+    leftNav: {
+      justifyContent: "space-between",
+      alignItems: "center",
+      display: "flex",
+>>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
     },
 
     logo: {
-      width: "6rem",
-      height: "auto",
+      borderRight: `2px solid ${secondaryAccent}`,
       margin: "1rem 1rem 1rem 0.5rem",
       paddingRight: "1rem",
-      borderRight: `2px solid ${secondaryAccent}`,
+      width: "6rem",
+      height: "auto",
     },
 
     explore: {
+<<<<<<< HEAD
       opacity: "92%",
       boxShadow: ` 0 1px 4px ${secondaryAccent} `,
     },
@@ -75,10 +112,22 @@ function Nav() {
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
+=======
+      boxShadow: ` 0 1px 4px ${secondaryAccent} `,
+      opacity: "92%",
+    },
+
+    // Search Area
+    mainSearch: {
+      justifyContent: "space-between",
+      alignItems: "center",
+      display: "flex",
+>>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
       width: "55vw",
     },
 
     mainSearchInput: {
+<<<<<<< HEAD
       width: "50vw",
       height: "2rem",
       padding: "0.5rem",
@@ -93,20 +142,39 @@ function Nav() {
 
     searchAll: {
       color: textColor,
+=======
+      boxShadow: `0 0 4px ${primaryAccent}`,
+      borderRadius: "10px",
+      fontSize: "1.1rem",
+      padding: "0.5rem",
+      width: "50vw",
+      height: "2rem",
+      border: "none",
+
+      "&:focus": {
+        outline: "none",
+      },
+>>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
     },
   });
 
   const classes = useStyles();
 
   const {
-    nav,
-    logo,
-    mainSearch,
     mainSearchInput,
+    mainSearch,
+    navHeader,
     leftNav,
     explore,
+<<<<<<< HEAD
     navHeader,
+=======
+    logo,
+    nav,
+>>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
   } = classes;
+
+  /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
   return (
     <AppBar position="static" classes={{ root: navHeader }}>
@@ -170,5 +238,7 @@ function Nav() {
     </AppBar>
   );
 }
+
+/*-------------------------------------------------------------- Exports ------------------------------------------------------------------*/
 
 export default Nav;
