@@ -1,26 +1,5 @@
 // ./src/app.js
 
-<<<<<<< HEAD
-import ReactRouterDOM from "react-router-dom";
-import React, { useState } from "react";
-import ReactDOM from "react-dom";
-
-import {
-  ThemeProvider,
-  createMuiTheme,
-  makeStyles,
-} from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { Typography } from "@material-ui/core";
-
-import StoreContent from "./components/StoreContent";
-import StoreHeader from "./components/StoreHeader";
-import CartDrawer from "./components/CartDrawer";
-import { DrawerContext } from "./DrawerContext";
-import InsertBanner from "./components/Banner";
-import Footer from "./components/Footer";
-import Nav from "./components/Nav";
-=======
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
 import ReactRouterDOM from "react-router-dom";
@@ -29,8 +8,8 @@ import ReactDOM from "react-dom";
 
 import StoreContent from "./components/StoreContent";
 import StoreHeader from "./components/StoreHeader";
-import ProductView from "./components/productView";
-import ProductCard from "./components/ProductCard";
+import ProductView from "./components/product-view";
+import ProductCard from "./components/product-card";
 import CartDrawer from "./components/CartDrawer";
 import InsertBanner from "./components/Banner";
 import Footer from "./components/Footer";
@@ -44,7 +23,6 @@ import {
 } from "@material-ui/core/styles";
 
 import { DrawerContext } from "./DrawerContext";
->>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
 import variables from "./styles";
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
@@ -66,11 +44,8 @@ const theme = createMuiTheme({
 });
 
 const App = () => {
-<<<<<<< HEAD
-=======
   /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
->>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
   const [drawer, setDrawer] = useState({
     cart: false,
     account: false,
@@ -78,25 +53,12 @@ const App = () => {
     customizeShop: false,
   });
 
-<<<<<<< HEAD
-  const useStyles = makeStyles({
-    root: {
-      display: "flex",
-    },
-  });
-
-  const classes = useStyles(theme);
-
-  const toggleDrawer = (anchor) =>
-    setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
-=======
   /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
 
   const toggleDrawer = (anchor) =>
     setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
 
   /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
->>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
 
   return (
     // <div className={ classes.root }>
