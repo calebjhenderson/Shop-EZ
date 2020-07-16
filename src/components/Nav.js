@@ -16,18 +16,11 @@ import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import Badge from "@material-ui/core/Badge";
 
-<<<<<<< HEAD
-import variables from "../styles";
-=======
->>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
 import { DrawerContext } from "../DrawerContext";
 import variables from "../styles";
 
-<<<<<<< HEAD
-=======
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
->>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
 const {
   themeMain,
   textColor,
@@ -35,27 +28,12 @@ const {
   secondaryAccent,
   navHeight,
 } = variables;
-<<<<<<< HEAD
-=======
 
 /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
->>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
 
 const handleSubmit = () => {};
 
 function Nav() {
-<<<<<<< HEAD
-  const { toggleDrawer } = useContext(DrawerContext);
-
-  const useStyles = makeStyles({
-    // root
-
-    root: {
-      display: "flex",
-    },
-
-    // Nav/header
-=======
   /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
   const { toggleDrawer } = useContext(DrawerContext);
@@ -64,7 +42,6 @@ function Nav() {
 
   const useStyles = makeStyles({
     // Nav
->>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
 
     nav: {
       justifyContent: "space-between",
@@ -79,19 +56,12 @@ function Nav() {
       zIndex: 1301,
     },
 
-<<<<<<< HEAD
-    leftNav: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-=======
     // Logo Area
 
     leftNav: {
       justifyContent: "space-between",
       alignItems: "center",
       display: "flex",
->>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
     },
 
     logo: {
@@ -103,16 +73,6 @@ function Nav() {
     },
 
     explore: {
-<<<<<<< HEAD
-      opacity: "92%",
-      boxShadow: ` 0 1px 4px ${secondaryAccent} `,
-    },
-
-    mainSearch: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-=======
       boxShadow: ` 0 1px 4px ${secondaryAccent} `,
       opacity: "92%",
     },
@@ -122,27 +82,10 @@ function Nav() {
       justifyContent: "space-between",
       alignItems: "center",
       display: "flex",
->>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
       width: "55vw",
     },
 
     mainSearchInput: {
-<<<<<<< HEAD
-      width: "50vw",
-      height: "2rem",
-      padding: "0.5rem",
-      border: "none",
-      borderRadius: "10px",
-      boxShadow: `0 0 4px ${primaryAccent}`,
-      fontSize: "1.1rem",
-      "&:focus": {
-        outline: "none",
-      },
-    },
-
-    searchAll: {
-      color: textColor,
-=======
       boxShadow: `0 0 4px ${primaryAccent}`,
       borderRadius: "10px",
       fontSize: "1.1rem",
@@ -154,7 +97,6 @@ function Nav() {
       "&:focus": {
         outline: "none",
       },
->>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
     },
   });
 
@@ -166,12 +108,8 @@ function Nav() {
     navHeader,
     leftNav,
     explore,
-<<<<<<< HEAD
-    navHeader,
-=======
     logo,
     nav,
->>>>>>> a1e2467f906ba17480f1fae322755ec635f57020
   } = classes;
 
   /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
