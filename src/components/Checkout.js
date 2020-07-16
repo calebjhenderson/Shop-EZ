@@ -7,6 +7,12 @@ import Typography from '@material-ui/core/Typography';
 
 
 const useStyles = makeStyles({
+    checkoutAccordion:{
+      marginRight: 150,
+      marginLeft: 150,
+      padding: 30,
+      background: "white",
+    }
   
 });
 
@@ -14,36 +20,40 @@ const useStyles = makeStyles({
 
 export default function () {
   const [expanded, setExpanded] = useState('panel1');
-    const classes = useStyles();
+    
+  const classes = useStyles();
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
   return (
+  
     <div>
-      <Accordion square expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+      <Accordion className={classes.checkoutAccordion} square expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
           <Typography>Shipping</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-          Shipping address here
+            <form>Shipping Address
+            </form>
+          
           </Typography>
         </AccordionDetails>
       </Accordion>
-      <Accordion square expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
+      <Accordion className={classes.checkoutAccordion} square expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
 
         <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
           <Typography>Payment</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-           Payment  Details in here
+           Payment Information 
           </Typography>
         </AccordionDetails>
       </Accordion>
-      <Accordion square expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
+      <Accordion className={classes.checkoutAccordion} square expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
 
         <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
           <Typography>Delivery Options</Typography>
