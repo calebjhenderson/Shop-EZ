@@ -56,12 +56,14 @@ const App = () => {
     setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
 
   return (
+    // <div className={ classes.root }>
     <ThemeProvider theme={theme}>
       <CssBaseline>
         <DrawerContext.Provider value={{ drawer, setDrawer, toggleDrawer }}>
           <div id="app">
             <Nav />
             <CartDrawer />
+
             <InsertBanner />
             <StoreHeader />
             <StoreContent />
@@ -70,6 +72,7 @@ const App = () => {
         </DrawerContext.Provider>
       </CssBaseline>
     </ThemeProvider>
+    // </div>
   );
 };
 
