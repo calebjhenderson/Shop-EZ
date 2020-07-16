@@ -1,126 +1,132 @@
-// ./src/components/Nav.js
+// ./src/components/Na
+
+/*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
 import React, { useContext } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 
 import ArrowDropDown from "@material-ui/icons/ArrowDropDownCircleOutlined";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core/styles";
 import ExploreIcon from "@material-ui/icons/Explore";
-import PersonIcon from "@material-ui/icons/Person";
 import SearchIcon from "@material-ui/icons/Search";
+import PersonIcon from "@material-ui/icons/Person";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
-import Badge from "@material-ui/core/Badge"
+import Badge from "@material-ui/core/Badge";
 
-
-import variables from '../styles'
 import { DrawerContext } from "../DrawerContext";
+import variables from "../styles";
 
+/*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
-const { themeMain, textColor, primaryAccent, secondaryAccent, navHeight } = variables;
+const {
+  themeMain,
+  textColor,
+  primaryAccent,
+  secondaryAccent,
+  navHeight,
+} = variables;
 
+/*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
 
 const handleSubmit = () => {};
 
 function Nav() {
+  /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
   const { toggleDrawer } = useContext(DrawerContext);
 
-  const useStyles = (makeStyles({
+  /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
-    // root
-  
-    root: {
-      display: "flex",
-    },
-  
-    // Nav/header
-  
+  const useStyles = makeStyles({
+    // Nav
+
     nav: {
-      zIndex: 1301,
-      background: themeMain,
-      diplay: "flex",
       justifyContent: "space-between",
+      background: themeMain,
       alignItems: "center",
       height: navHeight,
+      diplay: "flex",
+      zIndex: 1301,
     },
-  
+
     navHeader: {
       zIndex: 1301,
     },
-  
+
+    // Logo Area
+
     leftNav: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      
+      justifyContent: "space-between",
+      alignItems: "center",
+      display: "flex",
     },
-    
+
     logo: {
-      width: "6rem",
-      height: "auto",
+      borderRight: `2px solid ${secondaryAccent}`,
       margin: "1rem 1rem 1rem 0.5rem",
       paddingRight: "1rem",
-      borderRight: `2px solid ${secondaryAccent}`,
+      width: "6rem",
+      height: "auto",
     },
-  
+
     explore: {
-      opacity: '92%',
-      boxShadow: ` 0 1px 4px ${ secondaryAccent } `
+      boxShadow: ` 0 1px 4px ${secondaryAccent} `,
+      opacity: "92%",
     },
-  
+
+    // Search Area
     mainSearch: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      width: '55vw'
+      justifyContent: "space-between",
+      alignItems: "center",
+      display: "flex",
+      width: "55vw",
     },
-  
+
     mainSearchInput: {
-      width: '50vw',
-      height: '2rem',
-      padding: '0.5rem',
-      border: 'none',
-      borderRadius: '10px',
-      boxShadow: `0 0 4px ${ primaryAccent }`,
-      fontSize: '1.1rem',
-      '&:focus': {
-        outline: 'none'
-      }
+      boxShadow: `0 0 4px ${primaryAccent}`,
+      borderRadius: "10px",
+      fontSize: "1.1rem",
+      padding: "0.5rem",
+      width: "50vw",
+      height: "2rem",
+      border: "none",
+
+      "&:focus": {
+        outline: "none",
+      },
     },
-  
-    searchAll: {
-      color: textColor,
-    },
-  }));
+  });
 
   const classes = useStyles();
 
   const {
-    nav,
-    logo,
-    mainSearch,
     mainSearchInput,
+    mainSearch,
+    navHeader,
     leftNav,
     explore,
-    navHeader
+    logo,
+    nav,
   } = classes;
 
+  /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
+
   return (
-    <AppBar position='static' classes={{ root: navHeader }} >
-      <Toolbar className={ nav }>
-        <div className={ leftNav }>
+    <AppBar position="static" classes={{ root: navHeader }}>
+      <Toolbar className={nav}>
+        <div className={leftNav}>
           <a href="#">
             <img
               src="/assets/logo.png"
               alt="A pastel lavendar capital E and Z in a filled circle with pastel water colors"
-              className={ logo }
+              className={logo}
             />
           </a>
           <Button
-            className={ explore }
+            className={explore}
             variant="contained"
             color="secondary"
             startIcon={<ExploreIcon />}
@@ -129,14 +135,14 @@ function Nav() {
           </Button>
         </div>
 
-        <form className={ mainSearch } onSubmit={ handleSubmit }>
+        <form className={mainSearch} onSubmit={handleSubmit}>
           <IconButton aria-label="main search filters" color="inherit">
             <ArrowDropDown />
           </IconButton>
           <input
             type="search"
             placeholder="search"
-            className={ mainSearchInput }
+            className={mainSearchInput}
           ></input>
           <IconButton aria-label="main search filters" color="inherit">
             <SearchIcon />
@@ -170,5 +176,7 @@ function Nav() {
     </AppBar>
   );
 }
+
+/*-------------------------------------------------------------- Exports ------------------------------------------------------------------*/
 
 export default Nav;
