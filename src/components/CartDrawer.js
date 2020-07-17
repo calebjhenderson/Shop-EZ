@@ -2,7 +2,7 @@
 
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -68,6 +68,9 @@ const testCart = [
 ];
 
 function CartDrawer() {
+
+  /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
+
   const { drawer, toggleDrawer } = useContext(DrawerContext);
 
   /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
@@ -247,7 +250,7 @@ function CartDrawer() {
   /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
 
   const cartList = () => {
-    const [expanded, setExpanded] = React.useState(false);
+    const [expanded, setExpanded] = useState(false);
 
     const handleChange = (panel) => (event, isExpanded) => {
       setExpanded(isExpanded ? panel : false);
