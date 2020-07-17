@@ -25,23 +25,32 @@ import { Box } from "@material-ui/core";
 //STYLES
 const useStyles = makeStyles({
     wholeComponent:{
-      border:"solid #ad77eb 10px",
+      border:"solid #3d2f75 10px",
       margin:"1 em",
-      marginBottom:"1em"
-
+      marginBottom:"1em",
+      display:"flex",
+      flexDirection:"column",
+      justifyContent:"center",
+      alignItems:"center"
     },
     header:{
-      marginRight: 150,
-      marginLeft: 150,
       textAlign: "center", 
-      textDecoration:""
+      width:"100%",
+      display:"flex",
+      justifyContent:"center",
+      alignItems:"center"
     },
     checkoutAccordion:{
       textAlign:"center",
       marginRight: 150,
       marginLeft: 150,
       padding: 30,
-      background: "white"
+      background: "white",
+      width:"80%",
+      display:"flex",
+      alignItems:"center",
+      justifyContent:"center",
+      flexDirection:"column"
     },
     formControl:{
       margin: 1,
@@ -51,7 +60,28 @@ const useStyles = makeStyles({
       marginTop: 2,
     },
     completeButton:{
-      textAlign: "center"
+      textAlign: "center",
+      marginTop:"1em",
+      marginBottom:"1em"
+    },
+    headerText:{
+      width:"100%"
+    },
+    headerWrapper:{
+      display:"flex",
+      justifyContent:"center",
+      alignItems:"center"
+    },
+    iconPadding:{
+     paddingRight:"1rem" 
+    },
+    accordionDetails:{
+      alignItems:"center",
+      justifyContent:"center",
+    },
+    accordionSummary:{
+      alignItems:"center",
+      justifyContent:"center"
     }
   
 });
@@ -71,13 +101,16 @@ function Checkout () {
   return (
   
     <div className={classes.wholeComponent}>
-      <h1 className={classes.header}><PaymentIcon/> Checkout </h1>
+      <div className={`${classes.headerWrapper} ${classes.header}`}>
+      <PaymentIcon/> <h1> Checkout </h1> </div>
       <h3 className={classes.header}>Please fill out these fields to complete your order:</h3>
+      
       <Accordion className={classes.checkoutAccordion} square expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-          <Typography> <ListIcon/> Shipping</Typography>
+        <AccordionSummary className={classes.accordionSummary} aria-controls="panel1d-content" id="panel1d-header">
+          <div className={classes.headerWrapper}>
+          <ListIcon/> <Typography className={classes.headerText}>  Shipping</Typography></div>
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails className={classes.accordionDetails}>
           <div>
           <form noValidate autoComplete="off">
           <TextField id="filled-basic" label="First Name" variant="filled" />
@@ -98,18 +131,20 @@ function Checkout () {
 
 
       <Accordion className={classes.checkoutAccordion} square expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
-        <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
-          <Typography> <AttachMoneyIcon/> Payment Information </Typography>
+        <AccordionSummary className={classes.accordionSummary}  aria-controls="panel2d-content" id="panel2d-header">
+        <div className={classes.headerWrapper}>
+        <AttachMoneyIcon/> <Typography className={classes.headerText}> Payment Information </Typography></div>
         </AccordionSummary>
         <AccordionDetails>
         <div>
           <form noValidate autoComplete="off">
           <FormControl className={classes.formControl}>
         <InputLabel id="method">Method</InputLabel>
-        <Select
+        <Select 
           labelId="cards"
           value = {method}
           onChange={(e)=>{methodChange(e)}}
+          variant="filled"
         >
           <MenuItem value="Visa">Visa</MenuItem>
           <MenuItem value="Mastercard">MasterCard</MenuItem>
@@ -125,8 +160,8 @@ function Checkout () {
       </Accordion>
 
       <Accordion className={classes.checkoutAccordion} square expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
-        <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
-          <Typography> <FlightTakeoffIcon/>  Delivery Options</Typography>
+        <AccordionSummary className={classes.accordionSummary}  aria-controls="panel3d-content" id="panel3d-header">
+          <div className={classes.headerWrapper}> <FlightTakeoffIcon/> <Typography className={classes.headerText}>  Delivery Options</Typography></div>
         </AccordionSummary>
         <AccordionDetails>
         <div>

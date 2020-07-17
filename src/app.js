@@ -14,6 +14,7 @@ import CartDrawer from "./components/CartDrawer";
 import InsertBanner from "./components/Banner";
 import Footer from "./components/Footer";
 import Nav from "./components/Nav";
+import Checkout from "./components/Checkout"
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {
