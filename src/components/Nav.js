@@ -130,6 +130,7 @@ function Nav() {
             variant="contained"
             color="secondary"
             startIcon={<ExploreIcon />}
+            // disabled
           >
             Explore
           </Button>
@@ -141,8 +142,9 @@ function Nav() {
           </IconButton>
           <input
             type="search"
-            placeholder="search"
+            placeholder="search (under construction)"
             className={mainSearchInput}
+            // disabled
           ></input>
           <IconButton aria-label="main search filters" color="inherit">
             <SearchIcon />
@@ -154,7 +156,7 @@ function Nav() {
             color="inherit"
             aria-label="open account options drawer"
             onClick={() => {
-              toggleDrawer("cart");
+              toggleDrawer("accountLoggedOut");
             }}
           >
             <PersonIcon />
