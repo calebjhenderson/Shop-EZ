@@ -68,7 +68,6 @@ const testCart = [
 ];
 
 function CartDrawer() {
-
   /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
   const { drawer, toggleDrawer } = useContext(DrawerContext);

@@ -130,7 +130,7 @@ function Nav() {
             variant="contained"
             color="secondary"
             startIcon={<ExploreIcon />}
-            // disabled
+            disabled
           >
             Explore
           </Button>
@@ -144,7 +144,7 @@ function Nav() {
             type="search"
             placeholder="search (under construction)"
             className={mainSearchInput}
-            // disabled
+            disabled
           ></input>
           <IconButton aria-label="main search filters" color="inherit">
             <SearchIcon />
