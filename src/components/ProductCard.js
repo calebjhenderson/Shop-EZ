@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Grid, Typography } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -42,39 +42,36 @@ const useStyles = makeStyles({
   },
 });
 
+const userId = 1;
+
 function ProductCard() {
   const [products, setProducts] = useState([]);
 
   //Get all products by this user and store in a userState
-  async function getUserProducts(userId) {
-    try {
-      const userProducts = await axios.get(BASE_URL + `/products/${userId}`);
-      if (userProducts) {
-        message: "Products Exist for this userId!";
-        const newProductArray = userProducts.data.userProducts;
+  useEffect(() => {
+    axios
+      .get(BASE_URL + `/products/${userId}`)
+      .then((res) => {
+        setProducts(res.data.userProducts);
+      })
+      .catch((err) => {
+        console.log(err);
+        throw err;
+      });
+  }, []);
 
-        setProducts(newProductArray);
-        console.log(newProductArray);
-      } else {
-        message: "No products for that userId";
-      }
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  }
-
-  if (!products || !products.length) {
-    getUserProducts(1);
-  }
-
+  console.log(products);
   const classes = useStyles();
 
   return (
     <Grid container spacing={8} justify="center">
       {products.map((products) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={products.name}>
-          <Card className={classes.cardSize} variant="outlined">
+          <Card
+            id={products.id}
+            className={classes.cardSize}
+            variant="outlined"
+          >
             <CardActionArea>
               <Typography
                 align="center"

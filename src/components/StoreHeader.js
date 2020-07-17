@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Grid } from "@material-ui/core/";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -18,43 +18,36 @@ const useStyles = makeStyles({
 });
 
 const BASE_URL = "http://localhost:3000/api/users";
+const userId = 1;
 
 function StoreHeader() {
   const [shop, setShop] = useState([]);
 
   //Get Shop by this user and store in a userState
-  async function getUserShop(userId) {
-    try {
-      const userShop = await axios.get(BASE_URL + `/shop/${userId}`);
-      if (userShop) {
-        message: "Shop exist for this userId!";
-        const shopArray = userShop.data.userShop;
-
-        setShop(shopArray);
-
-        return userShop;
-        console.log("testshop", shopArray);
-      } else {
-        message: "No shop for that userId";
+  useEffect(() => {
+    async function getUserShop() {
+      try {
+        const userShop = await axios.get(BASE_URL + `/shop/${userId}`);
+        if (userShop) {
+          const shopArray = userShop.data.userShop;
+          setShop(shopArray);
+        } else {
+          throw new Error("No shop found for that userId");
+        }
+      } catch (err) {
+        console.log(err);
+        throw err;
       }
-    } catch (err) {
-      console.error(err);
-      throw err;
     }
-  }
-
-  console.log("shop", shop);
-
-  if (!shop || !shop.length) {
-    // getUserShop(1);
-  }
+    getUserShop();
+  }, []);
 
   const classes = useStyles();
 
   return (
     <Grid className={classes.storeHeader} position="static">
       <Typography align="center" variant="h5" noWrap>
-        Shop Name
+        {shop.name}
       </Typography>
     </Grid>
   );
