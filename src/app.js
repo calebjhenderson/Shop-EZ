@@ -8,10 +8,8 @@ import ReactDOM from "react-dom";
 
 import StoreContent from "./components/StoreContent";
 import StoreHeader from "./components/StoreHeader";
-import ProductView from "./components/product-view";
-import ProductCard from "./components/product-card";
 import CartDrawer from "./components/CartDrawer";
-import InsertBanner from "./components/Banner";
+import Banner from "./components/Banner";
 import Footer from "./components/Footer";
 import Nav from "./components/Nav";
 
@@ -69,7 +67,7 @@ const App = () => {
             <Nav />
             <CartDrawer />
 
-            <InsertBanner />
+            <Banner />
             <StoreHeader />
             <StoreContent />
             <Footer />
