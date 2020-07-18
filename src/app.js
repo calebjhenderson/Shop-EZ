@@ -14,6 +14,7 @@ import CartDrawer from "./components/drawers/CartDrawer";
 import Banner from "./components/Banner";
 import Footer from "./components/Footer";
 import Nav from "./components/Nav";
+import Checkout from "./components/Checkout";
 
 // Material-UI
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -61,6 +62,10 @@ const App = () => {
         explore: false,
         customizeShop: false,
     });
+<<<<<<< HEAD
+=======
+    const [visibility, setVisibility] = useState(false);
+>>>>>>> e83588e0b3726248ee678c866a89672853b276a4
 
     // Check if user is logged in and set their cart in state, else check if cart exists for non-user and set cart in state
     // useEffect(() => {
@@ -84,6 +89,12 @@ const App = () => {
     /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
 
     const toggleDrawer = (anchor) => {
+<<<<<<< HEAD
+=======
+        console.log("anchor is ", anchor);
+        console.log("drawer[anchor] is", drawer[anchor]);
+
+>>>>>>> e83588e0b3726248ee678c866a89672853b276a4
         if (
             anchor === "accountLoggedOut" &&
             drawer[anchor] === false &&
@@ -116,11 +127,19 @@ const App = () => {
                 >
                     <div id="app">
                         <Nav />
+<<<<<<< HEAD
                         <CartDrawer />
+=======
+                        <CartDrawer setVisibility={setVisibility} />
+>>>>>>> e83588e0b3726248ee678c866a89672853b276a4
                         <LoggedOutDrawer />
 
                         <Banner />
                         <StoreHeader />
+<<<<<<< HEAD
+=======
+                        {visibility ? <Checkout /> : <StoreContent />}
+>>>>>>> e83588e0b3726248ee678c866a89672853b276a4
                         <StoreContent />
                         <Footer />
                     </div>

@@ -36,6 +36,8 @@ cartsRouter.post("/create", async function (req, res, next) {
         const newCart = await createCart(cartData);
         if (newCart) {
             res.send({ message: "Here is your cart...", cart: newCart });
+        } else {
+            res.send({ message: "Cart doesnt exist." });
         }
     } catch (error) {
         console.error(error);
@@ -62,6 +64,8 @@ cartsRouter.patch("/update/:cartId", async function (req, res, next) {
                 message: "Your cart has been updated...",
                 cart: updatedCart,
             });
+        } else {
+            res.send({ message: "Cart update failed." });
         }
     } catch (error) {
         console.error(error);
@@ -79,6 +83,8 @@ cartsRouter.delete("/deletecart/:cartId", async function (req, res, next) {
         const deletedCart = await deleteCart(cart.id);
         if (deletedCart) {
             res.send({ message: "Cart deleted.", cart: deletedCart });
+        } else {
+            res.send({ message: "Cart doesnt exist." });
         }
     } catch (error) {
         console.error(error);
@@ -87,7 +93,7 @@ cartsRouter.delete("/deletecart/:cartId", async function (req, res, next) {
     }
 });
 
-// Add Product to Cart Route------------------------------WORKS!
+// Add Product to Cart Route------------------------------Works!
 cartsRouter.put("/add/:productId", async function (req, res, next) {
     const { productId } = req.params;
     const { cartId } = req.body;
