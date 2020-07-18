@@ -12,13 +12,13 @@ import CartDrawer from "./components/CartDrawer";
 import Banner from "./components/Banner";
 import Footer from "./components/Footer";
 import Nav from "./components/Nav";
-import Checkout from "./components/Checkout"
+import Checkout from "./components/Checkout";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {
-  createMuiTheme,
-  ThemeProvider,
-  makeStyles,
+    createMuiTheme,
+    ThemeProvider,
+    makeStyles,
 } from "@material-ui/core/styles";
 
 import { DrawerContext } from "./DrawerContext";
@@ -28,58 +28,61 @@ import variables from "./styles";
 
 // Overrides Material-Ui Base Styling
 const theme = createMuiTheme({
-  palette: {
-    primary: {
-      light: "#3c2e75",
-      main: "#080849",
-      dark: "#000023",
+    palette: {
+        primary: {
+            light: "#3c2e75",
+            main: "#080849",
+            dark: "#000023",
+        },
+        secondary: {
+            light: "#e5adff",
+            main: "#b17de8",
+            dark: "#7f4fb5",
+        },
     },
-    secondary: {
-      light: "#e5adff",
-      main: "#b17de8",
-      dark: "#7f4fb5",
-    },
-  },
 });
 
 const App = () => {
-  /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
+    /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
-  const [drawer, setDrawer] = useState({
-    cart: false,
-    account: false,
-    explore: false,
-    customizeShop: false,
-  });
+    const [drawer, setDrawer] = useState({
+        cart: false,
+        account: false,
+        explore: false,
+        customizeShop: false,
+    });
 
-  /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
+    /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
 
-  const toggleDrawer = (anchor) =>
-    setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
+    const toggleDrawer = (anchor) =>
+        setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
 
-  /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
+    const [visibility, setVisibility] = useState(false);
 
-  return (
-    // <div className={ classes.root }>
-    <ThemeProvider theme={theme}>
-      <CssBaseline>
-        <DrawerContext.Provider value={{ drawer, setDrawer, toggleDrawer }}>
-          <div id="app">
-            <Nav />
-            <CartDrawer />
+    /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
-            <Banner />
-            <StoreHeader />
-            <Checkout/>
-            <StoreContent />
-           
-            <Footer />
-          </div>
-        </DrawerContext.Provider>
-      </CssBaseline>
-    </ThemeProvider>
-    // </div>
-  );
+    return (
+        // <div className={ classes.root }>
+        <ThemeProvider theme={theme}>
+            <CssBaseline>
+                <DrawerContext.Provider
+                    value={{ drawer, setDrawer, toggleDrawer }}
+                >
+                    <div id="app">
+                        <Nav />
+                        <CartDrawer setVisibility={setVisibility} />
+
+                        <Banner />
+                        <StoreHeader />
+                        {visibility ? <Checkout /> : <StoreContent />}
+
+                        <Footer />
+                    </div>
+                </DrawerContext.Provider>
+            </CssBaseline>
+        </ThemeProvider>
+        // </div>
+    );
 };
 
 /*-------------------------------------------------------------- Render ------------------------------------------------------------------*/

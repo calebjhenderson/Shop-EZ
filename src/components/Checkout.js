@@ -20,6 +20,8 @@ import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 
+import TransitionsModal from "./CheckOutModal.js";
+
 //STYLES
 const useStyles = makeStyles({
     wholeComponent: {
@@ -82,6 +84,7 @@ const useStyles = makeStyles({
         justifyContent: "center",
     },
 });
+
 // COMPONENT
 function Checkout() {
     const [expanded, setExpanded] = useState("");
@@ -119,28 +122,12 @@ function Checkout() {
         setInput({ ...input, [method]: event.target.value });
         setMethod(event.target.value);
     };
+    const [submit, setSubmit] = useState(false);
 
-    //handle submit will reset form for values to be empty.
-    //display modal.
     const handleSubmit = () => {
         event.stopPropagation();
-        console.log("clicked");
-        const {
-            first,
-            last,
-            street,
-            city,
-            state,
-            country,
-            zip,
-            phone,
-            method,
-            cardnumber,
-            cvv,
-            exp,
-            delivery,
-        } = input;
-
+        console.log("submitted");
+        setSubmit(true);
         setInput({
             first: "",
             last: "",
@@ -157,7 +144,7 @@ function Checkout() {
             delivery: null,
         });
     };
-
+    console.log("Submit !!", submit);
     return (
         <div className={classes.wholeComponent}>
             <div className={`${classes.headerWrapper} ${classes.header}`}>
@@ -166,7 +153,7 @@ function Checkout() {
             <h3 className={classes.header}>
                 Please fill out these fields to complete your order:
             </h3>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <Accordion
                     className={classes.checkoutAccordion}
                     square
@@ -389,12 +376,17 @@ function Checkout() {
                     <Button
                         type="submit"
                         value="complete"
-                        onClick={handleSubmit}
                         variant="outlined"
                         color="secondary"
                     >
                         Complete Order
                     </Button>
+                    {submit ? (
+                        <TransitionsModal
+                            submit={submit}
+                            setSubmit={setSubmit}
+                        />
+                    ) : null}
                 </Container>
             </form>
         </div>
