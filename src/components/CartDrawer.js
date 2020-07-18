@@ -16,7 +16,6 @@ import Button from "@material-ui/core/Button";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/list";
 
-import Checkout from "./Checkout.js";
 import { DrawerContext } from "../DrawerContext";
 import variables from "../styles";
 

@@ -13,7 +13,7 @@ import TextField from "@material-ui/core/TextField";
 import variables from "../../../../styles";
 const { logInAccordionStyling } = variables;
 
-function PasswordInput(value, onChange) {
+function PasswordInput({ value, onChange }) {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
     const [passVisible, setPassVisible] = useState(false);
