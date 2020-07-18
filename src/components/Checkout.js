@@ -126,6 +126,7 @@ function Checkout() {
 
     const handleSubmit = () => {
         event.stopPropagation();
+        event.preventDefault();
         console.log("submitted");
         setSubmit(true);
         setInput({

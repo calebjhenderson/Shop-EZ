@@ -27,8 +27,7 @@ export default function TransitionsModal({ submit, setSubmit }) {
     //     setOpen(true);
     // };
 
-    const handleClose = () => (event) => {
-        console.log("EVENT", event);
+    const handleClose = (event) => {
         event.stopPropagation();
         event.preventDefault();
         setSubmit(false);
