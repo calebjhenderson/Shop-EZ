@@ -2,10 +2,12 @@
 
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
+// React
 import ReactRouterDOM from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
+// Components
 import StoreContent from "./components/StoreContent";
 import StoreHeader from "./components/StoreHeader";
 import CartDrawer from "./components/CartDrawer";
@@ -14,6 +16,7 @@ import Footer from "./components/Footer";
 import Nav from "./components/Nav";
 import Checkout from "./components/Checkout";
 
+// Material-UI
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {
     createMuiTheme,
@@ -21,8 +24,13 @@ import {
     makeStyles,
 } from "@material-ui/core/styles";
 
+// Other packages/modules
+import axios from "axios";
+
+// Local
 import { DrawerContext } from "./DrawerContext";
 import variables from "./styles";
+import LoggedOutDrawer from "./components/LoggedOutDrawer";
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
@@ -45,19 +53,62 @@ const theme = createMuiTheme({
 const App = () => {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
+    const [user, setUser] = useState({});
+    const [cart, setCart] = useState([]);
     const [drawer, setDrawer] = useState({
         cart: false,
-        account: false,
+        accountLoggedOut: false,
+        accountLoggedIn: false,
         explore: false,
         customizeShop: false,
     });
+    const [visibility, setVisibility] = useState(false);
+
+    // Check if user is logged in and set their cart in state, else check if cart exists for non-user and set cart in state
+    // useEffect(() => {
+
+    //   const isToken =  localStorage.getItem('token');
+    //   const isCart = localStorage.getItem('cart') || (cart && cart.length);
+
+    //   if(user && Object.keys(user).length){setCart(user.cart)}
+    //   else if(isToken){
+
+    //     // Check if token is valid and if it is, set user and then set cart
+
+    //   }
+    //   else if(isCart){
+    //     // set cart
+
+    //   }
+
+    // }, [])
 
     /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
 
-    const toggleDrawer = (anchor) =>
-        setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
+    const toggleDrawer = (anchor) => {
+        console.log("anchor is ", anchor);
+        console.log("drawer[anchor] is", drawer[anchor]);
 
-    const [visibility, setVisibility] = useState(false);
+        if (
+            anchor === "accountLoggedOut" &&
+            drawer[anchor] === false &&
+            drawer.cart === true
+        ) {
+            setDrawer({ ...drawer, [anchor]: !drawer[anchor], cart: false });
+        } else if (
+            anchor === "cart" &&
+            drawer[anchor] === false &&
+            drawer.accountLoggedOut === true
+        ) {
+            setDrawer({
+                ...drawer,
+                [anchor]: !drawer[anchor],
+                accountLoggedOut: false,
+            });
+        } else {
+            setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
+        }
+    };
 
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
@@ -71,11 +122,12 @@ const App = () => {
                     <div id="app">
                         <Nav />
                         <CartDrawer setVisibility={setVisibility} />
+                        <LoggedOutDrawer />
 
                         <Banner />
                         <StoreHeader />
                         {visibility ? <Checkout /> : <StoreContent />}
-
+                        <StoreContent />
                         <Footer />
                     </div>
                 </DrawerContext.Provider>

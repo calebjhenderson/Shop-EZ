@@ -7,7 +7,7 @@ let primaryAccent = "rgba(173,119,235, 1)";
 let secondaryAccent = "rgba(216,166,29, 1)";
 let textColor = "rgba(255, 255, 255, 1)";
 let postColor = "rgba(8,8,73, 0.7)";
-let drawerWidth = "18rem";
+let drawerWidth = "20rem";
 let navHeight = "7rem";
 
 // variables
@@ -20,8 +20,7 @@ const variables = {
   textColor,
   postColor,
   drawerWidth,
-  navHeight
-}
+  navHeight,
+};
 
 export default variables;
-
