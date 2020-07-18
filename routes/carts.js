@@ -8,6 +8,7 @@ const {
     deleteCart,
     getCartById,
     getCartByUserId,
+    insertProductToCart,
 } = require("../db/carts.js");
 const { getProductById } = require("../db/products.js");
 const {
@@ -26,23 +27,53 @@ cartsRouter.use(async function (req, res, next) {
 
 // Create Cart Route------------------------------WORKS!
 cartsRouter.post("/create", async function (req, res, next) {
-    const { userId, products } = req.body;
+    const { userId, products, productId } = req.body;
+
     const cartData = {};
 
     cartData.userId = userId;
     cartData.products = products;
+    cartData.productId = productId;
 
-    try {
-        const newCart = await createCart(cartData);
-        if (newCart) {
-            res.send({ message: "Here is your cart...", cart: newCart });
-        } else {
-            res.send({ message: "Cart doesnt exist." });
+    const userCart = await getCartByUserId(userId);
+    console.log("userCard", userCart);
+
+    const cartId = userCart.id;
+
+    if (userCart) {
+        try {
+            const addedProduct = await insertProductToCart({
+                userId,
+                products,
+            });
+
+            console.log("AddedProduct is", addedProduct);
+
+            const newCartProduct = await addProductToCart(productId, cartId);
+            res.send({
+                message: "Product added to cart",
+                product: newCartProduct,
+            });
+        } catch (error) {
+            console.error(error);
+            const { name, message } = error;
+            next({ name, message });
         }
-    } catch (error) {
-        console.error(error);
-        const { name, message } = error;
-        next({ name, message });
+    } else {
+        try {
+            const newCart = await createCart(cartData);
+            if (newCart) {
+                res.send({ message: "Here is your cart...", cart: newCart });
+            } else {
+                throw {
+                    message: "Error creating cart",
+                };
+            }
+        } catch (error) {
+            console.error(error);
+            const { name, message } = error;
+            next({ name, message });
+        }
     }
 });
 
