@@ -67,7 +67,11 @@ const testCart = [
     },
 ];
 
+<<<<<<< HEAD
+function CartDrawer() {
+=======
 function CartDrawer({ setVisibility }) {
+>>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
     const { drawer, toggleDrawer } = useContext(DrawerContext);
 
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
@@ -262,9 +266,12 @@ function CartDrawer({ setVisibility }) {
                         containedSecondary: checkout,
                     }}
                     startIcon={<PaymentIcon />}
+<<<<<<< HEAD
+=======
                     onClick={() => {
                         setVisibility(true);
                     }}
+>>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
                 >
                     Checkout
                 </Button>

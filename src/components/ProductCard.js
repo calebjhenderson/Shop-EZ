@@ -11,7 +11,7 @@ import Rating from "@material-ui/lab/Rating";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3000/api/users";
+const BASE_URL = "http://localhost:3000/api";
 
 const useStyles = makeStyles({
     cardSize: {
@@ -44,13 +44,15 @@ const useStyles = makeStyles({
 
 const userId = 1;
 
-function ProductCard() {
+function ProductCards() {
     const [products, setProducts] = useState([]);
+    const [cart, setCart] = useState([]);
+    // const [selectedCard, setSelectedCard] = userState;
 
     //Get all products by this user and store in a userState
     useEffect(() => {
         axios
-            .get(BASE_URL + `/products/${userId}`)
+            .get(BASE_URL + `/users/products/${userId}`)
             .then((res) => {
                 setProducts(res.data.userProducts);
             })
@@ -60,76 +62,107 @@ function ProductCard() {
             });
     }, []);
 
-    console.log(products);
     const classes = useStyles();
 
+    async function createUserCart(product) {
+        console.log("This product", product);
+        console.log("Id of product", product.id);
+        try {
+            const response = await axios.post(BASE_URL + `/carts/create/`, {
+                userId: userId,
+                products: product,
+                productId: product.id,
+            });
+            console.log(response);
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    }
+
+    // Add productObj to cart
+    const addToCart = (product) => {
+        setCart([...cart, product]);
+        createUserCart(product);
+    };
+
+    const cardTemplate = (product) => {
+        return (
+            <Card
+                id={product.id}
+                className={classes.cardSize}
+                variant="outlined"
+            >
+                <CardActionArea>
+                    <Typography
+                        align="center"
+                        className={classes.productTitle}
+                        gutterBottom
+                        variant="h5"
+                        component="h2"
+                    >
+                        {product.name}
+                    </Typography>
+                    <Typography
+                        align="center"
+                        className={classes.productPrice}
+                        gutterBottom
+                        variant="h5"
+                        component="h2"
+                    >
+                        Price: ${product.price}
+                    </Typography>
+                    <CardMedia
+                        className={classes.productMedia}
+                        component="img"
+                        image="https://bit.ly/2WNi2Ml"
+                        title="Product example"
+                    />
+                    <CardContent>
+                        <Typography
+                            className={classes.productContent}
+                            align="center"
+                            component="p"
+                        >
+                            {product.description}
+                        </Typography>
+                    </CardContent>
+                    <Typography align="center">
+                        Quantity: {product.quantity}
+                    </Typography>
+                </CardActionArea>
+                <Grid container className={classes.ratingContainer}>
+                    <Rating
+                        name="size-large"
+                        value={product.rating}
+                        size="large"
+                    />
+                </Grid>
+                <CardActions className={classes.cardButtons}>
+                    <Button size="small" color="primary">
+                        Buy Now
+                    </Button>
+                    <Button
+                        onClick={() => addToCart(product)}
+                        size="small"
+                        color="primary"
+                    >
+                        Add to Cart
+                    </Button>
+                </CardActions>
+            </Card>
+        );
+    };
+    console.log("cart", cart);
     return (
         <Grid container spacing={8} justify="center">
-            {products.map((products) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={products.name}>
-                    <Card
-                        id={products.id}
-                        className={classes.cardSize}
-                        variant="outlined"
-                    >
-                        <CardActionArea>
-                            <Typography
-                                align="center"
-                                className={classes.productTitle}
-                                gutterBottom
-                                variant="h5"
-                                component="h2"
-                            >
-                                {products.name}
-                            </Typography>
-                            <Typography
-                                align="center"
-                                className={classes.productPrice}
-                                gutterBottom
-                                variant="h5"
-                                component="h2"
-                            >
-                                Price: ${products.price}
-                            </Typography>
-                            <CardMedia
-                                className={classes.productMedia}
-                                component="img"
-                                image="https://bit.ly/2WNi2Ml"
-                                title="Product example"
-                            />
-                            <CardContent>
-                                <Typography
-                                    className={classes.productContent}
-                                    align="center"
-                                    component="p"
-                                >
-                                    {products.description}
-                                </Typography>
-                            </CardContent>
-                            <Typography align="center">
-                                Quantity: {products.quantity}
-                            </Typography>
-                        </CardActionArea>
-                        <Grid container className={classes.ratingContainer}>
-                            <Rating
-                                name="size-large"
-                                value={products.rating}
-                                size="large"
-                            />
-                        </Grid>
-                        <CardActions className={classes.cardButtons}>
-                            <Button size="small" color="primary">
-                                Buy Now
-                            </Button>
-                            <Button size="small" color="primary">
-                                Add to Cart
-                            </Button>
-                        </CardActions>
-                    </Card>
+            {products.map((product, idx) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={idx}>
+                    {cardTemplate(product)}
                 </Grid>
             ))}
         </Grid>
     );
 }
 
-export default ProductCard;
+export default ProductCards;

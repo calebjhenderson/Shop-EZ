@@ -14,101 +14,101 @@ const client = require("./client");
 
 // Add productId to associated orderId in order_products table
 const addReviewToProduct = async (productId, reviewId) => {
-  try {
-    const {
-      rows: [newProductReview],
-    } = await client.query(
-      `
+    try {
+        const {
+            rows: [newProductReview],
+        } = await client.query(
+            `
                 INSERT INTO product_reviews ("productId", "reviewId")
                 VALUES($1, $2)
                 RETURNING *;
             `,
-      [productId, reviewId]
-    );
+            [productId, reviewId]
+        );
 
-    return newProductReview;
-  } catch (error) {
-    console.error(
-      `There's been an error adding a review to a product @ addReviewToProduct(productId, reviewId) in ./db/product_reviews.js. ${error}`
-    );
-    throw error;
-  }
+        return newProductReview;
+    } catch (error) {
+        console.error(
+            `There's been an error adding a review to a product @ addReviewToProduct(productId, reviewId) in ./db/product_reviews.js. ${error}`
+        );
+        throw error;
+    }
 };
 
 // Remove productId from associated orderId in order_products table
 const removeReviewFromProduct = async (productReviewId) => {
-  try {
-    const isProductReview = await getProductReviewById(productReviewId);
+    try {
+        const isProductReview = await getProductReviewById(productReviewId);
 
-    if (isProductReview) {
-      const {
-        rows: [removedProductReview],
-      } = await client.query(
-        `
+        if (isProductReview) {
+            const {
+                rows: [removedProductReview],
+            } = await client.query(
+                `
                 DELETE FROM product_reviews
                 WHERE id=$1
                 RETURNING *;
             `,
-        [productReviewId]
-      );
+                [productReviewId]
+            );
 
-      return removedProductReview;
-    } else {
-      throw {
-        name: "ProductReviewNotFoundError",
-        message: "Cannot find product review with that productReviewId",
-      };
+            return removedProductReview;
+        } else {
+            throw {
+                name: "ProductReviewNotFoundError",
+                message: "Cannot find product review with that productReviewId",
+            };
+        }
+    } catch (error) {
+        console.error(
+            `There's been an error removing a review from a product @ removeReviewFromProduct(productReviewId) in ./db/product_reviews.js. ${error}`
+        );
+        throw error;
     }
-  } catch (error) {
-    console.error(
-      `There's been an error removing a review from a product @ removeReviewFromProduct(productReviewId) in ./db/product_reviews.js. ${error}`
-    );
-    throw error;
-  }
 };
 
 // Returun order product object associated with the specified orderProductId
 const getProductReviewById = async (productReviewId) => {
-  try {
-    const {
-      rows: [productReview],
-    } = await client.query(
-      `
+    try {
+        const {
+            rows: [productReview],
+        } = await client.query(
+            `
             SELECT * FROM product_reviews
             WHERE id=$1;
         `,
-      [productReviewId]
-    );
+            [productReviewId]
+        );
 
-    return productReview;
-  } catch (error) {
-    console.error(
-      `There's been an error getting a product review by id @ getProductReviewById(productReviewId) in ./db/product_reviews.js. ${error}`
-    );
-    throw error;
-  }
+        return productReview;
+    } catch (error) {
+        console.error(
+            `There's been an error getting a product review by id @ getProductReviewById(productReviewId) in ./db/product_reviews.js. ${error}`
+        );
+        throw error;
+    }
 };
 
 // Returun order product object associated with the specified reviewId
 const getProductReviewByReviewId = async (reviewId) => {
-  try {
-    const {
-      rows: [productReview],
-    } = await client.query(
-      `
+    try {
+        const {
+            rows: [productReview],
+        } = await client.query(
+            `
             SELECT * FROM product_reviews
             WHERE "reviewId"=$1;
         `,
-      [reviewId]
-    );
+            [reviewId]
+        );
 
-    return productReview;
-  } catch (error) {
-    console.error(
-      `There's been an error getting a product review by id @ getProductReviewById(productReviewId) in ./db/product_reviews.js. ${error}`
-    );
-    throw error;
-  }
+        return productReview;
+    } catch (error) {
+        console.error(
+            `There's been an error getting a product review by id @ getProductReviewById(productReviewId) in ./db/product_reviews.js. ${error}`
+        );
+        throw error;
+    }
 };
 
 //
@@ -116,7 +116,7 @@ const getProductReviewByReviewId = async (reviewId) => {
 /*---------------------------------- Exports ---------------------------------------*/
 
 module.exports = {
-  addReviewToProduct,
-  removeReviewFromProduct,
-  getProductReviewByReviewId,
+    addReviewToProduct,
+    removeReviewFromProduct,
+    getProductReviewByReviewId,
 };
