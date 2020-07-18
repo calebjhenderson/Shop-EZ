@@ -1,12 +1,9 @@
 // ./src/app.js
-
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
-
 // React
 import ReactRouterDOM from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-
 // Components
 import StoreContent from "./components/StoreContent";
 import StoreHeader from "./components/StoreHeader";
@@ -15,7 +12,6 @@ import Banner from "./components/Banner";
 import Footer from "./components/Footer";
 import Nav from "./components/Nav";
 import Checkout from "./components/Checkout";
-
 // Material-UI
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {
@@ -23,17 +19,13 @@ import {
     ThemeProvider,
     makeStyles,
 } from "@material-ui/core/styles";
-
 // Other packages/modules
 import axios from "axios";
-
 // Local
 import { DrawerContext } from "./DrawerContext";
 import variables from "./styles";
-import LoggedOutDrawer from "./components/LoggedOutDrawer";
-
+import LoggedOutDrawer from "./components/drawers/LoggedOutDrawer";
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
-
 // Overrides Material-Ui Base Styling
 const theme = createMuiTheme({
     palette: {
@@ -49,10 +41,8 @@ const theme = createMuiTheme({
         },
     },
 });
-
 const App = () => {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
-
     const [user, setUser] = useState({});
     const [cart, setCart] = useState([]);
     const [drawer, setDrawer] = useState({
@@ -63,32 +53,22 @@ const App = () => {
         customizeShop: false,
     });
     const [visibility, setVisibility] = useState(false);
-
     // Check if user is logged in and set their cart in state, else check if cart exists for non-user and set cart in state
     // useEffect(() => {
-
     //   const isToken =  localStorage.getItem('token');
     //   const isCart = localStorage.getItem('cart') || (cart && cart.length);
-
     //   if(user && Object.keys(user).length){setCart(user.cart)}
     //   else if(isToken){
-
     //     // Check if token is valid and if it is, set user and then set cart
-
     //   }
     //   else if(isCart){
     //     // set cart
-
     //   }
-
     // }, [])
-
     /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
-
     const toggleDrawer = (anchor) => {
         console.log("anchor is ", anchor);
         console.log("drawer[anchor] is", drawer[anchor]);
-
         if (
             anchor === "accountLoggedOut" &&
             drawer[anchor] === false &&
@@ -109,9 +89,7 @@ const App = () => {
             setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
         }
     };
-
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
-
     return (
         // <div className={ classes.root }>
         <ThemeProvider theme={theme}>
@@ -123,7 +101,6 @@ const App = () => {
                         <Nav />
                         <CartDrawer setVisibility={setVisibility} />
                         <LoggedOutDrawer />
-
                         <Banner />
                         <StoreHeader />
                         {visibility ? <Checkout /> : <StoreContent />}
@@ -136,8 +113,6 @@ const App = () => {
         // </div>
     );
 };
-
 /*-------------------------------------------------------------- Render ------------------------------------------------------------------*/
-
 const app = document.getElementById("root");
 ReactDOM.render(<App />, app);

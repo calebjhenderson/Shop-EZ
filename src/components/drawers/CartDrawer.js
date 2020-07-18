@@ -16,8 +16,8 @@ import Button from "@material-ui/core/Button";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/list";
 
-import { DrawerContext } from "../DrawerContext";
-import variables from "../styles";
+import { DrawerContext } from "../../DrawerContext";
+import variables from "../../styles"
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
@@ -67,7 +67,9 @@ const testCart = [
     },
 ];
 
-function CartDrawer({ setVisibility }) {
+function CartDrawer() {
+    /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
+
     const { drawer, toggleDrawer } = useContext(DrawerContext);
 
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
@@ -247,7 +249,7 @@ function CartDrawer({ setVisibility }) {
     /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
 
     const cartList = () => {
-        const [expanded, setExpanded] = React.useState(false);
+        const [expanded, setExpanded] = useState(false);
 
         const handleChange = (panel) => (event, isExpanded) => {
             setExpanded(isExpanded ? panel : false);
@@ -262,9 +264,6 @@ function CartDrawer({ setVisibility }) {
                         containedSecondary: checkout,
                     }}
                     startIcon={<PaymentIcon />}
-                    onClick={() => {
-                        setVisibility(true);
-                    }}
                 >
                     Checkout
                 </Button>
@@ -293,8 +292,7 @@ function CartDrawer({ setVisibility }) {
                                             variant="h3"
                                             className={headerTitle}
                                         >
-                                            {" "}
-                                            {`${productObj.quantity} x ${productObj.name}`}{" "}
+                                            {`${productObj.quantity} x ${productObj.name}`}
                                         </Typography>
 
                                         <Typography
@@ -302,14 +300,13 @@ function CartDrawer({ setVisibility }) {
                                             variant="h4"
                                             className={headerPrice}
                                         >
-                                            {" "}
                                             {/* If price is not already formatted as a decimal, add ".00" to it */}
                                             {`$${
                                                 +productObj.price ===
                                                 Math.floor(+productObj.price)
                                                     ? `${+productObj.price}.00`
                                                     : productObj.price
-                                            } `}{" "}
+                                            } `}
                                         </Typography>
                                     </div>
                                 </AccordionSummary>
@@ -326,7 +323,6 @@ function CartDrawer({ setVisibility }) {
                                             align="left"
                                             variant="h4"
                                         >
-                                            {" "}
                                             Qty:
                                         </Typography>
 
