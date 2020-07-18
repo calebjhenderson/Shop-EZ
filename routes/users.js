@@ -142,6 +142,25 @@ usersRouter.post("/login", async function (req, res, next) {
   }
 });
 
+//Post User Tokens Route---------------------------------In Progress
+usersRouter.post('/token', async function (req, rest, next){
+
+  const { token } =  req.body;
+  try{
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    if(decodedToken){
+      const id = decoded.id
+    }
+  }
+  catch(error){
+    const{ name, message } = error;
+    next({ name, message});
+  }
+
+});
+
+
+
 //Get User Orders Route---------------------------------Works!
 usersRouter.get("/orders", async function (req, res, next) {
   const { id } = req.params;
