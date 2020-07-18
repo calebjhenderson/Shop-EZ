@@ -3,24 +3,24 @@
 /* ----------------------------------------------------------------------------------------------- Global -----------------------------------------------------------------------------------------------*/
 
 .nav {
-  // .nav-toolbar{
-  //     display: flex;
-  //     justify-content: space-between;
-  background: $theme-color-main;
+    // .nav-toolbar{
+    //     display: flex;
+    //     justify-content: space-between;
+    background: $theme-color-main;
 }
 
 .nav-buttons {
-  .nav-menu-button {
-    color: $primary-accent;
-  }
+    .nav-menu-button {
+        color: $primary-accent;
+    }
 
-  .nav-search-button {
-    color: $primary-accent;
-  }
+    .nav-search-button {
+        color: $primary-accent;
+    }
 }
 
 .nav-search-button {
-  color: $primary-accent;
+    color: $primary-accent;
 }
 
 .nav-search-button {
