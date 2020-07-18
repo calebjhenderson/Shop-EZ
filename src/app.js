@@ -9,7 +9,7 @@ import ReactDOM from "react-dom";
 import StoreContent from "./components/StoreContent";
 import StoreHeader from "./components/StoreHeader";
 import CartDrawer from "./components/CartDrawer";
-import Banner from "./components/Banner";
+import BannerInsert from "./components/Banner";
 import Footer from "./components/Footer";
 import Nav from "./components/Nav";
 
@@ -67,7 +67,7 @@ const App = () => {
             <Nav />
             <CartDrawer />
 
-            <Banner />
+            <BannerInsert />
             <StoreHeader />
             <StoreContent />
             <Footer />

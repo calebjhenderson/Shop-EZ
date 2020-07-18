@@ -60,7 +60,6 @@ function ProductCard() {
       });
   }, []);
 
-  console.log(products);
   const classes = useStyles();
 
   return (
