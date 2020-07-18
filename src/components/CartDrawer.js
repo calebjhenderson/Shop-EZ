@@ -2,7 +2,7 @@
 
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -67,7 +67,11 @@ const testCart = [
     },
 ];
 
+<<<<<<< HEAD
 function CartDrawer() {
+=======
+function CartDrawer({ setVisibility }) {
+>>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
     const { drawer, toggleDrawer } = useContext(DrawerContext);
 
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
@@ -262,6 +266,12 @@ function CartDrawer() {
                         containedSecondary: checkout,
                     }}
                     startIcon={<PaymentIcon />}
+<<<<<<< HEAD
+=======
+                    onClick={() => {
+                        setVisibility(true);
+                    }}
+>>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
                 >
                     Checkout
                 </Button>

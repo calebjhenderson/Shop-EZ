@@ -20,9 +20,8 @@ const {
 const { requireUser } = require("../db/users.js");
 const products = require("../db/products.js");
 
-cartsRouter.use((req, res, next) => {
-    console.log("A request is being made to /api/carts endpoint.");
-
+cartsRouter.use(async function (req, res, next) {
+    console.log("A request has been made to the /api/carts endpoint.");
     next();
 });
 
@@ -96,6 +95,8 @@ cartsRouter.patch("/update/:cartId", async function (req, res, next) {
                 message: "Your cart has been updated...",
                 cart: updatedCart,
             });
+        } else {
+            res.send({ message: "Cart update failed." });
         }
     } catch (error) {
         console.error(error);
@@ -113,6 +114,8 @@ cartsRouter.delete("/deletecart/:cartId", async function (req, res, next) {
         const deletedCart = await deleteCart(cart.id);
         if (deletedCart) {
             res.send({ message: "Cart deleted.", cart: deletedCart });
+        } else {
+            res.send({ message: "Cart doesnt exist." });
         }
     } catch (error) {
         console.error(error);
@@ -121,7 +124,7 @@ cartsRouter.delete("/deletecart/:cartId", async function (req, res, next) {
     }
 });
 
-// Add Product to Cart Route------------------------------WORKS!
+// Add Product to Cart Route------------------------------Works!
 cartsRouter.put("/add/:productId", async function (req, res, next) {
     const { productId } = req.params;
     const { cartId } = req.body;
@@ -158,32 +161,6 @@ cartsRouter.delete("/deletecartproduct/:productId", async function (
         });
     } catch (error) {
         console.error(error);
-        const { name, message } = error;
-        next({ name, message });
-    }
-});
-
-///Get Cart By userId Route-----WORKS!
-cartsRouter.get("/user/:userId", async function (req, res, next) {
-    const { userId } = req.params;
-    console.log(userId);
-
-    try {
-        const userCart = await getCartByUserId(userId);
-
-        if (userCart) {
-            res.send({
-                messsage: "Cart exist for this userId",
-                cart: userCart,
-            });
-        } else {
-            throw {
-                name: "NoCartByUserId",
-                message: "Cart doesn't exist for userId",
-            };
-        }
-    } catch (error) {
-        console.log(error);
         const { name, message } = error;
         next({ name, message });
     }

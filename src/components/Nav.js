@@ -1,4 +1,4 @@
-// ./src/components/Na
+// ./src/components/Nav.js
 
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
@@ -130,6 +130,10 @@ function Nav() {
                         variant="contained"
                         color="secondary"
                         startIcon={<ExploreIcon />}
+<<<<<<< HEAD
+=======
+                        disabled
+>>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
                     >
                         Explore
                     </Button>
@@ -144,8 +148,14 @@ function Nav() {
                     </IconButton>
                     <input
                         type="search"
+<<<<<<< HEAD
                         placeholder="search"
                         className={mainSearchInput}
+=======
+                        placeholder="search (under construction)"
+                        className={mainSearchInput}
+                        disabled
+>>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
                     ></input>
                     <IconButton
                         aria-label="main search filters"
@@ -160,7 +170,11 @@ function Nav() {
                         color="inherit"
                         aria-label="open account options drawer"
                         onClick={() => {
+<<<<<<< HEAD
                             toggleDrawer("cart");
+=======
+                            toggleDrawer("accountLoggedOut");
+>>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
                         }}
                     >
                         <PersonIcon />
