@@ -1,15 +1,15 @@
 // ./db/sync.js
 const client = require("./client");
-const chalk = require('chalk');
+const chalk = require("chalk");
 
 //Create all tables if they do not already exist
 async function createTables() {
-  console.log(chalk.yellow("Starting to create tables..."));
-  try {
-    //TODO: Add image array
-    //Users table
-    await client.query(
-      `CREATE TABLE IF NOT EXISTS users (
+    console.log(chalk.yellow("Starting to create tables..."));
+    try {
+        //TODO: Add image array
+        //Users table
+        await client.query(
+            `CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
                 username VARCHAR(255) UNIQUE NOT NULL,
                 password VARCHAR(255) NOT NULL,
@@ -23,11 +23,11 @@ async function createTables() {
                 public BOOLEAN DEFAULT false,
                 active BOOLEAN DEFAULT true
             );`
-    );
+        );
 
-    //TODO: Add image array
-    //Products table
-    await client.query(`
+        //TODO: Add image array
+        //Products table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS products (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
@@ -41,32 +41,32 @@ async function createTables() {
                 active BOOLEAN DEFAULT true
             );`);
 
-    //User_products join table
-    await client.query(`
+        //User_products join table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS user_products (
                 id SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(id) NOT NULL,
                 "productId" INTEGER REFERENCES products(id) NOT NULL
             );`);
 
-    //Categories table
-    await client.query(`
+        //Categories table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS categories (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(25) UNIQUE NOT NULL
             );`);
 
-    //Category_products join table
-    await client.query(`
+        //Category_products join table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS category_products(
                 id SERIAL PRIMARY KEY,
                 "categoryId" INTEGER REFERENCES categories(id) NOT NULL,
                 "productId" INTEGER REFERENCES products(id) NOT NULL
             );`);
 
-    //TODO: Add media array
-    //Reviews table
-    await client.query(`
+        //TODO: Add media array
+        //Reviews table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS reviews(
                 id SERIAL PRIMARY KEY,
                 "productId" INTEGER REFERENCES products(id) NOT NULL,
@@ -76,33 +76,33 @@ async function createTables() {
                 comment TEXT NOT NULL
             );`);
 
-    //Product_reviews join table
-    await client.query(`
+        //Product_reviews join table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS product_reviews(
                 id SERIAL PRIMARY KEY,
                 "productId" INTEGER REFERENCES products(id) NOT NULL,
                 "reviewId" INTEGER REFERENCES reviews(id) NOT NULL
             );`);
 
-    //Carts table (userId not required for non-users to be able to purchase)
-    await client.query(`
+        //Carts table (userId not required for non-users to be able to purchase)
+        await client.query(`
             CREATE TABLE IF NOT EXISTS carts(
                 id SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(id),
                 products INTEGER []
             );`);
 
-    //Cart_products join table
-    await client.query(`
+        //Cart_products join table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS cart_products(
                 id SERIAL PRIMARY KEY,
                 "cartId" INTEGER REFERENCES carts(id) NOT NULL,
                 "productId" INTEGER REFERENCES products(id) NOT NULL
             );`);
 
-    //TODO: Add support for receipt_id to table
-    //Orders table
-    await client.query(`
+        //TODO: Add support for receipt_id to table
+        //Orders table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS orders(
                 id SERIAL PRIMARY KEY,
                 products INTEGER [] NOT NULL,
@@ -112,25 +112,25 @@ async function createTables() {
                 fulfilled BOOLEAN DEFAULT false
             );`);
 
-    //User_orders join table
-    await client.query(`
+        //User_orders join table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS user_orders(
                 id SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(id) NOT NULL,
                 "orderId" INTEGER REFERENCES orders(id) NOT NULL
             );`);
 
-    //Order_products join table
-    await client.query(`
+        //Order_products join table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS order_products(
                 id SERIAL PRIMARY KEY,
                 "orderId" INTEGER REFERENCES orders(id) NOT NULL,
                 "productId" INTEGER REFERENCES products(id) NOT NULL
             );`);
 
-    //TODO: Add media array
-    //Shops table
-    await client.query(`
+        //TODO: Add media array
+        //Shops table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS shops(
                 id SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(id) NOT NULL,
@@ -139,8 +139,8 @@ async function createTables() {
                 description TEXT
             );`);
 
-    //Receipts table
-    await client.query(`
+        //Receipts table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS receipts(
                 id SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(id) NOT NULL,
@@ -152,8 +152,8 @@ async function createTables() {
                 payment text [] NOT NULL
             );`);
 
-    //Support_messages table
-    await client.query(`
+        //Support_messages table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS support_messages(
                 id SERIAL PRIMARY KEY,
                 "customerUserId" INTEGER REFERENCES users(id) NOT NULL,
@@ -164,8 +164,8 @@ async function createTables() {
                 messages TEXT [] NOT NULL
             );`);
 
-    //User_support_messages join table
-    await client.query(`
+        //User_support_messages join table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS user_support_messages(
                 id SERIAL PRIMARY KEY,
                 "customerUserId" INTEGER REFERENCES users(id) NOT NULL,
@@ -173,9 +173,9 @@ async function createTables() {
                 "interactionId" INTEGER REFERENCES support_messages(id) NOT NULL
             );`);
 
-    //TODO: Add media array and figure out if there's a way to make one of three fields required
-    //Posts table
-    await client.query(`
+        //TODO: Add media array and figure out if there's a way to make one of three fields required
+        //Posts table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS posts(
                 id SERIAL PRIMARY KEY,
                 title VARCHAR(50),
@@ -183,38 +183,38 @@ async function createTables() {
                 comments INTEGER []
             );`);
 
-    //User_posts join table
-    await client.query(`
+        //User_posts join table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS user_posts(
                 id SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(id) NOT NULL,
                 "postId" INTEGER REFERENCES posts(id) NOT NULL
             );`);
 
-    //Comments table
-    await client.query(`
+        //Comments table
+        await client.query(`
             CREATE TABLE IF NOT EXISTS comments(
                 id SERIAL PRIMARY KEY,
                 "postsId" INTEGER REFERENCES posts(id) NOT NULL,
                 comment TEXT NOT NULL
             );`);
 
-    console.log(chalk.greenBright("Finished creating tables!"));
-  } catch (error) {
-    console.error(
-      "Error creating tables @ db/seed.js createTables()! Error: ",
-      error
-    );
-    throw error;
-  }
+        console.log(chalk.greenBright("Finished creating tables!"));
+    } catch (error) {
+        console.error(
+            "Error creating tables @ db/seed.js createTables()! Error: ",
+            error
+        );
+        throw error;
+    }
 }
 
 //Drops all tables if they exist
 async function dropTables() {
-  try {
-    console.log(chalk.yellow("Starting to drop tables..."));
+    try {
+        console.log(chalk.yellow("Starting to drop tables..."));
 
-    await client.query(`
+        await client.query(`
         DROP TABLE IF EXISTS comments;
         DROP TABLE IF EXISTS user_posts;
         DROP TABLE IF EXISTS posts;
@@ -236,23 +236,23 @@ async function dropTables() {
         DROP TABLE IF EXISTS users;
         `);
 
-    console.log(chalk.greenBright("Finished dropping tables!"));
-  } catch (error) {
-    console.error("Error dropping tables @ db/seed.js! Error: ", error);
-    throw error;
-  }
+        console.log(chalk.greenBright("Finished dropping tables!"));
+    } catch (error) {
+        console.error("Error dropping tables @ db/seed.js! Error: ", error);
+        throw error;
+    }
 }
 
 async function sync(force = false) {
-  try {
-    if (force) {
-      await dropTables;
+    try {
+        if (force) {
+            await dropTables;
+        }
+        await createTables;
+    } catch (error) {
+        console.error("Error Syncing");
+        throw error;
     }
-    await createTables;
-  } catch (error) {
-    console.error("Error Syncing");
-    throw error;
-  }
 }
 
 module.exports = sync;

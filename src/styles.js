@@ -12,16 +12,15 @@ let navHeight = "7rem";
 
 // variables
 const variables = {
-  themeMain,
-  themeLite,
-  themeDark,
-  primaryAccent,
-  secondaryAccent,
-  textColor,
-  postColor,
-  drawerWidth,
-  navHeight
-}
+    themeMain,
+    themeLite,
+    themeDark,
+    primaryAccent,
+    secondaryAccent,
+    textColor,
+    postColor,
+    drawerWidth,
+    navHeight,
+};
 
 export default variables;
-

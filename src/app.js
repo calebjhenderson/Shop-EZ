@@ -15,9 +15,9 @@ import Nav from "./components/Nav";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {
-  createMuiTheme,
-  ThemeProvider,
-  makeStyles,
+    createMuiTheme,
+    ThemeProvider,
+    makeStyles,
 } from "@material-ui/core/styles";
 
 import { DrawerContext } from "./DrawerContext";
@@ -27,56 +27,58 @@ import variables from "./styles";
 
 // Overrides Material-Ui Base Styling
 const theme = createMuiTheme({
-  palette: {
-    primary: {
-      light: "#3c2e75",
-      main: "#080849",
-      dark: "#000023",
+    palette: {
+        primary: {
+            light: "#3c2e75",
+            main: "#080849",
+            dark: "#000023",
+        },
+        secondary: {
+            light: "#e5adff",
+            main: "#b17de8",
+            dark: "#7f4fb5",
+        },
     },
-    secondary: {
-      light: "#e5adff",
-      main: "#b17de8",
-      dark: "#7f4fb5",
-    },
-  },
 });
 
 const App = () => {
-  /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
+    /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
-  const [drawer, setDrawer] = useState({
-    cart: false,
-    account: false,
-    explore: false,
-    customizeShop: false,
-  });
+    const [drawer, setDrawer] = useState({
+        cart: false,
+        account: false,
+        explore: false,
+        customizeShop: false,
+    });
 
-  /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
+    /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
 
-  const toggleDrawer = (anchor) =>
-    setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
+    const toggleDrawer = (anchor) =>
+        setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
 
-  /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
+    /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
-  return (
-    // <div className={ classes.root }>
-    <ThemeProvider theme={theme}>
-      <CssBaseline>
-        <DrawerContext.Provider value={{ drawer, setDrawer, toggleDrawer }}>
-          <div id="app">
-            <Nav />
-            <CartDrawer />
+    return (
+        // <div className={ classes.root }>
+        <ThemeProvider theme={theme}>
+            <CssBaseline>
+                <DrawerContext.Provider
+                    value={{ drawer, setDrawer, toggleDrawer }}
+                >
+                    <div id="app">
+                        <Nav />
+                        <CartDrawer />
 
-            <BannerInsert />
-            <StoreHeader />
-            <StoreContent />
-            <Footer />
-          </div>
-        </DrawerContext.Provider>
-      </CssBaseline>
-    </ThemeProvider>
-    // </div>
-  );
+                        <BannerInsert />
+                        <StoreHeader />
+                        <StoreContent />
+                        <Footer />
+                    </div>
+                </DrawerContext.Provider>
+            </CssBaseline>
+        </ThemeProvider>
+        // </div>
+    );
 };
 
 /*-------------------------------------------------------------- Render ------------------------------------------------------------------*/
