@@ -1,15 +1,16 @@
 import React, { useState } from "react";
+
+import FlightTakeoffIcon from "@material-ui/icons/FlightTakeoff";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
 import { makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
-import FlightTakeoffIcon from "@material-ui/icons/FlightTakeoff";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputLabel from "@material-ui/core/InputLabel";
 import ListIcon from "@material-ui/icons/List";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -122,11 +123,13 @@ function Checkout() {
         setInput({ ...input, [method]: event.target.value });
         setMethod(event.target.value);
     };
+
     const [submit, setSubmit] = useState(false);
 
     const handleSubmit = () => {
         event.stopPropagation();
-        console.log("submitted");
+        event.preventDefault();
+
         setSubmit(true);
         setInput({
             first: "",

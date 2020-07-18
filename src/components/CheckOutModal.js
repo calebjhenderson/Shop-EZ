@@ -21,19 +21,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TransitionsModal({ submit, setSubmit }) {
     const classes = useStyles();
-    // const [open, setOpen] = React.useState(false);
 
-    // const handleOpen = () => {
-    //     setOpen(true);
-    // };
-
-    const handleClose = () => (event) => {
-        console.log("EVENT", event);
+    const handleClose = () => {
         event.stopPropagation();
         event.preventDefault();
         setSubmit(false);
     };
-    console.log("Submit", submit);
+
     return (
         <div>
             <Modal

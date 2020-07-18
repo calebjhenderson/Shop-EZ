@@ -21,10 +21,10 @@ server.use(morgan("dev"));
 
 // Start listening to the server, and return a promise
 const startServer = new Promise((res) => {
-  server.listen(PORT, () => {
-    console.log("The server is up on port", PORT);
-    res();
-  });
+    server.listen(PORT, () => {
+        console.log("The server is up on port", PORT);
+        res();
+    });
 });
 
 sync(FORCE).then(startServer).catch(console.error);
