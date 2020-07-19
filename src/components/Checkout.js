@@ -87,7 +87,7 @@ const useStyles = makeStyles({
 });
 
 // COMPONENT
-function Checkout() {
+function Checkout({ setVisibility }) {
     const [expanded, setExpanded] = useState("");
     const [method, setMethod] = useState("");
     const classes = useStyles();
@@ -123,7 +123,8 @@ function Checkout() {
         setInput({ ...input, [method]: event.target.value });
         setMethod(event.target.value);
     };
-
+    //pass set visibility to checkout and checkout modal
+    //from there set visiblity to false on close handler
     const [submit, setSubmit] = useState(false);
 
     const handleSubmit = () => {
@@ -388,6 +389,7 @@ function Checkout() {
                         <TransitionsModal
                             submit={submit}
                             setSubmit={setSubmit}
+                            setVisibility={setVisibility}
                         />
                     ) : null}
                 </Container>

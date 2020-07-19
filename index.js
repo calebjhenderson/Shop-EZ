@@ -16,8 +16,8 @@ const apiRouter = require("./routes");
 
 server.use(express.static(PUBLIC_PATH));
 server.use(express.json());
-server.use("/api", apiRouter);
 server.use(morgan("dev"));
+server.use("/api", apiRouter);
 
 // Start listening to the server, and return a promise
 const startServer = new Promise((res) => {

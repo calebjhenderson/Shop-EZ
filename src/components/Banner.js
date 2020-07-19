@@ -1,5 +1,5 @@
 import React from "react";
-import { Banner, StaticBanner } from "material-ui-banner";
+import { Banner } from "material-ui-banner";
 
 function BannerInsert() {
     return (

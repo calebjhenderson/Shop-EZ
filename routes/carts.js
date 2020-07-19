@@ -16,6 +16,8 @@ const {
     removeProductFromCart,
     getCartProductById,
     getCartProductByCartAndProductId,
+    getCartProductsByProductId,
+    updateCartProducts,
 } = require("../db/cart_products.js");
 const { requireUser } = require("../db/users.js");
 const products = require("../db/products.js");
@@ -27,53 +29,83 @@ cartsRouter.use(async function (req, res, next) {
 
 // Create Cart Route------------------------------WORKS!
 cartsRouter.post("/create", async function (req, res, next) {
-    const { userId, products, productId } = req.body;
-    console.log("Router body", products);
+    const { userId, productId, priceTotal } = req.body;
+
     const cartData = {};
 
     cartData.userId = userId;
-    cartData.products = products;
     cartData.productId = productId;
+    cartData.priceTotal = priceTotal;
 
-    const userCart = await getCartByUserId(userId);
+    try {
+        const userCart = await getCartByUserId(userId);
 
-    const cartId = userCart.id;
+        if (userCart) {
+            const cartByProductId = await getCartProductsByProductId(productId);
+            if (cartByProductId) {
+                console.log("FDFDF", cartByProductId);
+                const productId = cartByProductId.id;
+                const currentQuantity = cartByProductId.quantity;
+                const currentTotalPrice = cartByProductId.pricetotal;
+                console.log("totalpdfdf", currentTotalPrice);
 
-    if (userCart) {
-        try {
-            const addedProduct = await insertProductToCart({
-                userId,
-                products,
-            });
+                console.log("got in here", productId);
 
-            console.log("Product added to cart", addedProduct);
+                const updatedQuantity = await updateCartProducts(productId, {
+                    quantity: currentQuantity + 1,
+                    pricetotal: currentTotalPrice + priceTotal,
+                });
 
-            const newCartProduct = await addProductToCart(productId, cartId);
+                res.send({
+                    name: "UpdatedProductQuantity&priceTotal",
+                    message:
+                        "Product quantity and priceTotal has been updated Succesfully",
+                    updatedQuantity: updatedQuantity,
+                });
+            } else {
+                const cartId = userCart.id;
+                const newCartProduct = await addProductToCart(
+                    productId,
+                    cartId,
+                    priceTotal
+                );
 
-            res.send({
-                message: "Product added to cart_products",
-                product: newCartProduct,
-            });
-        } catch (error) {
-            console.error(error);
-            const { name, message } = error;
-            next({ name, message });
-        }
-    } else {
-        try {
-            const newCart = await createCart(cartData);
+                res.send({
+                    name: "CartProductAddedSuccess",
+                    message: "Product added to cart",
+                    newCartproduct: newCartProduct,
+                });
+            }
+        } else {
+            const newCart = await createCart(userId);
+            const userNewCart = await getCartByUserId(userId);
+
+            const newCartId = userNewCart.id;
+            const newCartProduct = await addProductToCart(
+                productId,
+                newCartId,
+                totalPrice
+            );
+
             if (newCart) {
-                res.send({ message: "Here is your cart...", cart: newCart });
+                res.send({
+                    name: "CartCreatedSuccess",
+                    message: "Here is your cart...",
+                    cart: newCart,
+                    name: "CartProductAddedSuccess",
+                    message: "Product added to cart",
+                    newCartproduct: newCartProduct,
+                });
             } else {
                 throw {
                     message: "Error creating cart",
                 };
             }
-        } catch (error) {
-            console.error(error);
-            const { name, message } = error;
-            next({ name, message });
         }
+    } catch (error) {
+        console.error(error);
+        const { name, message } = error;
+        next({ name, message });
     }
 });
 

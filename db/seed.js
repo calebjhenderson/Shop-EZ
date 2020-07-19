@@ -405,8 +405,7 @@ async function createTables() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS carts(
                 id SERIAL PRIMARY KEY,
-                "userId" INTEGER REFERENCES users(id),
-                products INTEGER []
+                "userId" INTEGER REFERENCES users(id)
             );`);
 
         //Cart_products join table
@@ -414,7 +413,11 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS cart_products(
                 id SERIAL PRIMARY KEY,
                 "cartId" INTEGER REFERENCES carts(id) NOT NULL,
-                "productId" INTEGER REFERENCES products(id) NOT NULL
+                "productId" INTEGER REFERENCES products(id) NOT NULL,
+                 quantity INTEGER DEFAULT '1',
+                 priceTotal FLOAT(2) NOT NULL,
+                 UNIQUE ("cartId","productId")
+            
             );`);
 
         //TODO: Add support for receipt_id to table
@@ -927,27 +930,26 @@ async function createInitialCarts() {
     try {
         const tonysCart = await createCart({
             userId: 1,
-            products: "{1, 4}",
         });
 
-        const nahidsCart = await createCart({
-            userId: 2,
-            products: "{2}",
-        });
+        // const nahidsCart = await createCart({
+        //     userId: 2,
+        //     products: "{2}",
+        // });
 
-        const calebsCart = await createCart({
-            userId: 3,
-            products: "{3, 2}",
-        });
+        // const calebsCart = await createCart({
+        //     userId: 3,
+        //     products: "{3, 2}",
+        // });
 
-        const yahyasCart = await createCart({
-            userId: 4,
-            products: "{1, 4, 2}",
-        });
+        // const yahyasCart = await createCart({
+        //     userId: 4,
+        //     products: "{1, 4, 2}",
+        // });
 
-        const anonsCart = await createCart({
-            products: "{1, 2, 4}",
-        });
+        // const anonsCart = await createCart({
+        //     products: "{1, 2, 4}",
+        // });
 
         console.log(chalk.greenBright("Finished creating initial carts!"));
     } catch (error) {
