@@ -18,6 +18,8 @@ import PasswordInput from "./Inputs/PasswordInput";
 import variables from "../../../styles";
 const { accordionStyling } = variables;
 
+import axios from "axios";
+
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
 function SignUpAccordion() {
@@ -57,30 +59,37 @@ function SignUpAccordion() {
     const handleSignUp = async (e) => {
         event.preventDefault();
         event.stopPropagation();
-        console.log("handle here");
+        console.log("handleSignUp here");
 
         try {
             const { data } = await axios.post("/api/users/register", {
-                firsName: signUpValues.firstName,
-                lastname: signUpValues.lastName,
+                firstName: signUpValues.firstName,
+                lastName: signUpValues.lastName,
                 email: signUpValues.email,
                 username: signUpValues.username,
                 password: signUpValues.password,
+                role: "user",
             });
 
-            if (
-                data.messageName === "IncorrectCredentials" ||
-                data.name === "UserNotFoundError"
-            ) {
-                console.log("incorrect credentials inputted");
-            } else if (data.messageName === "Success") {
+            if (data.messageName === "UserAlreadyExists") {
+                console.log("Username or Email Exists");
+            } else if (data.messageName === "UserCreated") {
+                console.log("It worked");
                 localStorage.setItem("token", data.token);
+
+                setSignUpValues({
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    username: "",
+                    password: "",
+                });
             } else {
                 console.log("An error has occurred.");
             }
         } catch (err) {
             console.error(
-                "Error logging in user @handleLogin in SignupAccordion.jsß",
+                "Error signing up in user @handleSignUp in SignupAccordion.jsß",
                 err
             );
         }
@@ -111,20 +120,63 @@ function SignUpAccordion() {
                 </AccordionSummary>
 
                 <AccordionDetails>
-                    <form className={form}>
+                    <form className={form} onSubmit={(e) => handleSignUp(e)}>
                         <BorderedInput
                             name="First Name"
                             first={true}
                             value={signUpValues.firstName}
+                            onChange={(e) =>
+                                setSignUpValues({
+                                    ...signUpValues,
+                                    ["firstName"]: e.target.value,
+                                })
+                            }
                         />
-                        <BorderedInput name="Last Name" />
-                        <BorderedInput name="E-mail" type="email" />
-                        <BorderedInput name="Username" />
-                        <PasswordInput />
+                        <BorderedInput
+                            name="Last Name"
+                            value={signUpValues.lastName}
+                            onChange={(e) =>
+                                setSignUpValues({
+                                    ...signUpValues,
+                                    ["lastName"]: e.target.value,
+                                })
+                            }
+                        />
+                        <BorderedInput
+                            name="E-mail"
+                            type="email"
+                            value={signUpValues.email}
+                            onChange={(e) =>
+                                setSignUpValues({
+                                    ...signUpValues,
+                                    ["email"]: e.target.value,
+                                })
+                            }
+                        />
+                        <BorderedInput
+                            name="Username"
+                            value={signUpValues.username}
+                            onChange={(e) =>
+                                setSignUpValues({
+                                    ...signUpValues,
+                                    ["username"]: e.target.value,
+                                })
+                            }
+                        />
+                        <PasswordInput
+                            value={signUpValues.password}
+                            onChange={(e) =>
+                                setSignUpValues({
+                                    ...signUpValues,
+                                    ["password"]: e.target.value,
+                                })
+                            }
+                        />
                         <Button
                             className={submit}
                             variant="contained"
                             color="secondary"
+                            type="submit"
                         >
                             Sign Up
                         </Button>
