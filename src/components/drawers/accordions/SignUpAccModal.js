@@ -19,14 +19,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function CheckoutModal({ submit, setSubmit, setVisibility }) {
+export default function SignUpModal({ submit, setSubmit }) {
     const classes = useStyles();
 
     const handleClose = () => {
         event.stopPropagation();
         event.preventDefault();
         setSubmit(false);
-        setVisibility(false);
     };
 
     return (
@@ -47,9 +46,7 @@ export default function CheckoutModal({ submit, setSubmit, setVisibility }) {
                     <div className={classes.paper}>
                         <h2 id="transition-modal-title">Thank you!</h2>
                         <p id="transition-modal-description">
-                            Your order has been submitted successfully and is
-                            being processed! We will notify you when it has been
-                            shipped.
+                            Thanks for signing up with Shop-Ez!
                         </p>
                     </div>
                 </Fade>
