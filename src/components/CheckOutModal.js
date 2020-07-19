@@ -1,9 +1,18 @@
+// ./src/components/CheckOutModal.js
+
+/*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
+
+// React
 import React, { useState } from "react";
+
+// Material-UI Components
 import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
 import Button from "@material-ui/core/Button";
+import Modal from "@material-ui/core/Modal";
+import Fade from "@material-ui/core/Fade";
+
+/*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -19,16 +28,23 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+/*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
+
 export default function TransitionsModal({ submit, setSubmit, setVisibility }) {
+    /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
+
     const classes = useStyles();
 
-    //pass set visibility to checkout and checkout modal , from there set visiblity to false on close handler
+    /*-------------------------------------------------------------- Event Handlers ------------------------------------------------------------------*/
+
     const handleClose = () => {
         event.stopPropagation();
         event.preventDefault();
         setSubmit(false);
         setVisibility(false);
     };
+
+    /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
     return (
         <div>
