@@ -1,20 +1,24 @@
-// ./src/components/accordions/SignUpAccordion
+// ./src/components/drawers/accordions/SignUpAccordion
 
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
+//React
 import React, { useState } from "react";
 
+// Material-UI Components
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
-import Button from "@material-ui/core/Button";
 import ListItem from "@material-ui/core/ListItem";
+import Button from "@material-ui/core/Button";
 
+// Local Components
 import BorderedInput from "./inputs/BoderedInput";
 import PasswordInput from "./Inputs/PasswordInput";
 
+// Styling
 import variables from "../../../styles";
 const { accordionStyling } = variables;
 
@@ -40,12 +44,12 @@ function SignUpAccordion() {
     const classes = useStyles();
 
     const {
+        accountAccordion,
+        accountListItem,
         accordionRoot,
         headerTitle,
-        accordion,
         submit,
         form,
-        listItem,
     } = classes;
 
     /*-------------------------------------------------------------- Event Handlers ------------------------------------------------------------------*/
@@ -89,7 +93,7 @@ function SignUpAccordion() {
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
     return (
-        <ListItem className={listItem}>
+        <ListItem className={accountListItem}>
             <Accordion
                 // @ts-ignore
                 expanded={expanded === `panelSignUp`}
@@ -97,9 +101,9 @@ function SignUpAccordion() {
                 classes={{ root: accordionRoot }}
             >
                 <AccordionSummary
-                    aria-controls={`panelbh-content`}
-                    id={`panelbh-header`}
-                    className={accordion}
+                    aria-controls={`panelch-content`}
+                    id={`panelch-header`}
+                    className={accountAccordion}
                 >
                     <Typography
                         align="center"
