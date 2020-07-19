@@ -414,7 +414,7 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS cart_products(
                 id SERIAL PRIMARY KEY,
                 "cartId" INTEGER REFERENCES carts(id) NOT NULL,
-                "productId" INTEGER REFERENCES products(id) NOT NULL
+                "productId" INTEGER REFERENCES products(id) NOT NULL      
             );`);
 
         //TODO: Add support for receipt_id to table

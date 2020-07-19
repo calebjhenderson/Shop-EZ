@@ -11,7 +11,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import variables from "../../../../styles";
-const { logInAccordionStyling } = variables;
+const { inputStyling } = variables;
 
 function PasswordInput({ value, onChange }) {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
@@ -20,17 +20,16 @@ function PasswordInput({ value, onChange }) {
 
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
-    const useStyles = makeStyles(logInAccordionStyling);
+    const useStyles = makeStyles(inputStyling);
 
     const classes = useStyles();
     const { input } = classes;
 
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
-    console.log("passVisible", passVisible);
-    console.log("value is ", value);
     return (
         <TextField
+            required
             placeholder="Password"
             variant="outlined"
             label="Password"

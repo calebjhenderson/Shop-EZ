@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function TransitionsModal({ submit, setSubmit }) {
+export default function TransitionsModal({ submit, setSubmit, setVisibility }) {
     const classes = useStyles();
 
     //pass set visibility to checkout and checkout modal , from there set visiblity to false on close handler
@@ -27,6 +27,7 @@ export default function TransitionsModal({ submit, setSubmit }) {
         event.stopPropagation();
         event.preventDefault();
         setSubmit(false);
+        setVisibility(false);
     };
 
     return (

@@ -1,7 +1,7 @@
 import React from "react";
-import { Banner, StaticBanner } from "material-ui-banner";
+import { Banner } from "material-ui-banner";
 
-function InsertBanner() {
+function BannerInsert() {
     return (
         <Banner
             icon={<div />}
@@ -11,4 +11,4 @@ function InsertBanner() {
     );
 }
 
-export default InsertBanner;
+export default BannerInsert;

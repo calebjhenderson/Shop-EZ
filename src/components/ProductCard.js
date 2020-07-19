@@ -44,9 +44,8 @@ const useStyles = makeStyles({
 
 const userId = 1;
 
-function ProductCards() {
+function ProductCards({ cart, setCart }) {
     const [products, setProducts] = useState([]);
-    const [cart, setCart] = useState([]);
     // const [selectedCard, setSelectedCard] = userState;
 
     //Get all products by this user and store in a userState
@@ -65,15 +64,22 @@ function ProductCards() {
     const classes = useStyles();
 
     async function createUserCart(product) {
+        const newCart = setCart([...cart, product.id]);
+
         console.log("This product", product);
-        console.log("Id of product", product.id);
+
         try {
-            const response = await axios.post(BASE_URL + `/carts/create/`, {
+            const { data } = await axios.post(BASE_URL + `/carts/create/`, {
                 userId: userId,
-                products: product,
+                products: newCart,
                 productId: product.id,
             });
-            console.log(response);
+
+            if (data.name === "CartProductAddedSuccess") {
+                console.log(data);
+            } else {
+                console.error("Product not added to cart successfully");
+            }
         } catch (err) {
             console.log(err);
             throw err;
@@ -82,7 +88,6 @@ function ProductCards() {
 
     // Add productObj to cart
     const addToCart = (product) => {
-        setCart([...cart, product]);
         createUserCart(product);
     };
 
@@ -153,7 +158,8 @@ function ProductCards() {
             </Card>
         );
     };
-    console.log("cart", cart);
+
+    console.log("cart at bottom of productcard is ", cart);
     return (
         <Grid container spacing={8} justify="center">
             {products.map((product, idx) => (

@@ -8,7 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 
 import variables from "../../../../styles";
-const { logInAccordionStyling } = variables;
+const { inputStyling } = variables;
 
 function BorderedInput({
     name,
@@ -22,15 +22,16 @@ function BorderedInput({
     const handleSubmit = () => {};
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
-    const useStyles = makeStyles(logInAccordionStyling);
+    const useStyles = makeStyles(inputStyling);
 
     const classes = useStyles();
     const { input, firstInput } = classes;
 
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
-    console.log("username value is ", value);
+
     return (
         <TextField
+            required
             variant="outlined"
             placeholder={name}
             label={name}
