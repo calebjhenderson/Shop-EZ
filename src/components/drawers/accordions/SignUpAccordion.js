@@ -20,6 +20,9 @@ const { accordionStyling } = variables;
 
 import axios from "axios";
 
+import SignUpModal from "./SignUpAccModal.js";
+import { Container } from "@material-ui/core";
+
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
 function SignUpAccordion() {
@@ -34,7 +37,7 @@ function SignUpAccordion() {
         password: "",
         showPassword: false,
     });
-
+    const [submit, setSubmit] = useState(false);
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
     const useStyles = makeStyles(accordionStyling);
@@ -45,7 +48,7 @@ function SignUpAccordion() {
         accordionRoot,
         headerTitle,
         accordion,
-        submit,
+        submit: submitStyle,
         form,
         listItem,
     } = classes;
@@ -84,6 +87,7 @@ function SignUpAccordion() {
                     username: "",
                     password: "",
                 });
+                setSubmit(true);
             } else {
                 console.log("An error has occurred.");
             }
@@ -96,7 +100,7 @@ function SignUpAccordion() {
     };
 
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
-
+    console.log("submit", submit);
     return (
         <ListItem className={listItem}>
             <Accordion
@@ -172,14 +176,22 @@ function SignUpAccordion() {
                                 })
                             }
                         />
-                        <Button
-                            className={submit}
-                            variant="contained"
-                            color="secondary"
-                            type="submit"
-                        >
-                            Sign Up
-                        </Button>
+                        <Container>
+                            <Button
+                                className={submitStyle}
+                                variant="contained"
+                                color="secondary"
+                                type="submit"
+                            >
+                                Sign Up
+                            </Button>
+                            {submit ? (
+                                <SignUpModal
+                                    submit={submit}
+                                    setSubmit={setSubmit}
+                                />
+                            ) : null}
+                        </Container>
                     </form>
                 </AccordionDetails>
             </Accordion>

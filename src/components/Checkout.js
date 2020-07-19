@@ -21,7 +21,7 @@ import Select from "@material-ui/core/Select";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 
-import TransitionsModal from "./CheckOutModal.js";
+import CheckoutModal from "./CheckOutModal.js";
 
 //STYLES
 const useStyles = makeStyles({
@@ -123,8 +123,7 @@ function Checkout({ setVisibility }) {
         setInput({ ...input, [method]: event.target.value });
         setMethod(event.target.value);
     };
-    //pass set visibility to checkout and checkout modal
-    //from there set visiblity to false on close handler
+
     const [submit, setSubmit] = useState(false);
 
     const handleSubmit = () => {
@@ -387,7 +386,7 @@ function Checkout({ setVisibility }) {
                         Complete Order
                     </Button>
                     {submit ? (
-                        <TransitionsModal
+                        <CheckoutModal
                             submit={submit}
                             setSubmit={setSubmit}
                             setVisibility={setVisibility}
