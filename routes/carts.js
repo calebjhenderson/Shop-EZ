@@ -77,14 +77,14 @@ cartsRouter.post("/create", async function (req, res, next) {
                 });
             }
         } else {
-            const newCart = await createCart(userId);
+            const newCart = await createCart({ userId });
             const userNewCart = await getCartByUserId(userId);
 
             const newCartId = userNewCart.id;
             const newCartProduct = await addProductToCart(
                 productId,
                 newCartId,
-                totalPrice
+                priceTotal
             );
 
             if (newCart) {
