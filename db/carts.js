@@ -192,15 +192,20 @@ const getCartByUserId = async (userId) => {
 
 const insertProductToCart = async ({ userId = NaN, products = "{}" }) => {
     try {
+        console.log("userId is ", userId);
+        console.log("products is ", products);
         const {
             rows: [cart],
         } = await client.query(
-            `INSERT INTO carts ("userId",products)
-        VALUES($1,$2)
-        RETURNING *;
+            `
+            INSERT INTO carts ("userId",products)
+            VALUES($1,$2)
+            RETURNING *;
         `,
             [userId, products]
         );
+
+        return cart;
     } catch (error) {
         console.error;
         throw error;

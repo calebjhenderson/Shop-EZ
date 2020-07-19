@@ -12,7 +12,7 @@ const client = require("./client");
 
 /*---------------------------------- Functions ---------------------------------------*/
 
-// Adds productId's to cartId's in cart_products table
+// Adds productId's,cartId's,quantityAvailabe, quantityDesired, and purchasePrice in cart_products table
 const addProductToCart = async (productId, cartId) => {
     try {
         const {
@@ -20,11 +20,17 @@ const addProductToCart = async (productId, cartId) => {
         } = await client.query(
             `
             INSERT INTO cart_products
-            ("productId", "cartId")
+            ("productId", "cartId", "quanitityAvailable", quantityDesired, "purchasePrice")
             VALUES ($1, $2)
             RETURNING *
         `,
-            [productId, cartId]
+            [
+                productId,
+                cartId,
+                quantityAvailable,
+                quanityDesired,
+                purchasePrice,
+            ]
         );
 
         return newCartProduct;

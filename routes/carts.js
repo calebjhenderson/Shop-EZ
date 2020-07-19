@@ -36,7 +36,6 @@ cartsRouter.post("/create", async function (req, res, next) {
     cartData.productId = productId;
 
     const userCart = await getCartByUserId(userId);
-    console.log("userCard", userCart);
 
     const cartId = userCart.id;
 
@@ -47,9 +46,8 @@ cartsRouter.post("/create", async function (req, res, next) {
                 products,
             });
 
-            console.log("AddedProduct is", addedProduct);
-
             const newCartProduct = await addProductToCart(productId, cartId);
+
             res.send({
                 message: "Product added to cart",
                 product: newCartProduct,

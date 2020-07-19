@@ -10,12 +10,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
 import Button from "@material-ui/core/Button";
+import ListItem from "@material-ui/core/ListItem";
 
 import BorderedInput from "./inputs/BoderedInput";
 import PasswordInput from "./Inputs/PasswordInput";
 
-import variables from "../../../styles"
-const { logInAccordionStyling } = variables;
+import variables from "../../../styles";
+const { accordionStyling } = variables;
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
@@ -23,50 +24,29 @@ function SignUpAccordion() {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
     const [expanded, setExpanded] = useState(false);
+    const [signUpValues, setSignUpValues] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        username: "",
+        password: "",
+        showPassword: false,
+    });
 
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
-    const useStyles = makeStyles({
-        // Accordions
-
-        accordion: {
-            boxShadow: ` 0 0 7px -4px black`,
-            paddingRight: "0",
-            paddingLeft: "0",
-        },
-
-        accordionRoot: {
-            background: "rgba(255, 255, 255, 0.75)",
-            width: "100%",
-        },
-
-        //Accordion Header
-
-        headerTitle: {
-            padding: "0 0.7rem",
-            fontSize: "1.6rem",
-            width: "100%",
-        },
-
-        //Accordion Body
-
-        form: {
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "space-around",
-            width: "100%",
-        },
-
-        submit: {
-            width: "40%",
-            margin: "0.5rem",
-        },
-    });
+    const useStyles = makeStyles(accordionStyling);
 
     const classes = useStyles();
 
-    const { accordionRoot, headerTitle, accordion, submit, form } = classes;
+    const {
+        accordionRoot,
+        headerTitle,
+        accordion,
+        submit,
+        form,
+        listItem,
+    } = classes;
 
     /*-------------------------------------------------------------- Event Handlers ------------------------------------------------------------------*/
 
@@ -74,44 +54,84 @@ function SignUpAccordion() {
         setExpanded(isExpanded ? panel : false);
     };
 
+    const handleSignUp = async (e) => {
+        event.preventDefault();
+        event.stopPropagation();
+        console.log("handle here");
+
+        try {
+            const { data } = await axios.post("/api/users/register", {
+                firsName: signUpValues.firstName,
+                lastname: signUpValues.lastName,
+                email: signUpValues.email,
+                username: signUpValues.username,
+                password: signUpValues.password,
+            });
+
+            if (
+                data.messageName === "IncorrectCredentials" ||
+                data.name === "UserNotFoundError"
+            ) {
+                console.log("incorrect credentials inputted");
+            } else if (data.messageName === "Success") {
+                localStorage.setItem("token", data.token);
+            } else {
+                console.log("An error has occurred.");
+            }
+        } catch (err) {
+            console.error(
+                "Error logging in user @handleLogin in SignupAccordion.jsß",
+                err
+            );
+        }
+    };
+
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
     return (
-        <Accordion
-            // @ts-ignore
-            expanded={expanded === `panelSignUp`}
-            onChange={handleChange(`panelSignUp`)}
-            classes={{ root: accordionRoot }}
-        >
-            <AccordionSummary
-                aria-controls={`panelbh-content`}
-                id={`panelbh-header`}
-                className={accordion}
+        <ListItem className={listItem}>
+            <Accordion
+                // @ts-ignore
+                expanded={expanded === `panelSignUp`}
+                onChange={handleChange(`panelSignUp`)}
+                classes={{ root: accordionRoot }}
             >
-                <Typography align="center" variant="h3" className={headerTitle}>
-                    Sign Up
-                </Typography>
-            </AccordionSummary>
-
-            <AccordionDetails>
-                <form className={form}>
-                    <BorderedInput name="First Name" first={true} />
-                    <BorderedInput name="Last Name" />
-                    <BorderedInput name="E-mail" type="email" />
-                    <BorderedInput name="Username" />
-                    <BorderedInput name="Password" />
-                    <PasswordInput />
-
-                    <Button
-                        className={submit}
-                        variant="contained"
-                        color="secondary"
+                <AccordionSummary
+                    aria-controls={`panelbh-content`}
+                    id={`panelbh-header`}
+                    className={accordion}
+                >
+                    <Typography
+                        align="center"
+                        variant="h3"
+                        className={headerTitle}
                     >
                         Sign Up
-                    </Button>
-                </form>
-            </AccordionDetails>
-        </Accordion>
+                    </Typography>
+                </AccordionSummary>
+
+                <AccordionDetails>
+                    <form className={form}>
+                        <BorderedInput
+                            name="First Name"
+                            first={true}
+                            value={signUpValues.firstName}
+                        />
+                        <BorderedInput name="Last Name" />
+                        <BorderedInput name="E-mail" type="email" />
+                        <BorderedInput name="Username" />
+                        <PasswordInput />
+                        <Button
+                            className={submit}
+                            variant="contained"
+                            color="secondary"
+                        >
+                            Sign Up
+                        </Button>
+                    </form>
+                </AccordionDetails>
+            </Accordion>
+        </ListItem>
     );
 }
 

@@ -8,7 +8,6 @@ import ReactDOM from "react-dom";
 import StoreContent from "./components/StoreContent";
 import StoreHeader from "./components/StoreHeader";
 import CartDrawer from "./components/CartDrawer";
-import BannerInsert from "./components/Banner";
 import Footer from "./components/Footer";
 import Nav from "./components/Nav";
 import Checkout from "./components/Checkout";
@@ -43,23 +42,6 @@ const theme = createMuiTheme({
 });
 const App = () => {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
-<<<<<<< HEAD
-
-    const [drawer, setDrawer] = useState({
-        cart: false,
-        account: false,
-        explore: false,
-        customizeShop: false,
-    });
-
-    /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
-
-    const toggleDrawer = (anchor) =>
-        setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
-
-    /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
-
-=======
     const [user, setUser] = useState({});
     const [cart, setCart] = useState([]);
     const [drawer, setDrawer] = useState({
@@ -84,8 +66,6 @@ const App = () => {
     // }, [])
     /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
     const toggleDrawer = (anchor) => {
-        console.log("anchor is ", anchor);
-        console.log("drawer[anchor] is", drawer[anchor]);
         if (
             anchor === "accountLoggedOut" &&
             drawer[anchor] === false &&
@@ -107,29 +87,23 @@ const App = () => {
         }
     };
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
->>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
     return (
         // <div className={ classes.root }>
         <ThemeProvider theme={theme}>
             <CssBaseline>
                 <DrawerContext.Provider
-                    value={{ drawer, setDrawer, toggleDrawer }}
+                    value={{ drawer, setDrawer, toggleDrawer, cart, setCart }}
                 >
                     <div id="app">
                         <Nav />
-<<<<<<< HEAD
-                        <CartDrawer />
-
-                        <BannerInsert />
-                        <StoreHeader />
-=======
                         <CartDrawer setVisibility={setVisibility} />
                         <LoggedOutDrawer />
-                        <Banner />
-                        <StoreHeader />
-                        {visibility ? <Checkout /> : <StoreContent />}
->>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
-                        <StoreContent />
+                        {/* <StoreHeader /> */}
+                        {visibility ? (
+                            <Checkout setVisibility={setVisibility} />
+                        ) : (
+                            <StoreContent />
+                        )}
                         <Footer />
                     </div>
                 </DrawerContext.Provider>
