@@ -6,7 +6,6 @@ const bcrypt = require("bcrypt");
 const chalk = require("chalk");
 const client = require("./client");
 const {
-<<<<<<< HEAD
     createUser,
     createOrder,
     createProduct,
@@ -34,7 +33,6 @@ const {
     getAllProducts,
     getProductById,
     getProductByName,
-    getAllProductsByUserId,
     updateProduct,
     deleteProduct,
     updateShop,
@@ -62,62 +60,6 @@ const {
     deleteOrderFromUser,
     deactivateProduct,
     deactivateUser,
-=======
-  createUser,
-  createOrder,
-  createProduct,
-  createReview,
-  createCart,
-  createShop,
-  createCategory,
-  getUserById,
-  getUserByUserName,
-  getAllUsers,
-  updateUser,
-  deleteUser,
-  updateCart,
-  deleteCart,
-  getCartByUserId,
-  updateCategory,
-  deleteCategory,
-  getAllCategories,
-  getCategoryById,
-  getCategoryByName,
-  updateOrder,
-  deleteOrder,
-  getAllOrders,
-  getOrderById,
-  getAllProducts,
-  getProductById,
-  getProductByName,
-  updateProduct,
-  deleteProduct,
-  updateShop,
-  deleteShop,
-  getAllShops,
-  getShopById,
-  getShopByUserId,
-  deleteReview,
-  updateReview,
-  getReviewsByProductId,
-  getReviewsByUserId,
-  addProductToCart,
-  removeProductFromCart,
-  getCartProductById,
-  getProductsByCartId,
-  addCategoryToProduct,
-  removeCategoryFromProduct,
-  addProductToOrder,
-  removeProductFromOrder,
-  addReviewToProduct,
-  removeReviewFromProduct,
-  addProductToUser,
-  deleteProductFromUser,
-  addOrderToUser,
-  deleteOrderFromUser,
-  deactivateProduct,
-  deactivateUser,
->>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
 } = require("./index");
 
 /*---------------------------------- Functions ---------------------------------------*/
@@ -620,7 +562,6 @@ async function dropTables() {
 
 //Creates seed data of initial users
 async function createInitialUsers() {
-<<<<<<< HEAD
     // Reference
     //     id SERIAL PRIMARY KEY,
     //     username VARCHAR(25) UNIQUE NOT NULL,
@@ -647,8 +588,8 @@ async function createInitialUsers() {
             lastName: "Dyleuth",
             email: "tony.dyleuth@example.com",
             role: "admin",
-            addresses: [],
-            paymentInfo: [],
+            addresses: "{}",
+            paymentInfo: "{}",
             shopName: "",
             public: true,
             active: true,
@@ -661,8 +602,8 @@ async function createInitialUsers() {
             lastName: "Alami",
             email: "nahidalami@example.com",
             role: "merchant",
-            addresses: [],
-            paymentInfo: [],
+            addresses: "{}",
+            paymentInfo: "{}",
             shopName: "",
             public: true,
             active: true,
@@ -675,8 +616,8 @@ async function createInitialUsers() {
             lastName: "Henderson",
             email: "caleb_rocks@example.com",
             role: "user",
-            addresses: [],
-            paymentInfo: [],
+            addresses: "{}",
+            paymentInfo: "{}",
             shopName: "Caleb's Rocks",
             public: true,
             active: true,
@@ -689,8 +630,8 @@ async function createInitialUsers() {
             lastName: "Hafez",
             email: "yhafez3@example.com",
             role: "user",
-            addresses: [],
-            paymentInfo: [],
+            addresses: "{}",
+            paymentInfo: "{}",
             shopName: "",
             public: false,
             active: true,
@@ -704,91 +645,6 @@ async function createInitialUsers() {
         );
         throw error;
     }
-=======
-  // Reference
-  //     id SERIAL PRIMARY KEY,
-  //     username VARCHAR(25) UNIQUE NOT NULL,
-  //     password VARCHAR(25) NOT NULL,
-  //     "firstName" VARCHAR(25) NOT NULL,
-  //     "lastName" VARCHAR(25) NOT NULL,
-  //     email VARCHAR(255) UNIQUE NOT NULL,
-  //     role varchar NOT NULL,
-  //     addresses TEXT [],
-  //     "paymentInfo" TEXT [],
-  //     "shopName" VARCHAR (50),
-  //     public BOOLEAN DEFAULT false,
-  //     active BOOLEAN DEFAULT true
-
-  console.log(chalk.yellow("Creating initial users..."));
-
-  const SALT_COUNT = 10;
-
-  try {
-    const tony = await createUser({
-      username: "tdyleuth",
-      password: await bcrypt.hash("password123", SALT_COUNT),
-      firstName: "Tony",
-      lastName: "Dyleuth",
-      email: "tony.dyleuth@example.com",
-      role: "admin",
-      addresses: "{}",
-      paymentInfo: "{}",
-      shopName: "",
-      public: true,
-      active: true,
-    });
-
-    const nahid = await createUser({
-      username: "nahid_alami",
-      password: await bcrypt.hash("password234", SALT_COUNT),
-      firstName: "Nahid",
-      lastName: "Alami",
-      email: "nahidalami@example.com",
-      role: "merchant",
-      addresses: "{}",
-      paymentInfo: "{}",
-      shopName: "",
-      public: true,
-      active: true,
-    });
-
-    const caleb = await createUser({
-      username: "caleb_rocks",
-      password: await bcrypt.hash("password345", SALT_COUNT),
-      firstName: "Caleb",
-      lastName: "Henderson",
-      email: "caleb_rocks@example.com",
-      role: "user",
-      addresses: "{}",
-      paymentInfo: "{}",
-      shopName: "Caleb's Rocks",
-      public: true,
-      active: true,
-    });
-
-    const yahya = await createUser({
-      username: "yhafez",
-      password: await bcrypt.hash("password212", SALT_COUNT),
-      firstName: "Yahya",
-      lastName: "Hafez",
-      email: "yhafez3@example.com",
-      role: "user",
-      addresses: "{}",
-      paymentInfo: "{}",
-      shopName: "",
-      public: false,
-      active: true,
-    });
-
-    console.log(chalk.greenBright("Finished creating initial users!"));
-  } catch (error) {
-    console.error(
-      "Error creating initial users @ db/seed.js createInitialUsers()! Error: ",
-      error
-    );
-    throw error;
-  }
->>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
 }
 
 //Creates seed data of initial categories

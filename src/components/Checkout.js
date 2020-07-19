@@ -124,11 +124,14 @@ function Checkout() {
         setMethod(event.target.value);
     };
 
+    //pass set visibility to checkout and checkout modal
+    //from there set visiblity to false on close handler
     const [submit, setSubmit] = useState(false);
 
     const handleSubmit = () => {
         event.stopPropagation();
         event.preventDefault();
+
         console.log("submitted");
         setSubmit(true);
         setInput({

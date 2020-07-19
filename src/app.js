@@ -43,23 +43,6 @@ const theme = createMuiTheme({
 });
 const App = () => {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
-<<<<<<< HEAD
-
-    const [drawer, setDrawer] = useState({
-        cart: false,
-        account: false,
-        explore: false,
-        customizeShop: false,
-    });
-
-    /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
-
-    const toggleDrawer = (anchor) =>
-        setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
-
-    /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
-
-=======
     const [user, setUser] = useState({});
     const [cart, setCart] = useState([]);
     const [drawer, setDrawer] = useState({
@@ -107,7 +90,6 @@ const App = () => {
         }
     };
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
->>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
     return (
         // <div className={ classes.root }>
         <ThemeProvider theme={theme}>
@@ -117,18 +99,11 @@ const App = () => {
                 >
                     <div id="app">
                         <Nav />
-<<<<<<< HEAD
-                        <CartDrawer />
-
-                        <BannerInsert />
-                        <StoreHeader />
-=======
                         <CartDrawer setVisibility={setVisibility} />
                         <LoggedOutDrawer />
                         <Banner />
                         <StoreHeader />
                         {visibility ? <Checkout /> : <StoreContent />}
->>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
                         <StoreContent />
                         <Footer />
                     </div>

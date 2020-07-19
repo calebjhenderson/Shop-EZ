@@ -162,17 +162,6 @@ const loggedOutDrawerStyling = {
 
 // variables
 const variables = {
-<<<<<<< HEAD
-    themeMain,
-    themeLite,
-    themeDark,
-    primaryAccent,
-    secondaryAccent,
-    textColor,
-    postColor,
-    drawerWidth,
-    navHeight,
-=======
     logInAccordionStyling,
     loggedOutDrawerStyling,
     secondaryAccent,
@@ -184,7 +173,6 @@ const variables = {
     themeDark,
     textColor,
     postColor,
->>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
 };
 
 export default variables;
