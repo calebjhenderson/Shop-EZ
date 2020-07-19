@@ -6,7 +6,9 @@ const {
     getAllUsers,
     createUser,
     getUserByUserName,
-} = require("../db/users.js");
+    getUserById,
+    getCartByUserId,
+} = require("../db");
 const { getUserProductsByUserId } = require("../db/user_products");
 const { getUserOrdersByUserId } = require("../db/user_orders");
 const { getProductById } = require("../db/products");
@@ -123,7 +125,7 @@ usersRouter.post("/login", async function (req, res, next) {
                     );
 
                     res.send({
-                        messageName: "Success!",
+                        messageName: "Success",
                         message: "Welcome back!",
                         token,
                         firstName,
@@ -132,7 +134,7 @@ usersRouter.post("/login", async function (req, res, next) {
                     });
                 } else {
                     return next({
-                        messageName: "Oops!",
+                        messageName: "IncorrectCredentials",
                         message:
                             "Wrong username or password. Please try again.",
                     });
@@ -144,8 +146,6 @@ usersRouter.post("/login", async function (req, res, next) {
         const { name, message } = error;
         next({ name, message });
     }
-<<<<<<< HEAD
-=======
 });
 
 //Post User Tokens Route---------------------------------In Progress
@@ -160,7 +160,6 @@ usersRouter.post("/token", async function (req, rest, next) {
         const { name, message } = error;
         next({ name, message });
     }
->>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
 });
 
 //Get User Orders Route---------------------------------Works!
@@ -240,6 +239,33 @@ usersRouter.get("/shop/:userId", async function (req, res, next) {
             message: "Shop for this user have been found. See attached",
             userShop,
         });
+    } catch (error) {
+        console.error(error);
+        const { name, message } = error;
+        next({ name, message });
+    }
+});
+
+usersRouter.get("/cart/:userId", async function (req, res, next) {
+    const userId = req.params.userId;
+    try {
+        const userExists = await getUserById(userId);
+
+        if (userExists) {
+            const userCart = await getCartByUserId(userId);
+
+            res.send({
+                name: "UserCartObtained",
+                message: "The cart for that user was found. See attached",
+                userCart,
+            });
+        } else {
+            next({
+                name: "UserNotFound",
+                message:
+                    "We were not able to find a user with the provided userId.",
+            });
+        }
     } catch (error) {
         console.error(error);
         const { name, message } = error;

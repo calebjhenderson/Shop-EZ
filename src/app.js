@@ -8,7 +8,6 @@ import ReactDOM from "react-dom";
 import StoreContent from "./components/StoreContent";
 import StoreHeader from "./components/StoreHeader";
 import CartDrawer from "./components/CartDrawer";
-import BannerInsert from "./components/Banner";
 import Footer from "./components/Footer";
 import Nav from "./components/Nav";
 import Checkout from "./components/Checkout";
@@ -43,23 +42,6 @@ const theme = createMuiTheme({
 });
 const App = () => {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
-<<<<<<< HEAD
-
-    const [drawer, setDrawer] = useState({
-        cart: false,
-        account: false,
-        explore: false,
-        customizeShop: false,
-    });
-
-    /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
-
-    const toggleDrawer = (anchor) =>
-        setDrawer({ ...drawer, [anchor]: !drawer[anchor] });
-
-    /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
-
-=======
     const [user, setUser] = useState({});
     const [cart, setCart] = useState([]);
     const [drawer, setDrawer] = useState({
@@ -70,22 +52,37 @@ const App = () => {
         customizeShop: false,
     });
     const [visibility, setVisibility] = useState(false);
+
     // Check if user is logged in and set their cart in state, else check if cart exists for non-user and set cart in state
-    // useEffect(() => {
-    //   const isToken =  localStorage.getItem('token');
-    //   const isCart = localStorage.getItem('cart') || (cart && cart.length);
-    //   if(user && Object.keys(user).length){setCart(user.cart)}
-    //   else if(isToken){
-    //     // Check if token is valid and if it is, set user and then set cart
-    //   }
-    //   else if(isCart){
-    //     // set cart
-    //   }
-    // }, [])
+
+    useEffect(() => {
+        //   const isToken =  localStorage.getItem('token');
+        //   const isCart = localStorage.getItem('cart') || (cart && cart.length);
+        //   if(user && Object.keys(user).length){setCart(user.cart)}
+        //   else if(isToken){
+        //     // Check if token is valid and if it is, set user and then set cart
+        //   }
+        //   else if(isCart){
+        //     // set cart
+        //   }
+
+        const getUserCart = async () => {
+            try {
+                const { data } = await axios.get("/api/users/cart/1");
+                if (data.name === "UserCartObtained") {
+                    setCart(data.userCart.products);
+                }
+                //TODO: Add else statements for if user is not logged in or we receive invalid user error or no cart error
+            } catch (err) {
+                console.error("Error retrieving initial user cart", err);
+            }
+        };
+
+        getUserCart();
+    }, []);
+
     /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
     const toggleDrawer = (anchor) => {
-        console.log("anchor is ", anchor);
-        console.log("drawer[anchor] is", drawer[anchor]);
         if (
             anchor === "accountLoggedOut" &&
             drawer[anchor] === false &&
@@ -107,29 +104,27 @@ const App = () => {
         }
     };
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
->>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
+
     return (
         // <div className={ classes.root }>
         <ThemeProvider theme={theme}>
             <CssBaseline>
                 <DrawerContext.Provider
-                    value={{ drawer, setDrawer, toggleDrawer }}
+                    value={{ drawer, setDrawer, toggleDrawer, cart, setCart }}
                 >
                     <div id="app">
                         <Nav />
-<<<<<<< HEAD
-                        <CartDrawer />
-
-                        <BannerInsert />
-                        <StoreHeader />
-=======
                         <CartDrawer setVisibility={setVisibility} />
                         <LoggedOutDrawer />
-                        <Banner />
-                        <StoreHeader />
-                        {visibility ? <Checkout /> : <StoreContent />}
->>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
-                        <StoreContent />
+
+                        {visibility ? (
+                            <Checkout setVisibility={setVisibility} />
+                        ) : (
+                            <>
+                                <StoreHeader />
+                                <StoreContent cart={cart} setCart={setCart} />
+                            </>
+                        )}
                         <Footer />
                     </div>
                 </DrawerContext.Provider>

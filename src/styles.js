@@ -10,7 +10,7 @@ const postColor = "rgba(8,8,73, 0.7)";
 const drawerWidth = "20rem";
 const navHeight = "7rem";
 
-const logInAccordionStyling = {
+const accordionStyling = {
     // Accordions
 
     accordion: {
@@ -22,6 +22,12 @@ const logInAccordionStyling = {
     accordionRoot: {
         background: "rgba(255, 255, 255, 0.75)",
         width: "100%",
+    },
+
+    listItem: {
+        padding: 0,
+        marginBottom: "1.5rem",
+        width: "99%",
     },
 
     //Accordion Header
@@ -47,16 +53,31 @@ const logInAccordionStyling = {
         margin: "1rem 0 0.5rem 0",
     },
 
-    input: {
-        width: "85%",
-        marginBottom: "1rem",
+    //Settings
+
+    comingSoon: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "space-around",
+        width: "100%",
     },
-    firstInput: {
-        marginTop: "1rem",
+
+    settings: {
+        fontSize: "2rem",
+        width: "100%",
+        textAlign: "center",
+    },
+
+    //Log out
+    logOut: {
+        "&:hover": {
+            background: "rgba(125,8,8, 1)",
+        },
     },
 };
 
-const loggedOutDrawerStyling = {
+const drawerStyling = {
     // Drawer
 
     drawer: {
@@ -107,12 +128,6 @@ const loggedOutDrawerStyling = {
         alignItems: "center",
     },
 
-    listItem: {
-        padding: 0,
-        marginBottom: "1.5rem",
-        width: "99%",
-    },
-
     //Accordion Header
 
     headerTitle: {
@@ -144,37 +159,23 @@ const loggedOutDrawerStyling = {
         width: "40%",
         margin: "1rem 0 0.5rem 0",
     },
+};
 
-    comingSoon: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "space-around",
-        width: "100%",
+const inputStyling = {
+    input: {
+        width: "85%",
+        marginBottom: "1rem",
     },
-
-    settings: {
-        fontSize: "2rem",
-        width: "100%",
-        textAlign: "center",
+    firstInput: {
+        marginTop: "1rem",
     },
 };
 
 // variables
 const variables = {
-<<<<<<< HEAD
-    themeMain,
-    themeLite,
-    themeDark,
-    primaryAccent,
-    secondaryAccent,
-    textColor,
-    postColor,
-    drawerWidth,
-    navHeight,
-=======
-    logInAccordionStyling,
-    loggedOutDrawerStyling,
+    inputStyling,
+    accordionStyling,
+    drawerStyling,
     secondaryAccent,
     primaryAccent,
     drawerWidth,
@@ -184,7 +185,6 @@ const variables = {
     themeDark,
     textColor,
     postColor,
->>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
 };
 
 export default variables;

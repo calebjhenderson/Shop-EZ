@@ -19,13 +19,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function TransitionsModal({ submit, setSubmit }) {
+export default function TransitionsModal({ submit, setSubmit, setVisibility }) {
     const classes = useStyles();
 
     const handleClose = () => {
         event.stopPropagation();
         event.preventDefault();
         setSubmit(false);
+        setVisibility(false);
     };
 
     return (

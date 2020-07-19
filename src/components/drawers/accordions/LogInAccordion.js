@@ -1,4 +1,4 @@
-// ./src/components/accordions/LogInUpAccordion
+// ./src/components/accordions/LogInAccordion.js
 
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
@@ -10,11 +10,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
 import Button from "@material-ui/core/Button";
+import ListItem from "@material-ui/core/ListItem";
 
 import BorderedInput from "./inputs/BoderedInput";
 import PasswordInput from "./Inputs/PasswordInput";
 import variables from "../../../styles";
-const { logInAccordionStyling } = variables;
+const { accordionStyling } = variables;
 
 import axios from "axios";
 
@@ -26,14 +27,21 @@ function LogInAccordion() {
     const [expanded, setExpanded] = useState(false);
     const [loggedInValues, setLoggedInValues] = useState({
         username: "",
-        password: "TestPassword",
+        password: "",
     });
 
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
-    const useStyles = makeStyles(logInAccordionStyling);
+    const useStyles = makeStyles(accordionStyling);
     const classes = useStyles();
-    const { accordionRoot, headerTitle, accordion, submit, form } = classes;
+    const {
+        accordionRoot,
+        headerTitle,
+        accordion,
+        submit,
+        form,
+        listItem,
+    } = classes;
 
     /*-------------------------------------------------------------- Event Handlers ------------------------------------------------------------------*/
 
@@ -41,70 +49,94 @@ function LogInAccordion() {
         setExpanded(isExpanded ? panel : false);
     };
 
-    const handleInput = (key) => (event) => {
-        setLoggedInValues({ ...loggedInValues, [key]: event.target.value });
-    };
-
-    const handleLogIn = async () => async (event) => {
+    const handleLogIn = async (e) => {
         event.preventDefault();
         event.stopPropagation();
+        console.log("handlelogin here");
 
-        const token = await axios.post("/users/login", {
-            username: loggedInValues.username,
-            password: loggedInValues.password,
-        });
+        try {
+            const { data } = await axios.post("/api/users/login", {
+                username: loggedInValues.username,
+                password: loggedInValues.password,
+            });
 
-        console.log("token is ", token);
+            if (
+                data.messageName === "IncorrectCredentials" ||
+                data.name === "UserNotFoundError"
+            ) {
+                console.log("incorrect credentials inputted");
+            } else if (data.messageName === "Success") {
+                localStorage.setItem("token", data.token);
+            } else {
+                console.log("An error has occurred.");
+            }
+        } catch (err) {
+            console.error(
+                "Error logging in user @handleLogin in LoginAccordion.jsß",
+                err
+            );
+        }
     };
 
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
-    console.log("password is ", loggedInValues.password);
     return (
-        <Accordion
-            // @ts-ignore
-            expanded={expanded === `panelLogIn`}
-            onChange={handleChange(`panelLogIn`)}
-            classes={{ root: accordionRoot }}
-        >
-            <AccordionSummary
-                aria-controls={`panelbh-content`}
-                id={`panelbh-header`}
-                className={accordion}
+        <ListItem className={listItem}>
+            <Accordion
+                // @ts-ignore
+                expanded={expanded === `panelLogIn`}
+                onChange={handleChange(`panelLogIn`)}
+                classes={{ root: accordionRoot }}
             >
-                <Typography align="center" variant="h3" className={headerTitle}>
-                    Log In
-                </Typography>
-            </AccordionSummary>
-
-            <AccordionDetails>
-                <form className={form} onSubmit={handleLogIn}>
-                    <BorderedInput
-                        name="Username"
-                        first={true}
-                        value={loggedInValues.username}
-                        onChange={handleInput("username")}
-                    />
-                    <PasswordInput
-                        value={loggedInValues.password}
-                        onChange={(e) =>
-                            setLoggedInValues({
-                                ...loggedInValues,
-                                ["password"]: e.target.value,
-                            })
-                        }
-                    />
-
-                    <Button
-                        className={submit}
-                        variant="contained"
-                        color="secondary"
+                <AccordionSummary
+                    aria-controls={`panelbh-content`}
+                    id={`panelbh-header`}
+                    className={accordion}
+                >
+                    <Typography
+                        align="center"
+                        variant="h3"
+                        className={headerTitle}
                     >
                         Log In
-                    </Button>
-                </form>
-            </AccordionDetails>
-        </Accordion>
+                    </Typography>
+                </AccordionSummary>
+
+                <AccordionDetails>
+                    <form className={form} onSubmit={(e) => handleLogIn(e)}>
+                        <BorderedInput
+                            name="Username"
+                            first={true}
+                            value={loggedInValues.username}
+                            onChange={(e) =>
+                                setLoggedInValues({
+                                    ...loggedInValues,
+                                    ["username"]: e.target.value,
+                                })
+                            }
+                        />
+                        <PasswordInput
+                            value={loggedInValues.password}
+                            onChange={(e) =>
+                                setLoggedInValues({
+                                    ...loggedInValues,
+                                    ["password"]: e.target.value,
+                                })
+                            }
+                        />
+
+                        <Button
+                            className={submit}
+                            variant="contained"
+                            color="secondary"
+                            type="submit"
+                        >
+                            Log In
+                        </Button>
+                    </form>
+                </AccordionDetails>
+            </Accordion>
+        </ListItem>
     );
 }
 
