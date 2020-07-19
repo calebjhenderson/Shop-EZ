@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
 export default function CheckoutModal({ submit, setSubmit, setVisibility }) {
     const classes = useStyles();
 
-    //pass set visibility to checkout and checkout modal , from there set visiblity to false on close handler
     const handleClose = () => {
         event.stopPropagation();
         event.preventDefault();

@@ -2,7 +2,8 @@
 
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { DrawerContext } from "../../../DrawerContext";
 
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -25,7 +26,7 @@ import { Container } from "@material-ui/core";
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
-function SignUpAccordion() {
+function SignUpAccordion({ submit, setSubmit }) {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
     const [expanded, setExpanded] = useState(false);
@@ -37,7 +38,8 @@ function SignUpAccordion() {
         password: "",
         showPassword: false,
     });
-    const [submit, setSubmit] = useState(false);
+
+    const { toggleDrawer } = useContext(DrawerContext);
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
     const useStyles = makeStyles(accordionStyling);
@@ -54,7 +56,6 @@ function SignUpAccordion() {
     } = classes;
 
     /*-------------------------------------------------------------- Event Handlers ------------------------------------------------------------------*/
-
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
@@ -88,6 +89,7 @@ function SignUpAccordion() {
                     password: "",
                 });
                 setSubmit(true);
+                toggleDrawer("accountLoggedOut");
             } else {
                 console.log("An error has occurred.");
             }
@@ -100,7 +102,7 @@ function SignUpAccordion() {
     };
 
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
-    console.log("submit", submit);
+
     return (
         <ListItem className={listItem}>
             <Accordion
@@ -185,12 +187,6 @@ function SignUpAccordion() {
                             >
                                 Sign Up
                             </Button>
-                            {submit ? (
-                                <SignUpModal
-                                    submit={submit}
-                                    setSubmit={setSubmit}
-                                />
-                            ) : null}
                         </Container>
                     </form>
                 </AccordionDetails>
