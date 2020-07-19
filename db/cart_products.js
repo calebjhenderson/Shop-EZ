@@ -12,7 +12,7 @@ const client = require("./client");
 
 /*---------------------------------- Functions ---------------------------------------*/
 
-// Adds productId's to cartId's in cart_products table
+// Adds productId's,cartId's,quantityAvailabe, quantityDesired, and purchasePrice in cart_products table
 const addProductToCart = async (productId, cartId) => {
     try {
         const {

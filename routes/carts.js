@@ -28,7 +28,7 @@ cartsRouter.use(async function (req, res, next) {
 // Create Cart Route------------------------------WORKS!
 cartsRouter.post("/create", async function (req, res, next) {
     const { userId, products, productId } = req.body;
-
+    console.log("Router body", products);
     const cartData = {};
 
     cartData.userId = userId;
@@ -36,7 +36,6 @@ cartsRouter.post("/create", async function (req, res, next) {
     cartData.productId = productId;
 
     const userCart = await getCartByUserId(userId);
-    console.log("userCard", userCart);
 
     const cartId = userCart.id;
 
@@ -47,11 +46,12 @@ cartsRouter.post("/create", async function (req, res, next) {
                 products,
             });
 
-            console.log("AddedProduct is", addedProduct);
+            console.log("Product added to cart", addedProduct);
 
             const newCartProduct = await addProductToCart(productId, cartId);
+
             res.send({
-                message: "Product added to cart",
+                message: "Product added to cart_products",
                 product: newCartProduct,
             });
         } catch (error) {

@@ -144,8 +144,6 @@ usersRouter.post("/login", async function (req, res, next) {
         const { name, message } = error;
         next({ name, message });
     }
-<<<<<<< HEAD
-=======
 });
 
 //Post User Tokens Route---------------------------------In Progress
@@ -160,7 +158,6 @@ usersRouter.post("/token", async function (req, rest, next) {
         const { name, message } = error;
         next({ name, message });
     }
->>>>>>> 2e88da1ed4a2388002725832fde77d1969a45707
 });
 
 //Get User Orders Route---------------------------------Works!
