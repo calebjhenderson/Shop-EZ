@@ -13,11 +13,11 @@ const useStyles = makeStyles({
     },
 });
 
-function StoreContent() {
+function StoreContent({ cart, setCart }) {
     const classes = useStyles();
     return (
         <Grid className={classes.storeContent}>
-            <ProductCard />
+            <ProductCard cart={cart} setCart={setCart} />
         </Grid>
     );
 }

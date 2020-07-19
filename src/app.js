@@ -52,18 +52,35 @@ const App = () => {
         customizeShop: false,
     });
     const [visibility, setVisibility] = useState(false);
+
     // Check if user is logged in and set their cart in state, else check if cart exists for non-user and set cart in state
-    // useEffect(() => {
-    //   const isToken =  localStorage.getItem('token');
-    //   const isCart = localStorage.getItem('cart') || (cart && cart.length);
-    //   if(user && Object.keys(user).length){setCart(user.cart)}
-    //   else if(isToken){
-    //     // Check if token is valid and if it is, set user and then set cart
-    //   }
-    //   else if(isCart){
-    //     // set cart
-    //   }
-    // }, [])
+
+    useEffect(() => {
+        //   const isToken =  localStorage.getItem('token');
+        //   const isCart = localStorage.getItem('cart') || (cart && cart.length);
+        //   if(user && Object.keys(user).length){setCart(user.cart)}
+        //   else if(isToken){
+        //     // Check if token is valid and if it is, set user and then set cart
+        //   }
+        //   else if(isCart){
+        //     // set cart
+        //   }
+
+        const getUserCart = async () => {
+            try {
+                const { data } = await axios.get("/api/users/cart/1");
+                if (data.name === "UserCartObtained") {
+                    setCart(data.userCart.products);
+                }
+                //TODO: Add else statements for if user is not logged in or we receive invalid user error or no cart error
+            } catch (err) {
+                console.error("Error retrieving initial user cart", err);
+            }
+        };
+
+        getUserCart();
+    }, []);
+
     /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
     const toggleDrawer = (anchor) => {
         if (
@@ -87,6 +104,7 @@ const App = () => {
         }
     };
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
+
     return (
         // <div className={ classes.root }>
         <ThemeProvider theme={theme}>
@@ -98,11 +116,14 @@ const App = () => {
                         <Nav />
                         <CartDrawer setVisibility={setVisibility} />
                         <LoggedOutDrawer />
-                        {/* <StoreHeader /> */}
+
                         {visibility ? (
                             <Checkout setVisibility={setVisibility} />
                         ) : (
-                            <StoreContent />
+                            <>
+                                <StoreHeader />
+                                <StoreContent cart={cart} setCart={setCart} />
+                            </>
                         )}
                         <Footer />
                     </div>

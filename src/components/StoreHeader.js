@@ -25,11 +25,9 @@ function StoreHeader() {
 
     //Get Shop by this user and store in a userState
     useEffect(() => {
-        console.log("here i am");
         axios
             .get(BASE_URL + `/shop/${userId}`)
             .then((userShop) => {
-                console.log("usershop is ", userShop);
                 if (userShop) {
                     const shopArray = userShop.data.userShop;
                     setShop(shopArray);

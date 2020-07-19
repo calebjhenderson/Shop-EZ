@@ -198,7 +198,7 @@ const insertProductToCart = async ({ userId = NaN, products = "{}" }) => {
             rows: [cart],
         } = await client.query(
             `
-            INSERT INTO carts ("userId",products)
+            INSERT INTO carts ("userId", products)
             VALUES($1,$2)
             RETURNING *;
         `,

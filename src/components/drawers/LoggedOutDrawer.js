@@ -14,6 +14,7 @@ import variables from "../../styles";
 
 import SignUpAccordion from "./accordions/SignUpAccordion";
 import LogInAccordion from "./accordions/LogInAccordion";
+import LogOutAccordion from "./accordions/LogInAccordion";
 import SettingsAccordion from "./accordions/SettingsAccordion";
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
@@ -57,7 +58,7 @@ function LoggedOutDrawer() {
                         <SignUpAccordion />
                         <LogInAccordion />
                         <SettingsAccordion />
-                        <LogInAccordion />
+                        <LogOutAccordion />
                     </List>
                 </div>
             </div>

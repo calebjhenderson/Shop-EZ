@@ -35,43 +35,50 @@ cartsRouter.post("/create", async function (req, res, next) {
     cartData.products = products;
     cartData.productId = productId;
 
-    const userCart = await getCartByUserId(userId);
+    let dbArr = "{";
+    products.map((productArrId) => {
+        dbArr = dbArr + productArrId + ", ";
+    });
 
-    const cartId = userCart.id;
+    dbArr = dbArr.slice(0, dbArr.length - 2) + "}";
 
-    if (userCart) {
-        try {
+    try {
+        const userCart = await getCartByUserId(userId);
+
+        const cartId = userCart.id;
+
+        if (userCart) {
             const addedProduct = await insertProductToCart({
                 userId,
-                products,
+                products: dbArr,
             });
 
             const newCartProduct = await addProductToCart(productId, cartId);
 
             res.send({
+                name: "CartProductAddedSuccess",
                 message: "Product added to cart",
                 product: newCartProduct,
+                userCart,
             });
-        } catch (error) {
-            console.error(error);
-            const { name, message } = error;
-            next({ name, message });
-        }
-    } else {
-        try {
+        } else {
             const newCart = await createCart(cartData);
             if (newCart) {
-                res.send({ message: "Here is your cart...", cart: newCart });
+                res.send({
+                    name: "CartCreatedSuccess",
+                    message: "Here is your cart...",
+                    cart: newCart,
+                });
             } else {
                 throw {
                     message: "Error creating cart",
                 };
             }
-        } catch (error) {
-            console.error(error);
-            const { name, message } = error;
-            next({ name, message });
         }
+    } catch (error) {
+        console.error(error);
+        const { name, message } = error;
+        next({ name, message });
     }
 });
 

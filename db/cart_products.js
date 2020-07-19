@@ -20,16 +20,16 @@ const addProductToCart = async (productId, cartId) => {
         } = await client.query(
             `
             INSERT INTO cart_products
-            ("productId", "cartId", "quanitityAvailable", quantityDesired, "purchasePrice")
+            ("productId", "cartId")
             VALUES ($1, $2)
             RETURNING *
         `,
             [
                 productId,
                 cartId,
-                quantityAvailable,
-                quanityDesired,
-                purchasePrice,
+                // quantityAvailable,
+                // quanityDesired,
+                // purchasePrice,
             ]
         );
 
