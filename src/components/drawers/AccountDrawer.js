@@ -33,7 +33,7 @@ function AccountDrawer({ submit, setSubmit }) {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
     const { drawer, toggleDrawer, setAlert } = useContext(DrawerContext);
-    const { token } = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
@@ -64,7 +64,7 @@ function AccountDrawer({ submit, setSubmit }) {
             <div className={drawerContainer}>
                 <div id="account-drawer" className={wrapper}>
                     <List className={list}>
-                        {token ? (
+                        {user.id ? (
                             <>
                                 <OrdersAccordion />
                                 <StoreAccordion />

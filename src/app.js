@@ -38,7 +38,12 @@ import axios from "axios";
 const theme = createMuiTheme(muiTheme);
 const App = () => {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState({
+        id: "",
+        username: "",
+        firstName: "",
+        lastName: "",
+    });
     const [cart, setCart] = useState([]);
     const [token, setToken] = useState("");
     const [drawer, setDrawer] = useState({
@@ -72,23 +77,79 @@ const App = () => {
             }
 
             try {
-                // If there's a token in state or local storage, verify it and re-set it into local storage and state, else if token can't be verified, clear it from state and local storage
+                // If there's a token in state or local storage, verify it and re-set it into local storage and state and set user, else, if token can't be verified, clear it from state and local storage
                 // If token cannot be verified or there is no stored token, establish session and assign a UUID
                 if (isToken) {
                     const verifyToken = async () => {
-                        console.log("here, token is ", tempToken);
                         const { data } = await axios.post("/api/users/token", {
                             token: tempToken,
                         });
-
-                        console.log("data is ", data);
 
                         if (data.name === "TokenNotVerified") {
                             setToken("");
                             localStorage.setItem("token", "");
                         } else if (data.name === "TokenVerified") {
                             setToken(tempToken);
-                            localStorage.setItem("token", token);
+                            const headers = {
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: `Bearer ${tempToken}`,
+                                },
+                            };
+                            localStorage.setItem("token", tempToken);
+                            const {
+                                firstName,
+                                lastName,
+                                username,
+                                id,
+                            } = data.decodedToken;
+
+                            setUser({
+                                id,
+                                username,
+                                firstName,
+                                lastName,
+                            });
+
+                            // Get user cart products and sets cart state; if no products found for cart or no cart found, set cart to empty array
+                            const getUserCart = async () => {
+                                const { data: cartData } = await axios.get(
+                                    `/api/users/cart/1`
+                                );
+                                if (
+                                    cartData &&
+                                    cartData.name === "UserCartObtained"
+                                ) {
+                                    const { id: cartId } = cartData.userCart;
+
+                                    const getCartProducts = async () => {
+                                        const {
+                                            data: productData,
+                                        } = await axios.get(
+                                            `/api/carts/cartProducts/${cartId}`,
+                                            headers
+                                        );
+
+                                        if (
+                                            productData.name ===
+                                            "CartProductsRetrieved"
+                                        ) {
+                                            setCart(
+                                                productData.cartProductsArr
+                                            );
+                                        } else if (
+                                            productData.name ===
+                                            "NoProductsFound"
+                                        ) {
+                                            setCart([]);
+                                        }
+                                    };
+                                    getCartProducts();
+                                } else {
+                                    setCart([]);
+                                }
+                            };
+                            getUserCart();
                         } else {
                             throw new Error(
                                 "There's been an error verifying token on render startup in app.js @ useEffect"
@@ -99,14 +160,6 @@ const App = () => {
                 } else {
                     console.log("no token");
                 }
-
-                // const getUserCart = async () => {
-
-                // const { data } = await axios.get("/api/users/cart/1");
-                // if (data.name === "UserCartObtained") {
-                //     setCart(data.userCart.products);
-                // }
-                //TODO: Add else statements for if user is not logged in or we receive invalid user error or no cart error
             } catch (err) {
                 console.error("Error retrieving initial user cart", err);
                 const { name, message } = err;
@@ -142,7 +195,6 @@ const App = () => {
     };
 
     const handleClose = (event, reason) => {
-        console.log("reason is ", reason);
         if (reason === "clickaway") {
             return;
         }

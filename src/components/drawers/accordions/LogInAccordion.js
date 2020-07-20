@@ -36,7 +36,7 @@ function LogInAccordion() {
 
     const [expanded, setExpanded] = useState(false);
     const { setAlert, toggleDrawer } = useContext(DrawerContext);
-    const { setToken } = useContext(UserContext);
+    const { setToken, setUser } = useContext(UserContext);
     const [loggedInValues, setLoggedInValues] = useState({
         username: "",
         password: "",
@@ -83,8 +83,15 @@ function LogInAccordion() {
 
                 // Render error message
             } else if (data.messageName === "Success") {
-                localStorage.setItem("token", data.token);
+                const { token, id, username, firstName, lastName } = data;
+                localStorage.setItem("token", token);
                 setToken(data.token);
+                setUser({
+                    id,
+                    username,
+                    firstName,
+                    lastName,
+                });
                 setAlert({
                     message: "You have successfully logged in",
                     severity: "success",

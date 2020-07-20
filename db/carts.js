@@ -18,10 +18,12 @@ const {
 /*---------------------------------- Functions ---------------------------------------*/
 
 // Add new cart to carts table and return new cart object
-const createCart = async ({ userId = NaN }) => {
+const createCart = async ({ userId = NaN, products = [] }) => {
     try {
         //NaN is the only value in JS not equal to istelf, so this will return true only if userId is NaN
         const isNotNum = userId !== userId;
+
+        console.log("user id is ", userId, "and isnotnum is ", isNotNum);
 
         if (!isNotNum) {
             const {
@@ -34,11 +36,29 @@ const createCart = async ({ userId = NaN }) => {
                 [userId]
             );
 
+            if (cart && products.length) {
+                products.map(async (productId) => {
+                    const {
+                        rows: [cartProducts],
+                    } = await client.query(
+                        `
+                        INSERT INTO cart_products ("cartId", "productId")
+                        VALUES ($1, $2)
+                        RETURNING *;
+                    `,
+                        [cart.id, productId]
+                    );
+
+                    console.log("cartProducts is  ", cartProducts);
+                });
+            }
+
             return cart;
+        } else if (isNotNum || typeof userId !== "number") {
         }
     } catch (error) {
         console.error(
-            `There's been an error creating cart @ createCart({userId=Nan}) in ./db/carts.js. ${error}`
+            `There's been an error creating cart @ createCart({userId=Nan, products="{}"}) in ./db/carts.js. ${error}`
         );
         throw error;
     }
