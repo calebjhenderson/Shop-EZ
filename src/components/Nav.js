@@ -101,7 +101,7 @@ function Nav() {
                         color="inherit"
                         aria-label="open account options drawer"
                         onClick={() => {
-                            toggleDrawer("accountLoggedOut");
+                            toggleDrawer("account");
                         }}
                     >
                         <PersonIcon className={icons} />

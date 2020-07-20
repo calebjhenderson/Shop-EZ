@@ -55,7 +55,7 @@ function SettingsAccordion() {
             >
                 <AccordionSummary
                     aria-controls={`paneldh-content`}
-                    id={`panelbh-header`}
+                    id={`paneldh-header`}
                     className={accountAccordion}
                 >
                     <Typography

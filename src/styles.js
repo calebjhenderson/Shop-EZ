@@ -270,7 +270,7 @@ const drawerStyling = {
     },
 
     blankSpaceCart: {
-        height: `calc(${navHeight} + 0.5rem)`,
+        height: `calc(${navHeight} + 1rem)`,
     },
 
     wrapper: {
@@ -342,6 +342,7 @@ const checkOutBtnStyling = {
     checkout: {
         background: secondaryAccent,
         width: "95%",
+        marginBottom: "0.5rem",
 
         "&:hover": {
             background: "rgba(241,180,11,1)",
@@ -518,6 +519,20 @@ const storeHeaderStyling = {
     },
 };
 
+const noticeStyling = {
+    noticeStyle: {
+        width: `calc(${drawerWidth} - 1.5rem)`,
+        right: "11px",
+    },
+    alertRoot: {
+        width: `calc(${drawerWidth} - 1.5rem)`,
+        alignItems: "center",
+        textAlign: "center",
+        display: "flex",
+        opacity: 0.8,
+    },
+};
+
 // variables
 const variables = {
     storeContentStyling,
@@ -530,6 +545,7 @@ const variables = {
     checkoutStyling,
     secondaryAccent,
     drawerStyling,
+    noticeStyling,
     primaryAccent,
     inputStyling,
     drawerWidth,

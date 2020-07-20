@@ -3,7 +3,7 @@
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
 // React
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 // Material-UI Components
 import AccordionDetails from "@material-ui/core/AccordionDetails";
@@ -18,6 +18,10 @@ import Button from "@material-ui/core/Button";
 import BorderedInput from "./inputs/BoderedInput";
 import PasswordInput from "./Inputs/PasswordInput";
 
+// Context
+import { DrawerContext } from "../../../DrawerContext";
+import { UserContext } from "../../../UserContext";
+
 // Styling
 import variables from "../../../styles";
 const { accordionStyling } = variables;
@@ -31,6 +35,8 @@ function LogInAccordion() {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
     const [expanded, setExpanded] = useState(false);
+    const { setAlert, toggleDrawer } = useContext(DrawerContext);
+    const { setToken } = useContext(UserContext);
     const [loggedInValues, setLoggedInValues] = useState({
         username: "",
         password: "",
@@ -70,17 +76,39 @@ function LogInAccordion() {
                 data.messageName === "IncorrectCredentials" ||
                 data.name === "UserNotFoundError"
             ) {
-                console.log("incorrect credentials inputted");
+                setAlert({
+                    message: "The username or password entered is incorrect",
+                    severity: "error",
+                    isVisible: true,
+                });
+
+                // Render error message
             } else if (data.messageName === "Success") {
                 localStorage.setItem("token", data.token);
+                setToken(data.token);
+                setAlert({
+                    message: "You have successfully logged in",
+                    severity: "success",
+                    isVisible: true,
+                });
+                toggleDrawer("account");
             } else {
-                console.log("An error has occurred.");
+                setAlert({
+                    message: "An unknown error has occurred",
+                    severity: "error",
+                    isVisible: true,
+                });
             }
         } catch (err) {
             console.error(
-                "Error logging in user @handleLogin in LoginAccordion.jsß",
+                "Error logging in user @handleLogin in LoginAccordion.js",
                 err
             );
+            setAlert({
+                message: "An unknown error has occurred",
+                severity: "error",
+                isVisible: true,
+            });
         }
     };
 
