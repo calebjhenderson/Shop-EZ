@@ -24,6 +24,7 @@ import axios from "axios";
 import { DrawerContext } from "./DrawerContext";
 import variables from "./styles";
 import LoggedOutDrawer from "./components/drawers/LoggedOutDrawer";
+import SignUpModal from "./components/drawers/accordions/SignUpAccModal";
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 // Overrides Material-Ui Base Styling
 const theme = createMuiTheme({
@@ -52,6 +53,7 @@ const App = () => {
         customizeShop: false,
     });
     const [visibility, setVisibility] = useState(false);
+    const [submit, setSubmit] = useState(false);
 
     // Check if user is logged in and set their cart in state, else check if cart exists for non-user and set cart in state
 
@@ -104,8 +106,8 @@ const App = () => {
         }
     };
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
+
     return (
-        // <div className={ classes.root }>
         <ThemeProvider theme={theme}>
             <CssBaseline>
                 <DrawerContext.Provider
@@ -114,7 +116,17 @@ const App = () => {
                     <div id="app">
                         <Nav />
                         <CartDrawer setVisibility={setVisibility} />
-                        <LoggedOutDrawer />
+                        <LoggedOutDrawer
+                            submit={submit}
+                            setSubmit={setSubmit}
+                        />
+                        {submit ? (
+                            <SignUpModal
+                                submit={submit}
+                                setSubmit={setSubmit}
+                                setVisibility={setVisibility}
+                            />
+                        ) : null}
 
                         {visibility ? (
                             <Checkout setVisibility={setVisibility} />
@@ -129,7 +141,6 @@ const App = () => {
                 </DrawerContext.Provider>
             </CssBaseline>
         </ThemeProvider>
-        // </div>
     );
 };
 /*-------------------------------------------------------------- Render ------------------------------------------------------------------*/

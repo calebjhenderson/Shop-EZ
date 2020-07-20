@@ -21,7 +21,7 @@ import SettingsAccordion from "./accordions/SettingsAccordion";
 
 const { drawerStyling } = variables;
 
-function LoggedOutDrawer() {
+function LoggedOutDrawer({ submit, setSubmit }) {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
     const { drawer, toggleDrawer } = useContext(DrawerContext);
@@ -55,7 +55,10 @@ function LoggedOutDrawer() {
             <div className={drawerContainer}>
                 <div id="accountLoggedOut-drawer" className={wrapper}>
                     <List className={list}>
-                        <SignUpAccordion />
+                        <SignUpAccordion
+                            submit={submit}
+                            setSubmit={setSubmit}
+                        />
                         <LogInAccordion />
                         <SettingsAccordion />
                         <LogOutAccordion />
