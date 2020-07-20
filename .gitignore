@@ -1,7 +1,6 @@
 # /.gitignoregit 
 node_modules
-main.map.js
-main.js.map
+public/main.map.js
 .ds_store
 main.js
 .env
