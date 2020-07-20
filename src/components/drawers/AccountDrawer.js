@@ -26,7 +26,7 @@ const { drawerStyling } = variables;
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
-function AccountDrawer() {
+function AccountDrawer({ submit, setSubmit }) {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
     const { drawer, toggleDrawer } = useContext(DrawerContext);
@@ -60,7 +60,10 @@ function AccountDrawer() {
             <div className={drawerContainer}>
                 <div id="accountLoggedOut-drawer" className={wrapper}>
                     <List className={list}>
-                        <SignUpAccordion />
+                        <SignUpAccordion
+                            submit={submit}
+                            setSubmit={setSubmit}
+                        />
                         <LogInAccordion />
                         <SettingsAccordion />
                         <LogOutAccordion />

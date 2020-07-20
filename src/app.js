@@ -16,6 +16,7 @@ import AccountDrawer from "./components/drawers/AccountDrawer";
 import CartDrawer from "./components/drawers/CartDrawer";
 import StoreContent from "./components/StoreContent";
 import StoreHeader from "./components/StoreHeader";
+import SignUpModal from "./components/SignUpModal";
 import Checkout from "./components/Checkout";
 import Footer from "./components/Footer";
 import Nav from "./components/Nav";
@@ -45,6 +46,7 @@ const App = () => {
         customizeShop: false,
     });
     const [visibility, setVisibility] = useState(false);
+    const [submit, setSubmit] = useState(false);
 
     // Check if user is logged in and set their cart in state, else check if cart exists for non-user and set cart in state
 
@@ -97,8 +99,8 @@ const App = () => {
         }
     };
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
+
     return (
-        // <div className={ classes.root }>
         <ThemeProvider theme={theme}>
             <CssBaseline>
                 <DrawerContext.Provider
@@ -114,8 +116,15 @@ const App = () => {
                 >
                     <div id="app">
                         <Nav />
-                        <CartDrawer setVisibility={setVisibility} />
-                        <AccountDrawer />
+                        <CartDrawer />
+
+                        <AccountDrawer submit={submit} setSubmit={setSubmit} />
+                        {submit ? (
+                            <SignUpModal
+                                submit={submit}
+                                setSubmit={setSubmit}
+                            />
+                        ) : null}
 
                         {visibility ? (
                             <Checkout setVisibility={setVisibility} />
@@ -130,7 +139,6 @@ const App = () => {
                 </DrawerContext.Provider>
             </CssBaseline>
         </ThemeProvider>
-        // </div>
     );
 };
 /*-------------------------------------------------------------- Render ------------------------------------------------------------------*/

@@ -3,7 +3,7 @@
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
 //React
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 // Material-UI Components
 import AccordionDetails from "@material-ui/core/AccordionDetails";
@@ -12,21 +12,27 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
 import ListItem from "@material-ui/core/ListItem";
+import { Container } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 
 // Local Components
-import BorderedInput from "./inputs/BoderedInput";
 import PasswordInput from "./Inputs/PasswordInput";
+import BorderedInput from "./inputs/BoderedInput";
+import SignUpModal from "../../SignUpModal";
+
+// context
+import { DrawerContext } from "../../../DrawerContext";
 
 // Styling
 import variables from "../../../styles";
 const { accordionStyling } = variables;
 
+// Other packages/modules
 import axios from "axios";
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
-function SignUpAccordion() {
+function SignUpAccordion({ submit, setSubmit }) {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
     const [expanded, setExpanded] = useState(false);
@@ -39,6 +45,7 @@ function SignUpAccordion() {
         showPassword: false,
     });
 
+    const { toggleDrawer } = useContext(DrawerContext);
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
     const useStyles = makeStyles(accordionStyling);
@@ -46,16 +53,15 @@ function SignUpAccordion() {
     const classes = useStyles();
 
     const {
+        submit: submitStyle,
         accountAccordion,
         accountListItem,
         accordionRoot,
         headerTitle,
-        submit,
         form,
     } = classes;
 
     /*-------------------------------------------------------------- Event Handlers ------------------------------------------------------------------*/
-
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
@@ -87,7 +93,10 @@ function SignUpAccordion() {
                     email: "",
                     username: "",
                     password: "",
+                    showPassword: false,
                 });
+                setSubmit(true);
+                toggleDrawer("accountLoggedOut");
             } else {
                 console.log("An error has occurred.");
             }
@@ -176,14 +185,16 @@ function SignUpAccordion() {
                                 })
                             }
                         />
-                        <Button
-                            className={submit}
-                            variant="contained"
-                            color="secondary"
-                            type="submit"
-                        >
-                            Sign Up
-                        </Button>
+                        <Container>
+                            <Button
+                                className={submitStyle}
+                                variant="contained"
+                                color="secondary"
+                                type="submit"
+                            >
+                                Sign Up
+                            </Button>
+                        </Container>
                     </form>
                 </AccordionDetails>
             </Accordion>

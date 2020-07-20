@@ -13,30 +13,24 @@ const client = require("./client");
 /*---------------------------------- Functions ---------------------------------------*/
 
 // Adds productId's,cartId's,quantityAvailabe, quantityDesired, and purchasePrice in cart_products table
-const addProductToCart = async (productId, cartId) => {
+const addProductToCart = async (productId, cartId, priceTotal) => {
     try {
         const {
             rows: [newCartProduct],
         } = await client.query(
             `
             INSERT INTO cart_products
-            ("productId", "cartId")
-            VALUES ($1, $2)
+            ("productId", "cartId",priceTotal)
+            VALUES ($1, $2, $3)
             RETURNING *
         `,
-            [
-                productId,
-                cartId,
-                // quantityAvailable,
-                // quanityDesired,
-                // purchasePrice,
-            ]
+            [productId, cartId, priceTotal]
         );
 
         return newCartProduct;
     } catch (error) {
         console.error(
-            `There's been an error adding a product to a cart @ addProductToCart(productId, cartId) in ./db/cart_products.js. ${error}`
+            `There's been an error adding a product to a cart @ addProductToCart(productId, cartId,totalPrice) in ./db/cart_products.js. ${error}`
         );
         throw error;
     }
@@ -124,7 +118,9 @@ const getProductsByCartId = async (cartId) => {
 // Returns an array of all userProduct objects associated with the specified product id, if any
 const getCartProductsByProductId = async (productId) => {
     try {
-        const { rows: cartProductsArr } = await client.query(
+        const {
+            rows: [cartProductsArr],
+        } = await client.query(
             `
             SELECT * FROM cart_products
             WHERE "productId"=$1;
@@ -162,6 +158,38 @@ const getCartProductByCartAndProductId = async (cartId, productId) => {
         throw error;
     }
 };
+
+//Updates row in cart_products table and returns updated cart_products object
+const updateCartProducts = async (id, fields = {}) => {
+    const setString = Object.keys(fields)
+        .map((key, index) => `"${key}"=$${index + 1}`)
+        .join(", ");
+
+    if (setString.length === 0) {
+        return;
+    }
+
+    try {
+        const {
+            rows: [cart_products],
+        } = await client.query(
+            `
+          UPDATE cart_products
+          SET ${setString}
+          WHERE id=${id}
+          RETURNING *;
+        `,
+            Object.values(fields)
+        );
+
+        return cart_products;
+    } catch (error) {
+        console.error(
+            `There's been an error updating the cart_product @ updateCartProducts(id, fields = {}) in ./db/cart_products.js. ${error}`
+        );
+        throw error;
+    }
+};
 /*---------------------------------- Exports ---------------------------------------*/
 
 module.exports = {
@@ -171,4 +199,5 @@ module.exports = {
     getProductsByCartId,
     getCartProductsByProductId,
     getCartProductByCartAndProductId,
+    updateCartProducts,
 };
