@@ -1,27 +1,32 @@
-// ./src/components/LoggedOutdrawer
+// ./src/components/drawers/LoggedOutdrawer
 
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
+// React
 import React, { useContext, useState } from "react";
 
+// Material-UI Components
 import { makeStyles } from "@material-ui/core/styles";
 import ListItem from "@material-ui/core/ListItem";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/list";
 
-import { DrawerContext } from "../../DrawerContext";
-import variables from "../../styles";
-
+// Local Components
 import SignUpAccordion from "./accordions/SignUpAccordion";
 import LogInAccordion from "./accordions/LogInAccordion";
-import LogOutAccordion from "./accordions/LogInAccordion";
+import LogOutAccordion from "./accordions/LogOutAccordion";
 import SettingsAccordion from "./accordions/SettingsAccordion";
+
+// Context
+import { DrawerContext } from "../../DrawerContext";
+
+// Styling
+import variables from "../../styles";
+const { drawerStyling } = variables;
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
-const { drawerStyling } = variables;
-
-function LoggedOutDrawer({ submit, setSubmit }) {
+function AccountDrawer({ submit, setSubmit }) {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
     const { drawer, toggleDrawer } = useContext(DrawerContext);
@@ -34,9 +39,9 @@ function LoggedOutDrawer({ submit, setSubmit }) {
 
     const {
         drawer: drawerStyle,
+        blankSpaceAccount,
         drawerContainer,
         drawerPaper,
-        blankSpace,
         wrapper,
         list,
     } = classes;
@@ -51,7 +56,7 @@ function LoggedOutDrawer({ submit, setSubmit }) {
             onClose={() => toggleDrawer("accountLoggedOut")}
             classes={{ paper: drawerPaper }}
         >
-            <div className={blankSpace}></div>
+            <div className={blankSpaceAccount}></div>
             <div className={drawerContainer}>
                 <div id="accountLoggedOut-drawer" className={wrapper}>
                     <List className={list}>
@@ -71,4 +76,4 @@ function LoggedOutDrawer({ submit, setSubmit }) {
 
 /*-------------------------------------------------------------- Exports ------------------------------------------------------------------*/
 
-export default LoggedOutDrawer;
+export default AccountDrawer;

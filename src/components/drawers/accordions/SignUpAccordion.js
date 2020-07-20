@@ -1,28 +1,34 @@
-// ./src/components/accordions/SignUpAccordion
+// ./src/components/drawers/accordions/SignUpAccordion
 
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
+//React
 import React, { useState, useContext } from "react";
-import { DrawerContext } from "../../../DrawerContext";
 
+// Material-UI Components
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
-import Button from "@material-ui/core/Button";
 import ListItem from "@material-ui/core/ListItem";
+import { Container } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 
-import BorderedInput from "./inputs/BoderedInput";
+// Local Components
 import PasswordInput from "./Inputs/PasswordInput";
+import BorderedInput from "./inputs/BoderedInput";
+import SignUpModal from "../../SignUpModal";
 
+// context
+import { DrawerContext } from "../../../DrawerContext";
+
+// Styling
 import variables from "../../../styles";
 const { accordionStyling } = variables;
 
+// Other packages/modules
 import axios from "axios";
-
-import SignUpModal from "./SignUpAccModal.js";
-import { Container } from "@material-ui/core";
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
@@ -47,12 +53,12 @@ function SignUpAccordion({ submit, setSubmit }) {
     const classes = useStyles();
 
     const {
+        submit: submitStyle,
+        accountAccordion,
+        accountListItem,
         accordionRoot,
         headerTitle,
-        accordion,
-        submit: submitStyle,
         form,
-        listItem,
     } = classes;
 
     /*-------------------------------------------------------------- Event Handlers ------------------------------------------------------------------*/
@@ -87,6 +93,7 @@ function SignUpAccordion({ submit, setSubmit }) {
                     email: "",
                     username: "",
                     password: "",
+                    showPassword: false,
                 });
                 setSubmit(true);
                 toggleDrawer("accountLoggedOut");
@@ -104,7 +111,7 @@ function SignUpAccordion({ submit, setSubmit }) {
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
     return (
-        <ListItem className={listItem}>
+        <ListItem className={accountListItem}>
             <Accordion
                 // @ts-ignore
                 expanded={expanded === `panelSignUp`}
@@ -112,9 +119,9 @@ function SignUpAccordion({ submit, setSubmit }) {
                 classes={{ root: accordionRoot }}
             >
                 <AccordionSummary
-                    aria-controls={`panelbh-content`}
-                    id={`panelbh-header`}
-                    className={accordion}
+                    aria-controls={`panelch-content`}
+                    id={`panelch-header`}
+                    className={accountAccordion}
                 >
                     <Typography
                         align="center"

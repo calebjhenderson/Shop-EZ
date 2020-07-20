@@ -1,35 +1,39 @@
-// ./src/components/drawers/accordions/LogOutAccordion.js
+// ./src/components/drawers/accordions/cartAccordion/CartItemAccordion.js
 
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
-// React
-import React from "react";
+//React Components
+import React, { useState } from "react";
 
-// Material-UI Components
-import AccordionSummary from "@material-ui/core/AccordionSummary";
+//Material-UI Components
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
 import ListItem from "@material-ui/core/ListItem";
 
-// Styling
-import variables from "../../../styles";
+// Local Components
+import CartHeader from "./CartHeader";
+import CartBody from "./CartBody";
+
+// Styles
+import variables from "../../../../styles";
 const { accordionStyling } = variables;
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
-function LogOutAccordion() {
+function CartItemAccordion({ productObj, index }) {
+    /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
+
+    const [expanded, setExpanded] = useState(false);
+
+    const handleChange = (panel) => (event, isExpanded) => {
+        setExpanded(isExpanded ? panel : false);
+    };
+
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
     const useStyles = makeStyles(accordionStyling);
     const classes = useStyles();
-    const {
-        accountAccordion,
-        accountListItem,
-        accordionRoot,
-        headerTitle,
-        logOut,
-    } = classes;
+    const { accordionRoot, cartListItem } = classes;
 
     /*-------------------------------------------------------------- Event Handlers ------------------------------------------------------------------*/
 
@@ -42,22 +46,21 @@ function LogOutAccordion() {
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
     return (
-        <ListItem className={accountListItem}>
-            <Accordion classes={{ root: accordionRoot }}>
-                <AccordionSummary
-                    aria-controls={`paneleh-content`}
-                    id={`paneleh-header`}
-                    className={`${accountAccordion} ${logOut}`}
-                    onClick={handleLogOut}
-                >
-                    <Typography
-                        align="center"
-                        variant="h3"
-                        className={headerTitle}
-                    >
-                        Log Out
-                    </Typography>
-                </AccordionSummary>
+        <ListItem component="div" key={productObj.id} className={cartListItem}>
+            <Accordion
+                // @ts-ignore
+                expanded={expanded === `panel${index}`}
+                onChange={handleChange(`panel${index}`)}
+                classes={{ root: accordionRoot }}
+            >
+                <CartHeader
+                    quantity={productObj.quantity}
+                    name={productObj.name}
+                    price={productObj.price}
+                    index={index}
+                />
+
+                <CartBody quantity={productObj.quantity} />
             </Accordion>
         </ListItem>
     );
@@ -65,4 +68,4 @@ function LogOutAccordion() {
 
 /*-------------------------------------------------------------- Exports ------------------------------------------------------------------*/
 
-export default LogOutAccordion;
+export default CartItemAccordion;
