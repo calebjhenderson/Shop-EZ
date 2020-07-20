@@ -57,46 +57,68 @@ const App = () => {
 
     // Check if user is logged in and set their cart in state, else check if cart exists for non-user and set cart in state
 
-    useEffect(() => {
-        //   const isToken =  localStorage.getItem('token');
-        //   const isCart = localStorage.getItem('cart') || (cart && cart.length);
-
-        //   if(user && Object.keys(user).length){setCart(user.cart)}
-        //   else if(isToken){
-        //     // Check if token is valid and if it is, set user and then set cart
-        //   }
-        //   else if(isCart){
-        //     // set cart
-        //   }
-
-        const getUserCart = async () => {
-            try {
-                const { data } = await axios.get("/api/users/cart/1");
-                if (data.name === "UserCartObtained") {
-                    setCart(data.userCart.products);
+    useEffect(
+        () => {
+            // Check if there is a token in state. If not, check local storage.
+            let isToken = Boolean(token);
+            let tempToken = token;
+            if (!isToken) {
+                isToken = Boolean(localStorage.getItem("token"));
+                if (!isToken) {
+                    isToken = false;
+                } else {
+                    tempToken = localStorage.getItem("token");
                 }
+            }
+
+            try {
+                // If there's a token in state or local storage, verify it and re-set it into local storage and state, else if token can't be verified, clear it from state and local storage
+                // If token cannot be verified or there is no stored token, establish session and assign a UUID
+                if (isToken) {
+                    const verifyToken = async () => {
+                        console.log("here, token is ", tempToken);
+                        const { data } = await axios.post("/api/users/token", {
+                            token: tempToken,
+                        });
+
+                        console.log("data is ", data);
+
+                        if (data.name === "TokenNotVerified") {
+                            setToken("");
+                            localStorage.setItem("token", "");
+                        } else if (data.name === "TokenVerified") {
+                            setToken(tempToken);
+                            localStorage.setItem("token", token);
+                        } else {
+                            throw new Error(
+                                "There's been an error verifying token on render startup in app.js @ useEffect"
+                            );
+                        }
+                    };
+                    verifyToken();
+                } else {
+                    console.log("no token");
+                }
+
+                // const getUserCart = async () => {
+
+                // const { data } = await axios.get("/api/users/cart/1");
+                // if (data.name === "UserCartObtained") {
+                //     setCart(data.userCart.products);
+                // }
                 //TODO: Add else statements for if user is not logged in or we receive invalid user error or no cart error
             } catch (err) {
                 console.error("Error retrieving initial user cart", err);
+                const { name, message } = err;
             }
-        };
+        },
 
-        getUserCart();
-    }, []);
+        // getUserCart();
+        []
+    );
 
     /*-------------------------------------------------------------- Event Handlers ------------------------------------------------------------------*/
     const toggleDrawer = (anchor) => {
-        console.log(
-            "anchor is ",
-            anchor,
-            " and drawer[anchor] is ",
-            drawer[anchor],
-            " and drawer.cart is ",
-            drawer.cart,
-            " and drawer.account is ",
-            drawer["account"]
-        );
-
         if (
             anchor === "account" &&
             drawer[anchor] === false &&

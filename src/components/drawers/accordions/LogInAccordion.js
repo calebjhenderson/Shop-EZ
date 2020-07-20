@@ -64,7 +64,6 @@ function LogInAccordion() {
     const handleLogIn = async (e) => {
         event.preventDefault();
         event.stopPropagation();
-        console.log("handlelogin here");
 
         try {
             const { data } = await axios.post("/api/users/login", {
