@@ -3,7 +3,7 @@
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
 // React
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 // Material-UI Components
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -22,6 +22,7 @@ const { productCardStyling } = variables;
 
 // Other packages/modules
 import axios from "axios";
+import { DrawerContext } from "./../DrawerContext";
 
 /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
@@ -56,18 +57,18 @@ function ProductCards({ cart, setCart }) {
     /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
 
     async function createUserCart(product) {
-        const newCart = setCart([...cart, product.id]);
-
-        console.log("This product", product);
+        // setCart([...cart, product.id]);
 
         try {
             const { data } = await axios.post(`api/carts/create/`, {
                 userId: userId,
-                products: newCart,
                 productId: product.id,
+                priceTotal: product.price,
             });
 
             if (data.name === "CartProductAddedSuccess") {
+                console.log(data);
+            } else if (data.name === "UpdatedProductQuantity&priceTotal") {
                 console.log(data);
             } else {
                 console.error("Product not added to cart successfully");

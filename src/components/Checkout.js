@@ -28,7 +28,7 @@ import Button from "@material-ui/core/Button";
 import Radio from "@material-ui/core/Radio";
 
 // Local Components
-import TransitionsModal from "./CheckOutModal.js";
+import CheckoutModal from "./CheckOutModal.js";
 
 // Styling
 import variables from "../styles";
@@ -348,7 +348,7 @@ function Checkout({ setVisibility }) {
                         Complete Order
                     </Button>
                     {submit ? (
-                        <TransitionsModal
+                        <CheckoutModal
                             submit={submit}
                             setSubmit={setSubmit}
                             setVisibility={setVisibility}
