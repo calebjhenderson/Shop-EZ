@@ -106,7 +106,7 @@ const App = () => {
         }
     };
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
-    console.log("submit", submit);
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline>

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Grid, Typography } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -10,6 +10,7 @@ import Button from "@material-ui/core/Button";
 import Rating from "@material-ui/lab/Rating";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
+import { DrawerContext } from "./../DrawerContext";
 
 const BASE_URL = "http://localhost:3000/api";
 
@@ -42,7 +43,7 @@ const useStyles = makeStyles({
     },
 });
 
-const userId = 1;
+const userId = 2;
 
 function ProductCards({ cart, setCart }) {
     const [products, setProducts] = useState([]);
@@ -64,18 +65,18 @@ function ProductCards({ cart, setCart }) {
     const classes = useStyles();
 
     async function createUserCart(product) {
-        const newCart = setCart([...cart, product.id]);
-
-        console.log("This product", product);
+        // setCart([...cart, product.id]);
 
         try {
             const { data } = await axios.post(BASE_URL + `/carts/create/`, {
                 userId: userId,
-                products: newCart,
                 productId: product.id,
+                priceTotal: product.price,
             });
 
             if (data.name === "CartProductAddedSuccess") {
+                console.log(data);
+            } else if (data.name === "UpdatedProductQuantity&priceTotal") {
                 console.log(data);
             } else {
                 console.error("Product not added to cart successfully");
