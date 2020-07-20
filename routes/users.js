@@ -16,7 +16,7 @@ const { getShopByUserId } = require("../db/shops");
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const cart_products = require("../db/cart_products.js");
+
 const SALT_COUNT = 10;
 
 usersRouter.use(async function (req, res, next) {
@@ -24,7 +24,7 @@ usersRouter.use(async function (req, res, next) {
     next();
 });
 
-//Get All Users Route---------------------------------Works!
+//Get All Users Route------------------------------WORKS!
 usersRouter.get("/", async function (req, res, next) {
     try {
         const users = await getAllUsers();
@@ -36,7 +36,7 @@ usersRouter.get("/", async function (req, res, next) {
     }
 });
 
-//Create New User Route---------------------------------Works!
+//Create New User Route------------------------------WORKS!
 usersRouter.post("/register", async function (req, res, next) {
     const recievedObj = req.body;
     const {
@@ -108,10 +108,9 @@ usersRouter.post("/register", async function (req, res, next) {
     }
 });
 
-//Login User Route---------------------------------Works!
+//Login User Route------------------------------WORKS!
 usersRouter.post("/login", async function (req, res, next) {
     const { username, password } = req.body;
-
     try {
         const user = await getUserByUserName(username);
         const hashedPassword = user.password;
@@ -171,7 +170,7 @@ usersRouter.post("/token", async function (req, rest, next) {
     }
 });
 
-//Get User Orders Route---------------------------------Works!
+//Get User Orders Route------------------------------WORKS!
 usersRouter.get("/orders", async function (req, res, next) {
     const { id } = req.params;
     try {
@@ -182,13 +181,13 @@ usersRouter.get("/orders", async function (req, res, next) {
                 name: "NoOrdersForUserError",
                 message: "No orders found for that specified user",
             });
+        } else {
+            res.send({
+                name: "userOrdersFound",
+                message: "Orders for this user have been found. See attached",
+                userOrders,
+            });
         }
-
-        res.send({
-            name: "userOrdersFound",
-            message: "Orders for this user have been found. See attached",
-            userOrders,
-        });
     } catch (error) {
         console.error(error);
         const { name, message } = error;
@@ -196,7 +195,7 @@ usersRouter.get("/orders", async function (req, res, next) {
     }
 });
 
-//Get Products By UserID Route---------------------------------Works!
+//Get Products By UserID Route------------------------------WORKS!
 usersRouter.get("/products/:userId", async function (req, res, next) {
     const userId = req.params.userId;
 
@@ -230,7 +229,7 @@ usersRouter.get("/products/:userId", async function (req, res, next) {
     }
 });
 
-//Get Shop By UserID Route---------------------------------Works!
+//Get Shop By UserID Route------------------------------WORKS!
 usersRouter.get("/shop/:userId", async function (req, res, next) {
     const userId = req.params.userId;
     try {
@@ -241,13 +240,13 @@ usersRouter.get("/shop/:userId", async function (req, res, next) {
                 name: "NoShopForUserError",
                 message: "No Shop found for that specified user",
             });
+        } else {
+            res.send({
+                name: "userShopFound",
+                message: "Shop for this user have been found. See attached",
+                userShop,
+            });
         }
-
-        res.send({
-            name: "userShopFound",
-            message: "Shop for this user have been found. See attached",
-            userShop,
-        });
     } catch (error) {
         console.error(error);
         const { name, message } = error;

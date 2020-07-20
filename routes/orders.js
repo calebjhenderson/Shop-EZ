@@ -28,12 +28,14 @@ ordersRouter.use(function (req, res, next) {
     next();
 });
 
-// Get All Orders Route------------------------------Works!
+// Get All Orders Route------------------------------WORKS!
 ordersRouter.get("/", async function (req, res, next) {
     try {
         const allOrders = await getAllOrders();
         if (allOrders) {
             res.send({ allOrders });
+        } else {
+            res.send({ message: "Error Getting All Orders." });
         }
     } catch (error) {
         console.error(error);
@@ -42,12 +44,14 @@ ordersRouter.get("/", async function (req, res, next) {
     }
 });
 
-//Get All Order Products Route------------------------------Works!
+//Get All Order Products Route------------------------------WORKS!
 ordersRouter.get("/getorderproducts", async function (req, res, next) {
     try {
         const orderProducts = await getAllOrderProducts();
         if (orderProducts) {
             res.send({ message: "order products", orderProducts });
+        } else {
+            res.send({ message: "Error Getting All Order Products." });
         }
     } catch (error) {
         console.error(error);
@@ -56,7 +60,7 @@ ordersRouter.get("/getorderproducts", async function (req, res, next) {
     }
 });
 
-// Create Order Route------------------------------Works!
+// Create Order Route------------------------------WORKS!
 ordersRouter.post("/create", requireUser, async function (req, res, next) {
     const {
         userId,
@@ -76,6 +80,8 @@ ordersRouter.post("/create", requireUser, async function (req, res, next) {
         const newOrder = await createOrder(orderData);
         if (newOrder) {
             res.send({ message: "Order created!", order: orderData });
+        } else {
+            res.send({ message: "Error Creating Order." });
         }
     } catch (error) {
         console.error(error);
@@ -84,7 +90,7 @@ ordersRouter.post("/create", requireUser, async function (req, res, next) {
     }
 });
 
-// Edit Order Route------------------------------Works!
+// Update Order Route------------------------------WORKS!
 ordersRouter.patch("/update/:orderId", async function (req, res, next) {
     const { orderId } = req.params;
     try {
@@ -92,6 +98,8 @@ ordersRouter.patch("/update/:orderId", async function (req, res, next) {
         const updatedOrder = await updateOrder(orderId, order);
         if (updatedOrder) {
             res.send({ message: "Order updated.", order: updatedOrder });
+        } else {
+            res.send({ message: "Error Updating Order." });
         }
     } catch (error) {
         console.error(error);
@@ -100,7 +108,7 @@ ordersRouter.patch("/update/:orderId", async function (req, res, next) {
     }
 });
 
-//Delete Order Route------------------------------Works!
+//Delete Order Route------------------------------WORKS!
 ordersRouter.delete("/delete/:orderId", requireUser, async function (
     req,
     res,
@@ -109,14 +117,12 @@ ordersRouter.delete("/delete/:orderId", requireUser, async function (
     const { orderId } = req.params;
 
     try {
-        const deleteOrderProduct = await deleteOrderProducts(orderId);
-
-        const deleteUserOrders = await deleteUserOrder(orderId);
-
         const deletedOrders = await deleteOrder(orderId);
 
         if (deletedOrders) {
             res.send({ message: "Order deleted.", order: deletedOrders });
+        } else {
+            res.send({ message: "Error Deleting Order." });
         }
     } catch (error) {
         console.error(error);
@@ -125,7 +131,7 @@ ordersRouter.delete("/delete/:orderId", requireUser, async function (
     }
 });
 
-// Add Product To Order Route------------------------------Works!
+// Add Product To Order Route------------------------------WORKS!
 ordersRouter.post("/addorderproduct/:orderId", async function (req, res, next) {
     const { orderId } = req.params;
     const { productId } = req.body;
@@ -136,8 +142,6 @@ ordersRouter.post("/addorderproduct/:orderId", async function (req, res, next) {
         if (orderProducts && orderProducts.length) {
             for (let orderProduct of orderProducts) {
                 if (+orderProduct.orderId === +orderId) {
-                    console.log("OP", orderProduct);
-
                     next({
                         name: "orderProductAlreadyExists",
                         message: "This product is already on this order",
@@ -163,7 +167,7 @@ ordersRouter.post("/addorderproduct/:orderId", async function (req, res, next) {
     }
 });
 
-// Remove Product from Order Route-----------Works!
+// Remove Product from Order Route------------------------------WORKS!
 ordersRouter.delete("/deleteorderproduct/:orderProductId", async function (
     req,
     res,
@@ -178,6 +182,8 @@ ordersRouter.delete("/deleteorderproduct/:orderProductId", async function (
                 message: "Product has been removed from order",
                 order: removed,
             });
+        } else {
+            res.send({ message: "Error Removing Product from Order." });
         }
     } catch (error) {
         console.error(error);

@@ -17,18 +17,26 @@ shopsRouter.use(async function (req, res, next) {
     next();
 });
 
-//Get All Shops Route---------------------------------Works!
+//Get All Shops Route------------------------------WORKS!
 shopsRouter.get("/", async function (req, res, next) {
-    const allShops = await getAllShops();
-    if (allShops) {
-        res.send({
-            message: "Here are all of the available shops.",
-            shops: shops,
-        });
+    try {
+        const allShops = await getAllShops();
+        if (allShops) {
+            res.send({
+                message: "Here are all of the available shops.",
+                shops: shops,
+            });
+        } else {
+            res.send({ message: "Error Getting All Shops." });
+        }
+    } catch (error) {
+        console.error(error);
+        const { name, message } = error;
+        next({ name, message });
     }
 });
 
-//Create New Shop Route ---------------------------------Works!
+//Create New Shop Route------------------------------WORKS!
 shopsRouter.post("/newshop", requireUser, async function (req, res, next) {
     const { userId, name, products, description } = req.body;
 
@@ -42,6 +50,8 @@ shopsRouter.post("/newshop", requireUser, async function (req, res, next) {
     try {
         if (newShop) {
             res.send({ message: "Shop Created!", shop: newShop });
+        } else {
+            res.send({ message: "Error Creating Shop." });
         }
     } catch (error) {
         console.error(error);
@@ -50,7 +60,7 @@ shopsRouter.post("/newshop", requireUser, async function (req, res, next) {
     }
 });
 
-//Update Shop Route ---------------------------------Works!
+//Update Shop Route------------------------------WORKS!
 shopsRouter.patch("/update/:shopId", requireUser, async function (
     req,
     res,
@@ -63,6 +73,8 @@ shopsRouter.patch("/update/:shopId", requireUser, async function (
 
         if (updatedShop) {
             res.send({ message: "Shop has been updated", shop: updatedShop });
+        } else {
+            res.send({ message: "Error Updating Shop." });
         }
     } catch (error) {
         console.error(error);
@@ -71,7 +83,7 @@ shopsRouter.patch("/update/:shopId", requireUser, async function (
     }
 });
 
-//Delete Shop Route ---------------------------------Works!
+//Delete Shop Route------------------------------WORKS!
 shopsRouter.delete("/delete/:shopId", requireUser, async function (
     req,
     res,
@@ -80,13 +92,14 @@ shopsRouter.delete("/delete/:shopId", requireUser, async function (
     const { shopId } = req.params;
     try {
         const shop = await getShopById(shopId);
-
         const deletedShop = await deleteShop(shop.id);
         if (deletedShop) {
             res.send({
                 message: "Shop successfully deleted.",
                 shop: deletedShop,
             });
+        } else {
+            res.send({ message: "Error Deleting Shop." });
         }
     } catch (error) {
         console.error(error);

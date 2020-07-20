@@ -10,14 +10,13 @@ const {
     getCartByUserId,
     insertProductToCart,
 } = require("../db/carts.js");
-const { getProductById } = require("../db/products.js");
+
 const {
     addProductToCart,
     removeProductFromCart,
-    getCartProductById,
     getCartProductByCartAndProductId,
 } = require("../db/cart_products.js");
-const { requireUser } = require("../db/users.js");
+
 const products = require("../db/products.js");
 
 cartsRouter.use(async function (req, res, next) {
@@ -57,7 +56,7 @@ cartsRouter.post("/create", async function (req, res, next) {
 
             res.send({
                 name: "CartProductAddedSuccess",
-                message: "Product added to cart",
+                message: "Product added to cart.",
                 product: newCartProduct,
                 userCart,
             });
@@ -82,7 +81,7 @@ cartsRouter.post("/create", async function (req, res, next) {
     }
 });
 
-//------------------------------Works!
+// Update Cart Route------------------------------WORKS!
 cartsRouter.patch("/update/:cartId", async function (req, res, next) {
     const { cartId } = req.params;
     const { products } = req.body;
@@ -110,17 +109,16 @@ cartsRouter.patch("/update/:cartId", async function (req, res, next) {
     }
 });
 
-// Delete Cart Route-----Works!
+// Delete Cart Route------------------------------WORKS!
 cartsRouter.delete("/deletecart/:cartId", async function (req, res, next) {
     const { cartId } = req.params;
 
     try {
-        const cart = await getCartById(cartId);
-        const deletedCart = await deleteCart(cart.id);
+        const deletedCart = await deleteCart(cartId);
         if (deletedCart) {
             res.send({ message: "Cart deleted.", cart: deletedCart });
         } else {
-            res.send({ message: "Cart doesnt exist." });
+            res.send({ message: "Cart doesn't exist." });
         }
     } catch (error) {
         console.error(error);
@@ -129,14 +127,23 @@ cartsRouter.delete("/deletecart/:cartId", async function (req, res, next) {
     }
 });
 
-// Add Product to Cart Route------------------------------Works!
+// Add Product to Cart Route
 cartsRouter.put("/add/:productId", async function (req, res, next) {
     const { productId } = req.params;
     const { cartId } = req.body;
 
     try {
+        //MAKE SURE STOCK IS AVAILABLE...
         const newCartProduct = await addProductToCart(productId, cartId);
-        res.send({ message: "Product added to cart", product: newCartProduct });
+        //ADJUST STOCK AFTER PURCHASING
+        if (newCartProduct) {
+            res.send({
+                message: "Product added to cart.",
+                product: newCartProduct,
+            });
+        } else {
+            res.send({ message: "Error adding product to cart." });
+        }
     } catch (error) {
         console.error(error);
         const { name, message } = error;
@@ -144,7 +151,7 @@ cartsRouter.put("/add/:productId", async function (req, res, next) {
     }
 });
 
-//Remove Product From Cart Route-----WORKS!
+//Remove Product From Cart Route------------------------------WORKS!
 cartsRouter.delete("/deletecartproduct/:productId", async function (
     req,
     res,
@@ -158,12 +165,15 @@ cartsRouter.delete("/deletecartproduct/:productId", async function (
             cartId,
             productId
         );
-
         const deletedCartProduct = await removeProductFromCart(cartProduct.id);
-        res.send({
-            message: "Product removed from cart.",
-            product: deletedCartProduct,
-        });
+        if (deletedCartProduct) {
+            res.send({
+                message: "Product removed from cart.",
+                product: deletedCartProduct,
+            });
+        } else {
+            res.send({ message: "Error removing product from cart." });
+        }
     } catch (error) {
         console.error(error);
         const { name, message } = error;

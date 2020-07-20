@@ -23,12 +23,16 @@ categoriesRouter.use(async function (req, res, next) {
 
 // Get All Categories Route------------------------------WORKS!
 categoriesRouter.get("/", async function (req, res, next) {
-    const categories = await getAllCategories();
     try {
-        res.send({
-            message: "Here are all of the categories",
-            allCategories: categories,
-        });
+        const categories = await getAllCategories();
+        if (categories) {
+            res.send({
+                message: "Here are all of the categories",
+                allCategories: categories,
+            });
+        } else {
+            res.send({ message: "Error getting All Categories" });
+        }
     } catch (error) {
         console.error(error);
         const { name, message } = error;
@@ -43,7 +47,14 @@ categoriesRouter.post("/create", async function (req, res, next) {
     categoryData.name = name;
     try {
         const newCategory = await createCategory(categoryData);
-        res.send({ message: "New Category Created", category: newCategory });
+        if (newCategory) {
+            res.send({
+                message: "New Category Created",
+                category: newCategory,
+            });
+        } else {
+            res.send({ message: "Error Creating Category." });
+        }
     } catch (error) {
         console.error(error);
         const { name, message } = error;
@@ -72,6 +83,8 @@ categoriesRouter.patch("/update/:categoryId", requireUser, async function (
                 message: "Category updated.",
                 category: updatedCategory,
             });
+        } else {
+            res.send({ message: "Error Updating Category." });
         }
     } catch (error) {
         console.error(error);
@@ -86,11 +99,13 @@ categoriesRouter.delete("/delete/:id", async function (req, res, next) {
 
     try {
         const deletedCategory = await deleteCategory(id);
-        if (deleteCategory) {
+        if (deletedCategory) {
             res.send({
                 message: "Category deleted.",
                 category: deletedCategory,
             });
+        } else {
+            res.send({ message: "Error Deleting Category." });
         }
     } catch (error) {
         console.error(error);
@@ -99,7 +114,7 @@ categoriesRouter.delete("/delete/:id", async function (req, res, next) {
     }
 });
 
-// Add Category to Product Route-------------------------Works!
+// Add Category to Product Route------------------------------WORKS!
 categoriesRouter.patch("/addcategory/:productId", async function (
     req,
     res,
@@ -118,6 +133,8 @@ categoriesRouter.patch("/addcategory/:productId", async function (
                 message: "Category added to product",
                 product: updatedProduct,
             });
+        } else {
+            res.send({ message: "Error Adding Category to Product." });
         }
     } catch (error) {
         console.error(error);
@@ -143,6 +160,8 @@ categoriesRouter.delete("/deletecategory/:productId", async function (
                 message: "Category removed from product",
                 product: productWithDeletedCategory,
             });
+        } else {
+            res.send({ message: "Error removing Category from Product." });
         }
     } catch (error) {
         console.error(error);

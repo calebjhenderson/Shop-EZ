@@ -16,12 +16,14 @@ productsRouter.use(async function (req, res, next) {
     next();
 });
 
-//Get All Products Route------------------------------Works!
+//Get All Products Route------------------------------WORKS!
 productsRouter.get("/", async function (req, res, next) {
     const products = await getAllProducts();
     try {
         if (products) {
             res.send({ products });
+        } else {
+            res.send({ message: "Error Getting All Products." });
         }
     } catch (error) {
         console.error(error);
@@ -30,7 +32,7 @@ productsRouter.get("/", async function (req, res, next) {
     }
 });
 
-//Create Product Route------------------------------Works!
+//Create Product Route------------------------------WORKS!
 productsRouter.post("/newproduct", requireUser, async function (
     req,
     res,
@@ -57,11 +59,12 @@ productsRouter.post("/newproduct", requireUser, async function (
     productData.rating = rating;
     productData.userId = userId;
     productData.categoryId = categoryId;
-    const newProduct = await createProduct(productData);
-
     try {
+        const newProduct = await createProduct(productData);
         if (newProduct) {
             res.send({ message: "Product Created!", newProduct });
+        } else {
+            res.send({ message: "Error Creating Product. " });
         }
     } catch (error) {
         console.error(error);
@@ -70,7 +73,7 @@ productsRouter.post("/newproduct", requireUser, async function (
     }
 });
 
-//Edit Product Route------------------------------Works!
+//Edit Product Route------------------------------WORKS!
 productsRouter.patch("/update/:productId", requireUser, async function (
     req,
     res,
@@ -130,7 +133,7 @@ productsRouter.patch("/update/:productId", requireUser, async function (
     }
 });
 
-//Delete Products Route------------------------------Works!
+//Delete Products Route------------------------------WORKS!
 productsRouter.delete("/delete/:productId", requireUser, async function (
     req,
     res,

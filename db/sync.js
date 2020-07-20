@@ -19,7 +19,6 @@ async function createTables() {
                 role varchar NOT NULL,
                 addresses TEXT [],
                 "paymentInfo" TEXT [],
-                "shopName" VARCHAR (255),
                 public BOOLEAN DEFAULT false,
                 active BOOLEAN DEFAULT true
             );`
@@ -27,6 +26,8 @@ async function createTables() {
 
         //TODO: Add image array
         //Products table
+        //MAKE DELIVERY AN ENUM
+        //MAKE USER_PRODUCT_RATING TABLE??
         await client.query(`
             CREATE TABLE IF NOT EXISTS products (
                 id SERIAL PRIMARY KEY,
@@ -36,8 +37,7 @@ async function createTables() {
                 quantity INTEGER NOT NULL,
                 delivery TEXT [],
                 rating FLOAT(1),
-                "userId" INTEGER REFERENCES users(id) NOT NULL,
-                "categoryId" INTEGER [],
+                "shopId" INTEGER REFERENCES shops(id) NOT NULL,
                 active BOOLEAN DEFAULT true
             );`);
 
@@ -46,7 +46,8 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS user_products (
                 id SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(id) NOT NULL,
-                "productId" INTEGER REFERENCES products(id) NOT NULL
+                "productId" INTEGER REFERENCES products(id) NOT NULL,
+                quantity INTEGER NOT NULL
             );`);
 
         //Categories table
@@ -65,6 +66,7 @@ async function createTables() {
             );`);
 
         //TODO: Add media array
+        //ADD UPPER-LOWER BOUND TO RATING
         //Reviews table
         await client.query(`
             CREATE TABLE IF NOT EXISTS reviews(
@@ -76,20 +78,18 @@ async function createTables() {
                 comment TEXT NOT NULL
             );`);
 
-        //Product_reviews join table
-        await client.query(`
-            CREATE TABLE IF NOT EXISTS product_reviews(
-                id SERIAL PRIMARY KEY,
-                "productId" INTEGER REFERENCES products(id) NOT NULL,
-                "reviewId" INTEGER REFERENCES reviews(id) NOT NULL
-            );`);
-
         //Carts table (userId not required for non-users to be able to purchase)
+        //NEED FOREIGN KEY IN PRODUCTS INT
         await client.query(`
             CREATE TABLE IF NOT EXISTS carts(
                 id SERIAL PRIMARY KEY,
-                "userId" INTEGER REFERENCES users(id),
-                products INTEGER []
+                products INTEGER REFERENCES products(id)[] ,
+                sessionId INTEGER NOT NULL,
+                isActive BOOLEAN DEFAULT TRUE,
+                "orderDate" DATE NOT NULL,
+                "orderTotal" FLOAT(2) NOT NULL,
+                "shippingAddress" VARCHAR(255) NOT NULL,
+                fulfilled BOOLEAN DEFAULT false
             );`);
 
         //Cart_products join table
@@ -97,27 +97,9 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS cart_products(
                 id SERIAL PRIMARY KEY,
                 "cartId" INTEGER REFERENCES carts(id) NOT NULL,
-                "productId" INTEGER REFERENCES products(id) NOT NULL
-            );`);
-
-        //TODO: Add support for receipt_id to table
-        //Orders table
-        await client.query(`
-            CREATE TABLE IF NOT EXISTS orders(
-                id SERIAL PRIMARY KEY,
-                products INTEGER [] NOT NULL,
-                "orderDate" DATE NOT NULL,
-                "orderTotal" FLOAT(2) NOT NULL,
-                "shippingAddress" VARCHAR(255) NOT NULL,
-                fulfilled BOOLEAN DEFAULT false
-            );`);
-
-        //User_orders join table
-        await client.query(`
-            CREATE TABLE IF NOT EXISTS user_orders(
-                id SERIAL PRIMARY KEY,
-                "userId" INTEGER REFERENCES users(id) NOT NULL,
-                "orderId" INTEGER REFERENCES orders(id) NOT NULL
+                "productId" INTEGER REFERENCES products(id) NOT NULL,
+                quantity INTEGER REFERENCES carts(products) NOT NULL
+                pricePurchasedAt VARCHAR(255 NOT NULL)
             );`);
 
         //Order_products join table
@@ -130,6 +112,7 @@ async function createTables() {
 
         //TODO: Add media array
         //Shops table
+        // SHOP SHOULD HAVE FOREIGN KEY TO USER WHO OWNS IT
         await client.query(`
             CREATE TABLE IF NOT EXISTS shops(
                 id SERIAL PRIMARY KEY,
