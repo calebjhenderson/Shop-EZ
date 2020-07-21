@@ -405,8 +405,7 @@ async function createTables() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS carts(
                 id SERIAL PRIMARY KEY,
-                "userId" INTEGER REFERENCES users(id),
-                products INTEGER []
+                "userId" INTEGER REFERENCES users(id)
             );`);
 
         //Cart_products join table
@@ -414,7 +413,10 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS cart_products(
                 id SERIAL PRIMARY KEY,
                 "cartId" INTEGER REFERENCES carts(id) NOT NULL,
-                "productId" INTEGER REFERENCES products(id) NOT NULL      
+                "productId" INTEGER REFERENCES products(id) NOT NULL,
+                 "qtyDesired" INTEGER DEFAULT '1',
+                 UNIQUE ("cartId","productId")
+            
             );`);
 
         //TODO: Add support for receipt_id to table
@@ -646,7 +648,6 @@ async function createInitialUsers() {
         throw error;
     }
 }
-
 //Creates seed data of initial categories
 async function createInitialCategories() {
     // Reference
@@ -675,7 +676,6 @@ async function createInitialCategories() {
         throw error;
     }
 }
-
 //Creates seed data of initial users
 async function createInitialProducts() {
     // Reference
@@ -807,7 +807,6 @@ async function createInitialProducts() {
         throw error;
     }
 }
-
 //Creates seed data of initial shops
 async function createInitialShops() {
     // Reference
@@ -860,7 +859,6 @@ async function createInitialShops() {
         throw error;
     }
 }
-
 //Create seed data of initial reviews
 async function createInitialReviews() {
     //Reference
@@ -919,7 +917,6 @@ async function createInitialReviews() {
         throw error;
     }
 }
-
 //Creates seed data of initial carts
 async function createInitialCarts() {
     // Reference
@@ -932,26 +929,25 @@ async function createInitialCarts() {
     try {
         const tonysCart = await createCart({
             userId: 1,
-            products: "{1, 4}",
         });
 
         const nahidsCart = await createCart({
             userId: 2,
-            products: "{2}",
+            products: [],
         });
 
         const calebsCart = await createCart({
             userId: 3,
-            products: "{3, 2}",
+            products: [3, 2],
         });
 
         const yahyasCart = await createCart({
             userId: 4,
-            products: "{1, 4, 2}",
+            products: [1, 4, 2],
         });
 
         const anonsCart = await createCart({
-            products: "{1, 2, 4}",
+            products: [1, 2, 4],
         });
 
         console.log(chalk.greenBright("Finished creating initial carts!"));
@@ -963,7 +959,6 @@ async function createInitialCarts() {
         throw error;
     }
 }
-
 //Creates seed data of initial orders
 async function createInitialOrders() {
     // Reference
@@ -1019,7 +1014,6 @@ async function createInitialOrders() {
         throw error;
     }
 }
-
 //Connects to client, then drops and rebuilds all tables with initial seed data
 async function bootstrap() {
     try {
@@ -1042,7 +1036,6 @@ async function bootstrap() {
         throw error;
     }
 }
-
 /*---------------------------------- Run-Time ---------------------------------------*/
 
 bootstrap()

@@ -1,22 +1,32 @@
-// ./src/components/accordions/LogInAccordion.js
+// ./src/components/drawers/accordions/LogInAccordion.js
 
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
-import React, { useState } from "react";
+// React
+import React, { useState, useContext } from "react";
 
+// Material-UI Components
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
-import Button from "@material-ui/core/Button";
 import ListItem from "@material-ui/core/ListItem";
+import Button from "@material-ui/core/Button";
 
+// Local Components
 import BorderedInput from "./inputs/BoderedInput";
 import PasswordInput from "./Inputs/PasswordInput";
+
+// Context
+import { DrawerContext } from "../../../DrawerContext";
+import { UserContext } from "../../../UserContext";
+
+// Styling
 import variables from "../../../styles";
 const { accordionStyling } = variables;
 
+// Other packages/modules
 import axios from "axios";
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
@@ -25,6 +35,8 @@ function LogInAccordion() {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
     const [expanded, setExpanded] = useState(false);
+    const { setAlert, toggleDrawer } = useContext(DrawerContext);
+    const { setToken, setUser } = useContext(UserContext);
     const [loggedInValues, setLoggedInValues] = useState({
         username: "",
         password: "",
@@ -35,12 +47,12 @@ function LogInAccordion() {
     const useStyles = makeStyles(accordionStyling);
     const classes = useStyles();
     const {
+        accountAccordion,
+        accountListItem,
         accordionRoot,
         headerTitle,
-        accordion,
         submit,
         form,
-        listItem,
     } = classes;
 
     /*-------------------------------------------------------------- Event Handlers ------------------------------------------------------------------*/
@@ -52,7 +64,6 @@ function LogInAccordion() {
     const handleLogIn = async (e) => {
         event.preventDefault();
         event.stopPropagation();
-        console.log("handlelogin here");
 
         try {
             const { data } = await axios.post("/api/users/login", {
@@ -64,24 +75,53 @@ function LogInAccordion() {
                 data.messageName === "IncorrectCredentials" ||
                 data.name === "UserNotFoundError"
             ) {
-                console.log("incorrect credentials inputted");
+                setAlert({
+                    message: "The username or password entered is incorrect",
+                    severity: "error",
+                    isVisible: true,
+                });
+
+                // Render error message
             } else if (data.messageName === "Success") {
-                localStorage.setItem("token", data.token);
+                const { token, id, username, firstName, lastName } = data;
+                localStorage.setItem("token", token);
+                setToken(data.token);
+                setUser({
+                    id,
+                    username,
+                    firstName,
+                    lastName,
+                });
+                setAlert({
+                    message: "You have successfully logged in",
+                    severity: "success",
+                    isVisible: true,
+                });
+                toggleDrawer("account");
             } else {
-                console.log("An error has occurred.");
+                setAlert({
+                    message: "An unknown error has occurred",
+                    severity: "error",
+                    isVisible: true,
+                });
             }
         } catch (err) {
             console.error(
-                "Error logging in user @handleLogin in LoginAccordion.jsß",
+                "Error logging in user @handleLogin in LoginAccordion.js",
                 err
             );
+            setAlert({
+                message: "An unknown error has occurred",
+                severity: "error",
+                isVisible: true,
+            });
         }
     };
 
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
     return (
-        <ListItem className={listItem}>
+        <ListItem className={accountListItem}>
             <Accordion
                 // @ts-ignore
                 expanded={expanded === `panelLogIn`}
@@ -91,7 +131,7 @@ function LogInAccordion() {
                 <AccordionSummary
                     aria-controls={`panelbh-content`}
                     id={`panelbh-header`}
-                    className={accordion}
+                    className={accountAccordion}
                 >
                     <Typography
                         align="center"

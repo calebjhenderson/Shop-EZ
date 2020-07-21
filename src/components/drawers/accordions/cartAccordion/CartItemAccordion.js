@@ -1,77 +1,66 @@
-// ./src/components/drawers/accordions/SettingsAccordion
+// ./src/components/drawers/accordions/cartAccordion/CartItemAccordion.js
 
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
-// React
+//React Components
 import React, { useState } from "react";
 
-// Material-UI Components
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
+//Material-UI Components
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
 import ListItem from "@material-ui/core/ListItem";
 
-// Styling
-import variables from "../../../styles";
+// Local Components
+import CartHeader from "./CartHeader";
+import CartBody from "./CartBody";
+
+// Styles
+import variables from "../../../../styles";
 const { accordionStyling } = variables;
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
-function SettingsAccordion() {
+function CartItemAccordion({ productObj, index }) {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
     const [expanded, setExpanded] = useState(false);
-
-    /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
-
-    const useStyles = makeStyles(accordionStyling);
-    const classes = useStyles();
-    const {
-        accountAccordion,
-        accountListItem,
-        accordionRoot,
-        headerTitle,
-        comingSoon,
-        settings,
-    } = classes;
-
-    /*-------------------------------------------------------------- Event Handlers ------------------------------------------------------------------*/
 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
+    /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
+
+    const useStyles = makeStyles(accordionStyling);
+    const classes = useStyles();
+    const { accordionRoot, cartListItem } = classes;
+
+    /*-------------------------------------------------------------- Event Handlers ------------------------------------------------------------------*/
+
+    const handleLogOut = () => {
+        console.log("logging out...");
+        localStorage.setItem("token", "");
+        console.log("finished logging out");
+    };
+
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
     return (
-        <ListItem className={accountListItem}>
+        <ListItem component="div" key={productObj.id} className={cartListItem}>
             <Accordion
                 // @ts-ignore
-                expanded={expanded === `panelSettings`}
-                onChange={handleChange(`panelSettings`)}
+                expanded={expanded === `panel${index}`}
+                onChange={handleChange(`panel${index}`)}
                 classes={{ root: accordionRoot }}
             >
-                <AccordionSummary
-                    aria-controls={`paneldh-content`}
-                    id={`paneldh-header`}
-                    className={accountAccordion}
-                >
-                    <Typography
-                        align="center"
-                        variant="h3"
-                        className={headerTitle}
-                    >
-                        Settings
-                    </Typography>
-                </AccordionSummary>
+                <CartHeader
+                    quantity={productObj.quantity}
+                    name={productObj.name}
+                    price={productObj.price}
+                    index={index}
+                />
 
-                <AccordionDetails>
-                    <div className={settings}>
-                        <p className={comingSoon}>Coming Soon!</p>
-                    </div>
-                </AccordionDetails>
+                <CartBody quantity={productObj.quantity} />
             </Accordion>
         </ListItem>
     );
@@ -79,4 +68,4 @@ function SettingsAccordion() {
 
 /*-------------------------------------------------------------- Exports ------------------------------------------------------------------*/
 
-export default SettingsAccordion;
+export default CartItemAccordion;

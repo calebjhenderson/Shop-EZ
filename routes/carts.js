@@ -15,6 +15,9 @@ const {
     addProductToCart,
     removeProductFromCart,
     getCartProductByCartAndProductId,
+    getCartProductsByProductId,
+    updateCartProducts,
+    getProductsByCartId,
 } = require("../db/cart_products.js");
 
 const products = require("../db/products.js");
@@ -26,47 +29,70 @@ cartsRouter.use(async function (req, res, next) {
 
 // Create Cart Route------------------------------WORKS!
 cartsRouter.post("/create", async function (req, res, next) {
-    const { userId, products, productId } = req.body;
+    const { userId, productId, priceTotal } = req.body;
 
     const cartData = {};
 
     cartData.userId = userId;
-    cartData.products = products;
     cartData.productId = productId;
-
-    let dbArr = "{";
-    products.map((productArrId) => {
-        dbArr = dbArr + productArrId + ", ";
-    });
-
-    dbArr = dbArr.slice(0, dbArr.length - 2) + "}";
+    cartData.priceTotal = priceTotal;
 
     try {
         const userCart = await getCartByUserId(userId);
 
-        const cartId = userCart.id;
-
         if (userCart) {
-            const addedProduct = await insertProductToCart({
-                userId,
-                products: dbArr,
-            });
+            const cartByProductId = await getCartProductsByProductId(productId);
+            if (cartByProductId) {
+                console.log("FDFDF", cartByProductId);
+                const productId = cartByProductId.id;
+                const currentQuantity = cartByProductId.quantity;
+                const currentTotalPrice = cartByProductId.pricetotal;
+                console.log("totalpdfdf", currentTotalPrice);
 
-            const newCartProduct = await addProductToCart(productId, cartId);
+                console.log("got in here", productId);
 
-            res.send({
-                name: "CartProductAddedSuccess",
-                message: "Product added to cart.",
-                product: newCartProduct,
-                userCart,
-            });
+                const updatedQuantity = await updateCartProducts(productId, {
+                    quantity: currentQuantity + 1,
+                    pricetotal: currentTotalPrice + priceTotal,
+                });
+
+                res.send({
+                    name: "UpdatedProductQuantity&priceTotal",
+                    message:
+                        "Product quantity and priceTotal has been updated Succesfully",
+                    updatedQuantity: updatedQuantity,
+                });
+            } else {
+                const cartId = userCart.id;
+                const newCartProduct = await addProductToCart(
+                    productId,
+                    cartId,
+                    priceTotal
+                );
+
+                res.send({
+                    name: "CartProductAddedSuccess",
+                    message: "Product added to cart",
+                    newCartproduct: newCartProduct,
+                });
+            }
         } else {
-            const newCart = await createCart(cartData);
+            const newCart = await createCart({ userId });
+            const userNewCart = await getCartByUserId(userId);
+
+            const newCartId = userNewCart.id;
+            const newCartProduct = await addProductToCart(
+                productId,
+                newCartId,
+                priceTotal
+            );
+
             if (newCart) {
                 res.send({
                     name: "CartCreatedSuccess",
                     message: "Here is your cart...",
                     cart: newCart,
+                    newCartproduct: newCartProduct,
                 });
             } else {
                 throw {
@@ -151,8 +177,8 @@ cartsRouter.put("/add/:productId", async function (req, res, next) {
     }
 });
 
-//Remove Product From Cart Route------------------------------WORKS!
-cartsRouter.delete("/deletecartproduct/:productId", async function (
+//Remove Product From Cart Route-----WORKS!
+cartsRouter.delete("/deleteCartProduct/:productId", async function (
     req,
     res,
     next
@@ -176,6 +202,64 @@ cartsRouter.delete("/deletecartproduct/:productId", async function (
         }
     } catch (error) {
         console.error(error);
+        const { name, message } = error;
+        next({ name, message });
+    }
+});
+
+// Get Cart Products associated with specified cartId
+cartsRouter.get("/cartProducts/:cartId", requireUser, async function (
+    req,
+    res,
+    next
+) {
+    const { cartId } = req.params;
+
+    try {
+        const cartProducts = await getProductsByCartId(cartId);
+
+        if (cartProducts && cartProducts.length) {
+            const cartProductsArr = [];
+
+            async function getProducts() {
+                await Promise.all(
+                    cartProducts.map(async (cartProduct) => {
+                        const product = await getProductById(
+                            cartProduct.productId
+                        );
+                        cartProductsArr.push(product);
+                    })
+                );
+            }
+
+            await getProducts();
+
+            if (cartProductsArr && cartProductsArr.length) {
+                res.send({
+                    name: "CartProductsRetrieved",
+                    message:
+                        "The products for the cart specified have been found. See attached.",
+                    cartProductsArr,
+                });
+            } else if (!cartProductsArr.length) {
+                next({
+                    name: "NoProductsFound",
+                    message: "No products were found in the cart specified.",
+                });
+            } else {
+                next({
+                    name: "ErrorRetrievingCartProducts",
+                    message:
+                        "There was an error getting the cart products for the specified cart",
+                });
+            }
+        } else {
+            next({
+                name: "NoProductsFound",
+                message: "No products were found in the cart specified.",
+            });
+        }
+    } catch (error) {
         const { name, message } = error;
         next({ name, message });
     }

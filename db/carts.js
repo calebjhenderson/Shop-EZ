@@ -18,53 +18,47 @@ const {
 /*---------------------------------- Functions ---------------------------------------*/
 
 // Add new cart to carts table and return new cart object
-const createCart = async ({ userId = NaN, products = "{}" }) => {
+const createCart = async ({ userId = NaN, products = [] }) => {
     try {
         //NaN is the only value in JS not equal to istelf, so this will return true only if userId is NaN
         const isNotNum = userId !== userId;
+
+        console.log("user id is ", userId, "and isnotnum is ", isNotNum);
 
         if (!isNotNum) {
             const {
                 rows: [cart],
             } = await client.query(
-                `INSERT INTO carts ("userId",products)
-                VALUES($1,$2)
-                RETURNING *;
-                `,
-                [userId, products]
-            );
-
-            //For each product, create an entry in cart_products table
-            const targetProductArr = products
-                .slice(1, products.length - 1)
-                .split("");
-            const finalProductsArr = targetProductArr.filter(
-                (char) => char !== " " && char !== ","
-            );
-            const cartProducts = await Promise.all(
-                finalProductsArr.map(async (productId) => {
-                    return await addProductToCart(productId, cart.id);
-                })
-            );
-
-            return cart;
-        } else {
-            const {
-                rows: [cart],
-            } = await client.query(
-                `
-                INSERT INTO carts (products)
+                `INSERT INTO carts ("userId")
                 VALUES($1)
                 RETURNING *;
-            `,
-                [products]
+                `,
+                [userId]
             );
 
+            if (cart && products.length) {
+                products.map(async (productId) => {
+                    const {
+                        rows: [cartProducts],
+                    } = await client.query(
+                        `
+                        INSERT INTO cart_products ("cartId", "productId")
+                        VALUES ($1, $2)
+                        RETURNING *;
+                    `,
+                        [cart.id, productId]
+                    );
+
+                    console.log("cartProducts is  ", cartProducts);
+                });
+            }
+
             return cart;
+        } else if (isNotNum || typeof userId !== "number") {
         }
     } catch (error) {
         console.error(
-            `There's been an error creating cart @ createCart({userId=Nan, products='{}'}) in ./db/carts.js. ${error}`
+            `There's been an error creating cart @ createCart({userId=Nan, products="{}"}) in ./db/carts.js. ${error}`
         );
         throw error;
     }
