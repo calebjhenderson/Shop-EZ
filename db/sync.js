@@ -26,8 +26,9 @@ async function createTables() {
 
         //TODO: Add image array
         //Products table
+
         //MAKE DELIVERY AN ENUM
-        //MAKE USER_PRODUCT_RATING TABLE??
+
         await client.query(`
             CREATE TABLE IF NOT EXISTS products (
                 id SERIAL PRIMARY KEY,
@@ -66,8 +67,10 @@ async function createTables() {
             );`);
 
         //TODO: Add media array
-        //ADD UPPER-LOWER BOUND TO RATING
         //Reviews table
+
+        //ADD UPPER-LOWER BOUND TO RATING
+
         await client.query(`
             CREATE TABLE IF NOT EXISTS reviews(
                 id SERIAL PRIMARY KEY,
@@ -84,10 +87,10 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS carts(
                 id SERIAL PRIMARY KEY,
                 products INTEGER REFERENCES products(id)[] ,
+                userId INTEGER REFERENCES users(id),
                 sessionId INTEGER NOT NULL,
                 isActive BOOLEAN DEFAULT TRUE,
                 "orderDate" DATE NOT NULL,
-                "orderTotal" FLOAT(2) NOT NULL,
                 "shippingAddress" VARCHAR(255) NOT NULL,
                 fulfilled BOOLEAN DEFAULT false
             );`);
@@ -112,7 +115,7 @@ async function createTables() {
 
         //TODO: Add media array
         //Shops table
-        // SHOP SHOULD HAVE FOREIGN KEY TO USER WHO OWNS IT
+
         await client.query(`
             CREATE TABLE IF NOT EXISTS shops(
                 id SERIAL PRIMARY KEY,

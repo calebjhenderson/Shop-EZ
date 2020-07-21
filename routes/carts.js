@@ -19,6 +19,7 @@ const {
     updateCartProducts,
     getProductsByCartId,
 } = require("../db/cart_products.js");
+const { requireUser } = require("../db/users.js");
 
 const products = require("../db/products.js");
 
@@ -153,7 +154,7 @@ cartsRouter.delete("/deletecart/:cartId", async function (req, res, next) {
     }
 });
 
-// Add Product to Cart Route
+// Add Product to Cart Route------------------------------WORKS!
 cartsRouter.put("/add/:productId", async function (req, res, next) {
     const { productId } = req.params;
     const { cartId } = req.body;
@@ -177,7 +178,7 @@ cartsRouter.put("/add/:productId", async function (req, res, next) {
     }
 });
 
-//Remove Product From Cart Route-----WORKS!
+//Remove Product From Cart Route------------------------------WORKS!
 cartsRouter.delete("/deleteCartProduct/:productId", async function (
     req,
     res,
@@ -207,7 +208,7 @@ cartsRouter.delete("/deleteCartProduct/:productId", async function (
     }
 });
 
-// Get Cart Products associated with specified cartId
+// Get Cart Products Route------------------------------WORKS!
 cartsRouter.get("/cartProducts/:cartId", requireUser, async function (
     req,
     res,
