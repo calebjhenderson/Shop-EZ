@@ -95,6 +95,7 @@ const updateOrder = async (id, fields = {}) => {
 
 // Deletes an order from the orders table and returns the deleted order object
 const deleteOrder = async (orderId) => {
+    //user_orders has a record of this orderId
     try {
         const {
             rows: [deletedOrder],
@@ -152,6 +153,23 @@ const getOrderById = async (orderId) => {
     }
 };
 
+const getOrderByUserId = async (userId) => {
+    try {
+        const {
+            rows: [orders],
+        } = await client.query(
+            `SELECT * FROM orders
+            WHERE id = ${userId}
+            `
+        );
+        return orders;
+    } catch (error) {
+        console.error;
+        const { name, message } = error;
+        next({ name, message });
+    }
+};
+
 /*---------------------------------- Exports ---------------------------------------*/
 
 module.exports = {
@@ -160,4 +178,5 @@ module.exports = {
     deleteOrder,
     getAllOrders,
     getOrderById,
+    getOrderByUserId,
 };

@@ -6,7 +6,7 @@
 // name VARCHAR(255) NOT NULL,
 // description TEXT NOT NULL,
 // price FLOAT(2) NOT NULL,
-// quantity INTEGER NOT NULL,
+// qtyAvailable INTEGER NOT NULL,
 // delivery TEXT [],
 // rating FLOAT(1),
 // "userId" INTEGER REFERENCES users(id) NOT NULL,
@@ -27,15 +27,9 @@ const {
     removeCategoryFromProduct,
 } = require("./category_products");
 const {
-    addProductToCart,
     removeProductFromCart,
     getCartProductsByProductId,
 } = require("./cart_products");
-const {
-    addProductToOrder,
-    removeProductFromOrder,
-    getOrderProductsByProductId,
-} = require("./order_products");
 
 /*---------------------------------- Functions ---------------------------------------*/
 
@@ -44,7 +38,7 @@ const createProduct = async ({
     name,
     description,
     price,
-    quantity,
+    qtyAvailable,
     delivery = "{}",
     rating,
     userId,
@@ -54,7 +48,7 @@ const createProduct = async ({
         const {
             rows: [product],
         } = await client.query(
-            `INSERT INTO products (name, description, price, quantity, delivery, rating, "userId", "categoryId")
+            `INSERT INTO products (name, description, price, "qtyAvailable", delivery, rating, "userId", "categoryId")
             VALUES($1,$2,$3,$4,$5,$6,$7,$8)
             RETURNING *;
             `,
@@ -62,7 +56,7 @@ const createProduct = async ({
                 name,
                 description,
                 price,
-                quantity,
+                qtyAvailable,
                 delivery,
                 rating,
                 userId,
@@ -92,7 +86,7 @@ const createProduct = async ({
         return product;
     } catch (error) {
         console.error(
-            `There's been an error creating a product @ createProduct({ name, description, price, quantity, delivery={}, rating, userId, categoryId={} }) in ./db/products.js. ${error}`
+            `There's been an error creating a product @ createProduct({ name, description, price, "qtyAvailable", delivery={}, rating, userId, categoryId={} }) in ./db/products.js. ${error}`
         );
         throw error;
     }
@@ -133,63 +127,64 @@ const updateProduct = async (id, fields = {}) => {
 // Deletes a product from the products table and returns the deleted product object
 const deleteProduct = async (productId) => {
     try {
-        const isProductReviews = await getReviewsByProductId(productId);
-        if (isProductReviews) {
-            const deletedReview = await deleteReview(productId);
-        }
-
-        const userProductsArr = await getUserProductsByProductId(productId);
-        if (userProductsArr && userProductsArr.length) {
+        //need to delete cart products with this product id
+        const cartProducts = await getCartProductsByProductId();
+        if (cartProducts && cartProducts.length) {
             await Promise.all(
-                userProductsArr.map(async (userProductObj) => {
-                    return await deleteProductFromUser(userProductObj.id);
+                cartProducts.map(async (cartProductObj) => {
+                    return await deleteProductFromUser(cartProductObj.id);
                 })
             );
-        }
 
-        const categoryProductsArr = await getCategoryProductsByProductId(
-            productId
-        );
-        if (categoryProductsArr && categoryProductsArr.length) {
-            await Promise.all(
-                categoryProductsArr.map(async (categoryProductObj) => {
-                    return await removeCategoryFromProduct(
-                        categoryProductObj.id
-                    );
-                })
+            const isProductReviews = await getReviewsByProductId(productId);
+            if (isProductReviews) {
+                const deletedReview = await deleteReview(productId);
+            }
+
+            const userProductsArr = await getUserProductsByProductId(productId);
+            if (userProductsArr && userProductsArr.length) {
+                await Promise.all(
+                    userProductsArr.map(async (userProductObj) => {
+                        return await deleteProductFromUser(userProductObj.id);
+                    })
+                );
+            }
+
+            const categoryProductsArr = await getCategoryProductsByProductId(
+                productId
             );
-        }
+            if (categoryProductsArr && categoryProductsArr.length) {
+                await Promise.all(
+                    categoryProductsArr.map(async (categoryProductObj) => {
+                        return await removeCategoryFromProduct(
+                            categoryProductObj.id
+                        );
+                    })
+                );
+            }
 
-        const cartProductsArr = await getCartProductsByProductId(productId);
-        if (cartProductsArr && cartProductsArr.length) {
-            await Promise.all(
-                cartProductsArr.map(async (cartProductObj) => {
-                    return await removeProductFromCart(cartProductObj.id);
-                })
-            );
-        }
+            const cartProductsArr = await getCartProductsByProductId(productId);
+            if (cartProductsArr && cartProductsArr.length) {
+                await Promise.all(
+                    cartProductsArr.map(async (cartProductObj) => {
+                        return await removeProductFromCart(cartProductObj.id);
+                    })
+                );
+            }
 
-        const orderProductsArr = await getOrderProductsByProductId(productId);
-        if (orderProductsArr && orderProductsArr.length) {
-            await Promise.all(
-                orderProductsArr.map(async (orderProductObj) => {
-                    return await removeProductFromOrder(orderProductObj.id);
-                })
-            );
-        }
-
-        const {
-            rows: [deletedProduct],
-        } = await client.query(
-            `
+            const {
+                rows: [deletedProduct],
+            } = await client.query(
+                `
             DELETE FROM products
             WHERE id=$1
             RETURNING *;
         `,
-            [productId]
-        );
+                [productId]
+            );
 
-        return deletedProduct;
+            return deletedProduct;
+        }
     } catch (error) {
         console.error(
             `There's been an error deleting a product @ deleteProduct(productId) in ./db/products.js. ${error}`

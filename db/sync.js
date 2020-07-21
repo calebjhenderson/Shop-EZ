@@ -27,20 +27,19 @@ async function createTables() {
         //TODO: Add image array
         //Products table
 
-        //MAKE DELIVERY AN ENUM
-
         await client.query(`
             CREATE TABLE IF NOT EXISTS products (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
                 description TEXT NOT NULL,
                 price FLOAT(2) NOT NULL,
-                quantity INTEGER NOT NULL,
-                delivery TEXT [],
+                "qtyAvailable" INTEGER NOT NULL,
+                delivery [],
                 rating FLOAT(1),
                 "shopId" INTEGER REFERENCES shops(id) NOT NULL,
                 active BOOLEAN DEFAULT true
             );`);
+        // CREATE TYPE delivery AS ENUM ('Ground', 'Overnight', 'Delivery');
 
         //User_products join table
         await client.query(`
@@ -48,7 +47,7 @@ async function createTables() {
                 id SERIAL PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(id) NOT NULL,
                 "productId" INTEGER REFERENCES products(id) NOT NULL,
-                quantity INTEGER NOT NULL
+                "qtyAvailable" INTEGER NOT NULL
             );`);
 
         //Categories table
@@ -69,24 +68,22 @@ async function createTables() {
         //TODO: Add media array
         //Reviews table
 
-        //ADD UPPER-LOWER BOUND TO RATING
-
         await client.query(`
             CREATE TABLE IF NOT EXISTS reviews(
                 id SERIAL PRIMARY KEY,
                 "productId" INTEGER REFERENCES products(id) NOT NULL,
                 "userId" INTEGER REFERENCES users(id) NOT NULL,
                 title VARCHAR(255),
-                rating INTEGER NOT NULL,
+                rating INTEGER NOT NULL ("1","2","3","4","5"), 
                 comment TEXT NOT NULL
             );`);
+        //ADD UPPER-LOWER BOUND TO RATING COLUMN
 
         //Carts table (userId not required for non-users to be able to purchase)
-        //NEED FOREIGN KEY IN PRODUCTS INT
         await client.query(`
             CREATE TABLE IF NOT EXISTS carts(
                 id SERIAL PRIMARY KEY,
-                products INTEGER REFERENCES products(id)[] ,
+                products INTEGER REFERENCES products(id),
                 userId INTEGER REFERENCES users(id),
                 sessionId INTEGER NOT NULL,
                 isActive BOOLEAN DEFAULT TRUE,
@@ -101,16 +98,8 @@ async function createTables() {
                 id SERIAL PRIMARY KEY,
                 "cartId" INTEGER REFERENCES carts(id) NOT NULL,
                 "productId" INTEGER REFERENCES products(id) NOT NULL,
-                quantity INTEGER REFERENCES carts(products) NOT NULL
+                "qtyAvailable" INTEGER REFERENCES carts(products[qtyAvailable]) NOT NULL
                 pricePurchasedAt VARCHAR(255 NOT NULL)
-            );`);
-
-        //Order_products join table
-        await client.query(`
-            CREATE TABLE IF NOT EXISTS order_products(
-                id SERIAL PRIMARY KEY,
-                "orderId" INTEGER REFERENCES orders(id) NOT NULL,
-                "productId" INTEGER REFERENCES products(id) NOT NULL
             );`);
 
         //TODO: Add media array

@@ -30,7 +30,7 @@ const testCart = [
         name: "Pet Rock",
         description: "A friendly rock found in Joshua Tree looking for a home",
         price: 300.99,
-        quantity: 1,
+        qtyAvailable: 1,
         delivery: '{"pickup"}',
         rating: 5.0,
         userId: 3,
@@ -42,7 +42,7 @@ const testCart = [
         description:
             "A pair of used Pioneer CDJ's in decent condition, perfect for getting your scratch on!",
         price: 450.99,
-        quantity: 2,
+        qtyAvailable: 2,
         delivery: '{"standard", "express", "next-day"}',
         rating: 3.5,
         userId: 4,
@@ -54,7 +54,7 @@ const testCart = [
         description:
             "One of a kind, hand-made embroidered dress from Egypt, perfect for weddings, parties, and other special occassions!",
         price: 60.0,
-        quantity: 50,
+        qtyAvailable: 50,
         delivery: '{"standard"}',
         rating: 5.0,
         userId: 2,

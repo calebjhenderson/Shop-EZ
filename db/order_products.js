@@ -38,9 +38,9 @@ const addProductToOrder = async (orderId, productId) => {
 // Remove productId from associated orderId in order_products table
 const removeProductFromOrder = async (orderId) => {
     try {
-        const isOrderProduct = await getOrderProductsByOrderId(orderId);
-
-        if (isOrderProduct) {
+        const product = getProductsByOrderId(orderId);
+        //isOrderProduct here is undefined
+        if (product) {
             const {
                 rows: [removedOrderProduct],
             } = await client.query(
@@ -49,7 +49,7 @@ const removeProductFromOrder = async (orderId) => {
                 WHERE id=$1
                 RETURNING *;
             `,
-                [isOrderProduct.id]
+                [product.id]
             );
 
             return removedOrderProduct;
@@ -61,7 +61,7 @@ const removeProductFromOrder = async (orderId) => {
         }
     } catch (error) {
         console.error(
-            `There's been an error removing a product from an order @ addProductToOrder(orderProductId) in ./db/order_products.js. ${error}`
+            `There's been an error removing a product from an order @ removeProductFromOrder(orderProductId) in ./db/order_products.js. ${error}`
         );
         throw error;
     }
@@ -196,7 +196,7 @@ const deleteOrderProducts = async (orderId) => {
         return deletedOrderProduct;
     } catch (error) {
         console.error(
-            `There's been an error deleting an order @ deleteOrder(orderId) in ./db/orders.js. ${error}`
+            `There's been an error deleting an order @ deleteOrder(orderId) in ./db/order_products.js. ${error}`
         );
         throw error;
     }
@@ -218,9 +218,26 @@ const removeOrderProductById = async (orderProductId) => {
         return deletedOrderProduct;
     } catch (error) {
         console.error(
-            `There's been an error deleting an order product @ deleteOrderProductById(orderProductId) in ./db/orders.js. ${error}`
+            `There's been an error deleting an order product @ deleteOrderProductById(orderProductId) in ./db/order_products.js. ${error}`
         );
         throw error;
+    }
+};
+
+const getProductsByOrderId = async (orderId) => {
+    try {
+        const {
+            rows: [products],
+        } = await client.query(
+            `
+        SELECT * FROM products
+        WHERE "id"=$1
+        RETURNING *
+        `,
+            [orderId]
+        );
+    } catch (error) {
+        ("Theres been an error getting products by order id @ getProductsByOrderId(orderId) in ./db/order_products.js");
     }
 };
 

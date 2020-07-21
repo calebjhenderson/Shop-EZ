@@ -19,7 +19,7 @@ const { accordionStyling } = variables;
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
-function CartBody({ quantity, price }) {
+function CartBody({ qtyAvailable, price }) {
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
     const useStyles = makeStyles(accordionStyling);
@@ -71,7 +71,7 @@ function CartBody({ quantity, price }) {
                         className={qtyCount}
                         type="number"
                         min="1"
-                        defaultValue={quantity}
+                        defaultValue={qtyAvailable}
                     ></input>
                 </div>
                 <RemoveBtn />

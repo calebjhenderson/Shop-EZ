@@ -8,7 +8,6 @@ const {
     deleteCart,
     getCartById,
     getCartByUserId,
-    insertProductToCart,
 } = require("../db/carts.js");
 
 const {
@@ -46,21 +45,21 @@ cartsRouter.post("/create", async function (req, res, next) {
             if (cartByProductId) {
                 console.log("FDFDF", cartByProductId);
                 const productId = cartByProductId.id;
-                const currentQuantity = cartByProductId.quantity;
+                const currentQuantity = cartByProductId.qtyAvailable;
                 const currentTotalPrice = cartByProductId.pricetotal;
                 console.log("totalpdfdf", currentTotalPrice);
 
                 console.log("got in here", productId);
 
                 const updatedQuantity = await updateCartProducts(productId, {
-                    quantity: currentQuantity + 1,
+                    qtyAvailable: currentQuantity + 1,
                     pricetotal: currentTotalPrice + priceTotal,
                 });
 
                 res.send({
                     name: "UpdatedProductQuantity&priceTotal",
                     message:
-                        "Product quantity and priceTotal has been updated Succesfully",
+                        "Product qtyAvailable and priceTotal has been updated Successfully",
                     updatedQuantity: updatedQuantity,
                 });
             } else {

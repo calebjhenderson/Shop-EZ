@@ -29,7 +29,7 @@ function CartItemAccordion({ productObj, index }) {
         setExpanded(isExpanded ? panel : false);
     };
 
-    const { name, price, quantity, id: productId } = productObj;
+    const { name, price, qtyAvailable, id: productId } = productObj;
     const formattedPrice = {
         itemPrice: "",
         totalPrice: "",
@@ -63,15 +63,15 @@ function CartItemAccordion({ productObj, index }) {
         }
     }
 
-    function formatPrice(num, quantity) {
-        const totalPrice = +quantity * +num;
+    function formatPrice(num, qtyAvailable) {
+        const totalPrice = +qtyAvailable * +num;
         formattedPrice.itemPrice =
             "$" + formatNumberWithCommas(formatNumberWithDecial(num));
         formattedPrice.totalPrice =
             "$" + formatNumberWithCommas(formatNumberWithDecial(totalPrice));
     }
 
-    formatPrice(price, quantity);
+    formatPrice(price, qtyAvailable);
 
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
@@ -84,14 +84,14 @@ function CartItemAccordion({ productObj, index }) {
                 classes={{ root: accordionRoot }}
             >
                 <CartHeader
-                    quantity={quantity}
+                    qtyAvailable={qtyAvailable}
                     index={productId}
                     price={formattedPrice.totalPrice}
                     name={name}
                 />
 
                 <CartBody
-                    quantity={quantity}
+                    qtyAvailable={qtyAvailable}
                     price={formattedPrice.itemPrice}
                 />
             </Accordion>

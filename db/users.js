@@ -19,7 +19,7 @@
 
 const client = require("./client");
 const {
-    getAllProductsByUserId,
+    getProductsByUserId,
     deleteProduct,
     deactivateProduct,
 } = require("./products");
@@ -27,6 +27,10 @@ const { getShopByUserId, deleteShop } = require("./shops");
 const { getReviewsByUserId, deleteReview } = require("./reviews");
 const { getCartByUserId, deleteCart } = require("./carts");
 const { deleteOrderFromUser, getUserOrdersByUserId } = require("./user_orders");
+const {
+    getUserProductsByUserId,
+    deleteProductFromUser,
+} = require("./user_products");
 
 /*---------------------------------- Functions ---------------------------------------*/
 
@@ -128,38 +132,48 @@ const updateUser = async (id, fields = {}) => {
 //Deletes row from users table and returns deleted user object
 const deleteUser = async (userId) => {
     try {
-        const userProducts = await getAllProductsByUserId(userId);
-        await Promise.all(
-            userProducts.map(async (productObj) => {
-                await deleteProduct(productObj.id);
-            })
-        );
+        // const userProducts = await getProductsByUserId(userId);
+        // await Promise.all(
+        //     userProducts.map(async (productObj) => {
+        //         await deleteProduct(productObj.id);
+        //     })
+        // );
 
-        const userReviews = await getReviewsByUserId(userId);
-        await Promise.all(
-            userReviews.map(async (reviewObj) => {
-                await deleteReview(reviewObj.id);
-            })
-        );
+        // const userReviews = await getReviewsByUserId(userId);
+        // await Promise.all(
+        //     userReviews.map(async (reviewObj) => {
+        //         await deleteReview(reviewObj.id);
+        //     })
+        // );
+        // const userCart = await getCartByUserId(userId);
+        // if (userCart) {
+        //     console.log(userCart);
+        //     await deleteCart(userCart.id);
+        // }
 
-        const userCart = await getCartByUserId(userId);
-        await deleteCart(userCart.id);
+        // const userOrders = await getUserOrdersByUserId(userId);
+        // await Promise.all(
+        //     userOrders.map(async (ordersObj) => {
+        //         await deleteOrderFromUser(ordersObj.id);
+        //     })
+        // );
+        // const userShop = await getShopByUserId(userId);
+        // if (userShop) {
+        //     await deleteShop(userShop.id);
+        // }
 
-        const userOrders = await getUserOrdersByUserId(userId);
-        await Promise.all(
-            userOrders.map(async (ordersObj) => {
-                await deleteOrderFromUser(ordersObj.id);
-            })
-        );
-
-        const userShop = await getShopByUserId(userId);
-        await deleteShop(userShop.id);
+        // const userProductsArr = await getUserProductsByUserId(userId);
+        // await Promise.all(
+        //     userProductsArr.map(async (productsObj) => {
+        //         await deleteProductFromUser(productsObj.id);
+        //     })
+        // );
 
         const {
             rows: [user],
         } = await client.query(
             `
-            DELETE FROM users
+            DELETE FROM users CASCADE
             WHERE id=$1
             RETURNING *
         `,
@@ -254,17 +268,10 @@ const getUserByUserName = async (username) => {
 // Sets active row for user with specified userId to false in users table
 const deactivateUser = async (userId) => {
     try {
-        const userProducts = await getAllProductsByUserId(userId);
+        const userProducts = await getProductsByUserId(userId);
         await Promise.all(
             userProducts.map(async (productObj) => {
                 await deactivateProduct(productObj.id);
-            })
-        );
-
-        const userReviews = await getReviewsByUserId(userId);
-        await Promise.all(
-            userReviews.map(async (reviewObj) => {
-                await deleteReview(reviewObj.id);
             })
         );
 

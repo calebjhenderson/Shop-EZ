@@ -42,7 +42,7 @@ productsRouter.post("/newproduct", requireUser, async function (
         name,
         description,
         price,
-        quantity,
+        qtyAvailable,
         delivery,
         rating,
         userId,
@@ -54,7 +54,7 @@ productsRouter.post("/newproduct", requireUser, async function (
     productData.name = name;
     productData.description = description;
     productData.price = price;
-    productData.quantity = quantity;
+    productData.qtyAvailable = qtyAvailable;
     productData.delivery = delivery;
     productData.rating = rating;
     productData.userId = userId;
@@ -85,7 +85,7 @@ productsRouter.patch("/update/:productId", requireUser, async function (
         name,
         description,
         price,
-        quantity,
+        qtyAvailable,
         delivery,
         rating,
     } = req.body;
@@ -100,8 +100,8 @@ productsRouter.patch("/update/:productId", requireUser, async function (
     if (price) {
         updateFields.price = price;
     }
-    if (quantity) {
-        updateFields.quantity = quantity;
+    if (qtyAvailable) {
+        updateFields.qtyAvailable = qtyAvailable;
     }
     if (delivery) {
         updateFields.delivery = delivery;

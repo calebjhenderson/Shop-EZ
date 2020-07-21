@@ -130,7 +130,7 @@ function ProductCards() {
                         </Typography>
                     </CardContent>
                     <Typography align="center">
-                        Quantity: {product.quantity}
+                        Quantity: {product.qtyAvailable}
                     </Typography>
                 </CardActionArea>
                 <Grid container className={classes.ratingContainer}>
