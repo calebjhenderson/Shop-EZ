@@ -34,6 +34,7 @@ const { muiTheme } = variables;
 import axios from "axios";
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
+
 // Overrides Material-Ui Base Styling
 const theme = createMuiTheme(muiTheme);
 const App = () => {
@@ -60,7 +61,42 @@ const App = () => {
     const [visibility, setVisibility] = useState(false);
     const [submit, setSubmit] = useState(false);
 
+    /*-------------------------------------------------------------- Helper Functions ------------------------------------------------------------------*/
+
+    // Get user cart products and sets cart state; if no products found for cart or no cart found, set cart to an empty array
+    const getUserCart = async (userId) => {
+        const { data: cartData } = await axios.get(`/api/users/cart/${userId}`);
+        if (cartData && cartData.name === "UserCartObtained") {
+            const { id: cartId } = cartData.userCart;
+            getCartProducts(cartId);
+        } else {
+            setCart([]);
+        }
+    };
+
+    // Gets cart products and dets cart state; if no product found, set cart to an empty array
+    const getCartProducts = async (cartId) => {
+        const token = localStorage.getItem("token");
+        const { data: productData } = await axios.get(
+            `/api/carts/cartProducts/${cartId}`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        if (productData.name === "CartProductsRetrieved") {
+            setCart(productData.cartProductsArr);
+        } else if (productData.name === "NoProductsFound") {
+            setCart([]);
+        }
+    };
+
     // Check if user is logged in and set their cart in state, else check if cart exists for non-user and set cart in state
+
+    /*-------------------------------------------------------------- Initial Render ------------------------------------------------------------------*/
 
     useEffect(
         () => {
@@ -90,12 +126,6 @@ const App = () => {
                             localStorage.setItem("token", "");
                         } else if (data.name === "TokenVerified") {
                             setToken(tempToken);
-                            const headers = {
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    Authorization: `Bearer ${tempToken}`,
-                                },
-                            };
                             localStorage.setItem("token", tempToken);
                             const {
                                 firstName,
@@ -111,45 +141,7 @@ const App = () => {
                                 lastName,
                             });
 
-                            // Get user cart products and sets cart state; if no products found for cart or no cart found, set cart to empty array
-                            const getUserCart = async () => {
-                                const { data: cartData } = await axios.get(
-                                    `/api/users/cart/1`
-                                );
-                                if (
-                                    cartData &&
-                                    cartData.name === "UserCartObtained"
-                                ) {
-                                    const { id: cartId } = cartData.userCart;
-
-                                    const getCartProducts = async () => {
-                                        const {
-                                            data: productData,
-                                        } = await axios.get(
-                                            `/api/carts/cartProducts/${cartId}`,
-                                            headers
-                                        );
-
-                                        if (
-                                            productData.name ===
-                                            "CartProductsRetrieved"
-                                        ) {
-                                            setCart(
-                                                productData.cartProductsArr
-                                            );
-                                        } else if (
-                                            productData.name ===
-                                            "NoProductsFound"
-                                        ) {
-                                            setCart([]);
-                                        }
-                                    };
-                                    getCartProducts();
-                                } else {
-                                    setCart([]);
-                                }
-                            };
-                            getUserCart();
+                            getUserCart(id);
                         } else {
                             throw new Error(
                                 "There's been an error verifying token on render startup in app.js @ useEffect"
@@ -183,7 +175,6 @@ const App = () => {
             drawer[anchor] === false &&
             drawer.account === true
         ) {
-            console.log("iamhere");
             setDrawer({
                 ...drawer,
                 [anchor]: !drawer[anchor],
@@ -208,10 +199,14 @@ const App = () => {
             <CssBaseline>
                 <UserContext.Provider
                     value={{
-                        user,
-                        setUser,
-                        token,
+                        getCartProducts,
+                        getUserCart,
                         setToken,
+                        setUser,
+                        setCart,
+                        token,
+                        user,
+                        cart,
                     }}
                 >
                     <DrawerContext.Provider
@@ -221,10 +216,8 @@ const App = () => {
                             visibility,
                             setDrawer,
                             setAlert,
-                            setCart,
                             drawer,
                             alert,
-                            cart,
                         }}
                     >
                         <div id="app">

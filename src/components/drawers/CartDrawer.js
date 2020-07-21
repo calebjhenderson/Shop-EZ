@@ -16,6 +16,7 @@ import CheckoutBtn from "./buttons/CheckoutBtn";
 
 // Context
 import { DrawerContext } from "../../DrawerContext";
+import { UserContext } from "../../UserContext";
 
 // Styling
 import variables from "../../styles";
@@ -64,6 +65,7 @@ const testCart = [
 function CartDrawer() {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
+    const { cart } = useContext(UserContext);
     const { drawer, toggleDrawer } = useContext(DrawerContext);
 
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
@@ -95,7 +97,7 @@ function CartDrawer() {
                 <div id="cart-drawer" className={wrapper}>
                     <CheckoutBtn />
                     <List>
-                        {testCart.map((productObj, index) => (
+                        {cart.map((productObj, index) => (
                             <CartItemAccordion
                                 productObj={productObj}
                                 index={index}
