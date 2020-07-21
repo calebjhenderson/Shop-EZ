@@ -189,7 +189,7 @@ const accordionStyling = {
     cartHeaderTitle: {
         padding: "0 0.7rem",
         fontSize: "0.9rem",
-        width: "70%",
+        width: "65%",
     },
 
     cartHeaderDiv: {
@@ -206,7 +206,7 @@ const accordionStyling = {
         padding: "0 0.7rem",
         fontSize: "0.8rem",
         textAlign: "right",
-        width: "30%",
+        width: "35%",
     },
 
     // Cart Body
@@ -219,7 +219,7 @@ const accordionStyling = {
         flexGrow: 3,
     },
 
-    qtyContainer: {
+    productInfo: {
         justifyContent: "space-between",
         flexDirection: "column",
         alignItems: "center",
@@ -228,21 +228,49 @@ const accordionStyling = {
         flexGrow: 1,
     },
 
+    qtyContainer: {
+        justifyContent: "space-between",
+        flexDirection: "column",
+        marginBottom: "1.6rem",
+        marginLeft: "0.3rem",
+        alignItems: "center",
+        display: "flex",
+        flexGrow: 1,
+    },
+
     qty: {
         marginBottom: "0.5rem",
         textAlign: "center",
         fontSize: "0.8rem",
-        width: "15%",
     },
 
     qtyCount: {
         boxShadow: "0 0 3px black",
         borderColor: "transparent",
-        marginBottom: "2rem",
         borderRadius: "5px",
         textAlign: "center",
         height: "2rem",
         width: "4rem",
+    },
+
+    priceContainer: {
+        justifyContent: "space-between",
+        flexDirection: "column",
+        alignItems: "center",
+        marginLeft: "0.3rem",
+        marginBottom: "1rem",
+        display: "flex",
+        flexGrow: 1,
+    },
+
+    priceLabel: {
+        marginBottom: "0.3rem",
+        textAlign: "center",
+        fontSize: "0.8rem",
+    },
+
+    priceAmount: {
+        fontSize: "0.75rem",
     },
 };
 

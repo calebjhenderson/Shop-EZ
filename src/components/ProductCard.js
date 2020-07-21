@@ -16,13 +16,16 @@ import Button from "@material-ui/core/Button";
 import Rating from "@material-ui/lab/Rating";
 import Card from "@material-ui/core/Card";
 
+// Context
+import { DrawerContext } from "../DrawerContext";
+import { UserContext } from "../UserContext";
+
 // Styling
 import variables from "../styles";
 const { productCardStyling } = variables;
 
 // Other packages/modules
 import axios from "axios";
-import { DrawerContext } from "./../DrawerContext";
 
 /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
@@ -32,9 +35,10 @@ const useStyles = makeStyles(productCardStyling);
 
 const userId = 1;
 
-function ProductCards({ cart, setCart }) {
+function ProductCards() {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
+    const { cart, setCart } = useContext(UserContext);
     const [products, setProducts] = useState([]);
 
     //Get all products by this user and store in a userState

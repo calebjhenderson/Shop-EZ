@@ -26,7 +26,7 @@ function LogOutAccordion() {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
     const { setAlert, toggleDrawer } = useContext(DrawerContext);
-    const { setToken } = useContext(UserContext);
+    const { setToken, setCart, setUser } = useContext(UserContext);
 
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
@@ -51,6 +51,13 @@ function LogOutAccordion() {
             isVisible: true,
         });
         toggleDrawer("account");
+        setUser({
+            id: "",
+            username: "",
+            firstName: "",
+            lastName: "",
+        });
+        setCart([]);
     };
 
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
