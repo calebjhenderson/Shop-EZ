@@ -19,15 +19,19 @@ const { accordionStyling } = variables;
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
-function CartBody({ quantity }) {
+function CartBody({ quantity, price }) {
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
     const useStyles = makeStyles(accordionStyling);
     const classes = useStyles();
     const {
         cartAccordionDetails,
+        priceContainer,
         productImage,
+        productInfo,
         qtyContainer,
+        priceAmount,
+        priceLabel,
         qtyCount,
         qty,
     } = classes;
@@ -41,19 +45,35 @@ function CartBody({ quantity }) {
                 src="/assets/placeholder_product.png"
                 alt="A generic placeholder image of an outline of sunglasses"
             />
+            <div className={productInfo}>
+                <div className={priceContainer}>
+                    <Typography
+                        className={priceLabel}
+                        align="left"
+                        variant="h4"
+                    >
+                        Item Price:
+                    </Typography>
+                    <Typography
+                        className={priceAmount}
+                        align="left"
+                        variant="h4"
+                    >
+                        {price}
+                    </Typography>
+                </div>
+                <div className={qtyContainer}>
+                    <Typography className={qty} align="left" variant="h4">
+                        Qty:
+                    </Typography>
 
-            <div className={qtyContainer}>
-                <Typography className={qty} align="left" variant="h4">
-                    Qty:
-                </Typography>
-
-                <input
-                    className={qtyCount}
-                    type="number"
-                    min="1"
-                    defaultValue={quantity}
-                ></input>
-
+                    <input
+                        className={qtyCount}
+                        type="number"
+                        min="1"
+                        defaultValue={quantity}
+                    ></input>
+                </div>
                 <RemoveBtn />
             </div>
         </AccordionDetails>

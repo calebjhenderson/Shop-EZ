@@ -36,7 +36,7 @@ function LogInAccordion() {
 
     const [expanded, setExpanded] = useState(false);
     const { setAlert, toggleDrawer } = useContext(DrawerContext);
-    const { setToken, setUser } = useContext(UserContext);
+    const { setToken, setUser, getUserCart } = useContext(UserContext);
     const [loggedInValues, setLoggedInValues] = useState({
         username: "",
         password: "",
@@ -98,6 +98,7 @@ function LogInAccordion() {
                     isVisible: true,
                 });
                 toggleDrawer("account");
+                getUserCart(id);
             } else {
                 setAlert({
                     message: "An unknown error has occurred",

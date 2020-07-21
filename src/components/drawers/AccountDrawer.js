@@ -32,7 +32,7 @@ const { drawerStyling } = variables;
 function AccountDrawer({ submit, setSubmit }) {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
-    const { drawer, toggleDrawer, setAlert } = useContext(DrawerContext);
+    const { drawer, toggleDrawer } = useContext(DrawerContext);
     const { user } = useContext(UserContext);
 
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
