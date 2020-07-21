@@ -1,20 +1,17 @@
-// ./src/components/drawers/accordions/LogOutAccordion.js
+// ./src/components/drawers/accordions/StoresAccordion
 
 /*-------------------------------------------------------------- Imports ------------------------------------------------------------------*/
 
 // React
-import React, { useContext } from "react";
+import React, { useState } from "react";
 
 // Material-UI Components
+import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
 import ListItem from "@material-ui/core/ListItem";
-
-// Context
-import { DrawerContext } from "../../../DrawerContext";
-import { UserContext } from "../../../UserContext";
 
 // Styling
 import variables from "../../../styles";
@@ -22,11 +19,10 @@ const { accordionStyling } = variables;
 
 /*-------------------------------------------------------------- Globals ------------------------------------------------------------------*/
 
-function LogOutAccordion() {
+function StoreAccordion() {
     /*-------------------------------------------------------------- State ------------------------------------------------------------------*/
 
-    const { setAlert, toggleDrawer } = useContext(DrawerContext);
-    const { setToken } = useContext(UserContext);
+    const [expanded, setExpanded] = useState(false);
 
     /*-------------------------------------------------------------- Styling ------------------------------------------------------------------*/
 
@@ -37,41 +33,45 @@ function LogOutAccordion() {
         accountListItem,
         accordionRoot,
         headerTitle,
-        logOut,
+        comingSoon,
+        settings,
     } = classes;
 
     /*-------------------------------------------------------------- Event Handlers ------------------------------------------------------------------*/
 
-    const handleLogOut = () => {
-        localStorage.setItem("token", "");
-        setToken("");
-        setAlert({
-            message: "You have successfully logged out",
-            severity: "success",
-            isVisible: true,
-        });
-        toggleDrawer("account");
+    const handleChange = (panel) => (event, isExpanded) => {
+        setExpanded(isExpanded ? panel : false);
     };
 
     /*-------------------------------------------------------------- Component ------------------------------------------------------------------*/
 
     return (
         <ListItem className={accountListItem}>
-            <Accordion classes={{ root: accordionRoot }}>
+            <Accordion
+                // @ts-ignore
+                expanded={expanded === `panelSettings`}
+                onChange={handleChange(`panelSettings`)}
+                classes={{ root: accordionRoot }}
+            >
                 <AccordionSummary
-                    aria-controls={`paneleh-content`}
-                    id={`paneleh-header`}
-                    className={`${accountAccordion} ${logOut}`}
-                    onClick={handleLogOut}
+                    aria-controls={`panelgh-content`}
+                    id={`panelgh-header`}
+                    className={accountAccordion}
                 >
                     <Typography
                         align="center"
                         variant="h3"
                         className={headerTitle}
                     >
-                        Log Out
+                        Store
                     </Typography>
                 </AccordionSummary>
+
+                <AccordionDetails>
+                    <div className={settings}>
+                        <p className={comingSoon}>Coming Soon!</p>
+                    </div>
+                </AccordionDetails>
             </Accordion>
         </ListItem>
     );
@@ -79,4 +79,4 @@ function LogOutAccordion() {
 
 /*-------------------------------------------------------------- Exports ------------------------------------------------------------------*/
 
-export default LogOutAccordion;
+export default StoreAccordion;

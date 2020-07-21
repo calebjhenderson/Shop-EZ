@@ -18,6 +18,7 @@ const {
     getCartProductByCartAndProductId,
     getCartProductsByProductId,
     updateCartProducts,
+    getProductsByCartId,
 } = require("../db/cart_products.js");
 const { requireUser } = require("../db/users.js");
 const products = require("../db/products.js");
@@ -92,8 +93,6 @@ cartsRouter.post("/create", async function (req, res, next) {
                     name: "CartCreatedSuccess",
                     message: "Here is your cart...",
                     cart: newCart,
-                    name: "CartProductAddedSuccess",
-                    message: "Product added to cart",
                     newCartproduct: newCartProduct,
                 });
             } else {
@@ -172,7 +171,7 @@ cartsRouter.put("/add/:productId", async function (req, res, next) {
 });
 
 //Remove Product From Cart Route-----WORKS!
-cartsRouter.delete("/deletecartproduct/:productId", async function (
+cartsRouter.delete("/deleteCartProduct/:productId", async function (
     req,
     res,
     next
@@ -193,6 +192,64 @@ cartsRouter.delete("/deletecartproduct/:productId", async function (
         });
     } catch (error) {
         console.error(error);
+        const { name, message } = error;
+        next({ name, message });
+    }
+});
+
+// Get Cart Products associated with specified cartId
+cartsRouter.get("/cartProducts/:cartId", requireUser, async function (
+    req,
+    res,
+    next
+) {
+    const { cartId } = req.params;
+
+    try {
+        const cartProducts = await getProductsByCartId(cartId);
+
+        if (cartProducts && cartProducts.length) {
+            const cartProductsArr = [];
+
+            async function getProducts() {
+                await Promise.all(
+                    cartProducts.map(async (cartProduct) => {
+                        const product = await getProductById(
+                            cartProduct.productId
+                        );
+                        cartProductsArr.push(product);
+                    })
+                );
+            }
+
+            await getProducts();
+
+            if (cartProductsArr && cartProductsArr.length) {
+                res.send({
+                    name: "CartProductsRetrieved",
+                    message:
+                        "The products for the cart specified have been found. See attached.",
+                    cartProductsArr,
+                });
+            } else if (!cartProductsArr.length) {
+                next({
+                    name: "NoProductsFound",
+                    message: "No products were found in the cart specified.",
+                });
+            } else {
+                next({
+                    name: "ErrorRetrievingCartProducts",
+                    message:
+                        "There was an error getting the cart products for the specified cart",
+                });
+            }
+        } else {
+            next({
+                name: "NoProductsFound",
+                message: "No products were found in the cart specified.",
+            });
+        }
+    } catch (error) {
         const { name, message } = error;
         next({ name, message });
     }

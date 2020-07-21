@@ -414,8 +414,7 @@ async function createTables() {
                 id SERIAL PRIMARY KEY,
                 "cartId" INTEGER REFERENCES carts(id) NOT NULL,
                 "productId" INTEGER REFERENCES products(id) NOT NULL,
-                 quantity INTEGER DEFAULT '1',
-                 priceTotal FLOAT(2) NOT NULL,
+                 "qtyDesired" INTEGER DEFAULT '1',
                  UNIQUE ("cartId","productId")
             
             );`);
@@ -932,24 +931,24 @@ async function createInitialCarts() {
             userId: 1,
         });
 
-        // const nahidsCart = await createCart({
-        //     userId: 2,
-        //     products: "{2}",
-        // });
+        const nahidsCart = await createCart({
+            userId: 2,
+            products: [],
+        });
 
-        // const calebsCart = await createCart({
-        //     userId: 3,
-        //     products: "{3, 2}",
-        // });
+        const calebsCart = await createCart({
+            userId: 3,
+            products: [3, 2],
+        });
 
-        // const yahyasCart = await createCart({
-        //     userId: 4,
-        //     products: "{1, 4, 2}",
-        // });
+        const yahyasCart = await createCart({
+            userId: 4,
+            products: [1, 4, 2],
+        });
 
-        // const anonsCart = await createCart({
-        //     products: "{1, 2, 4}",
-        // });
+        const anonsCart = await createCart({
+            products: [1, 2, 4],
+        });
 
         console.log(chalk.greenBright("Finished creating initial carts!"));
     } catch (error) {
